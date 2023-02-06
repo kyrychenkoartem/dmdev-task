@@ -1,2 +1,5 @@
-package com.artem.mapper.model.dto;public class UserDto {
+package com.artem.model.dto;
+
+public record UserDto(String firstName,
+                      String lastName) {
 }

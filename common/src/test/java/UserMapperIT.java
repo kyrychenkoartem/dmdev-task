@@ -3,7 +3,7 @@ import org.junit.Test;
 import static org.junit.Assert.assertTrue;
 
 
-public class UserMapperTest {
+public class UserMapperIT {
 
     @Test
     public void test() {

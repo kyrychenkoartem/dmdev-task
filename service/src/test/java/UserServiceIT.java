@@ -3,7 +3,7 @@ import org.junit.Test;
 
 import static org.junit.Assert.assertTrue;
 
-public class UserServiceTest {
+public class UserServiceIT {
 
     @Test
     public void test() {
