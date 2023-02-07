@@ -1,2 +1,11 @@
-package PACKAGE_NAME;public class UserServiceTest {
+import org.junit.jupiter.api.Test;
+
+import static org.junit.jupiter.api.Assertions.assertTrue;
+
+public class UserServiceTest {
+
+    @Test
+    public void test() {
+        assertTrue(true);
+    }
 }
