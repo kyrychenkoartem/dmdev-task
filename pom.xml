@@ -31,9 +31,9 @@
             </dependency>
 
             <dependency>
-                <groupId>junit</groupId>
-                <artifactId>junit</artifactId>
-                <version>4.13.1</version>
+                <groupId>org.junit.jupiter</groupId>
+                <artifactId>junit-jupiter-engine</artifactId>
+                <version>5.9.2</version>
                 <scope>test</scope>
             </dependency>
         </dependencies>
@@ -41,12 +41,6 @@
 
 
     <build>
-        <resources>
-            <resource>
-                <directory>${project.basedir}/src/main/resources</directory>
-                <filtering>true</filtering>
-            </resource>
-        </resources>
         <pluginManagement>
             <plugins>
                 <plugin>
@@ -86,27 +80,6 @@
                     <artifactId>maven-clean-plugin</artifactId>
                     <version>3.2.0</version>
                 </plugin>
-<!--                <plugin>-->
-<!--                    <artifactId>maven-resources-plugin</artifactId>-->
-<!--                    <version>3.3.0</version>-->
-<!--                    <executions>-->
-<!--                        <execution>-->
-<!--                            <id>copy-docker-files</id>-->
-<!--                            <goals>-->
-<!--                                <goal>copy-resources</goal>-->
-<!--                            </goals>-->
-<!--                            <phase>validate</phase>-->
-<!--                            <configuration>-->
-<!--                                <outputDirectory>${project.basedir}/target</outputDirectory>-->
-<!--                                <resources>-->
-<!--                                    <resource>-->
-<!--                                        <directory>${project.basedir}/docker</directory>-->
-<!--                                    </resource>-->
-<!--                                </resources>-->
-<!--                            </configuration>-->
-<!--                        </execution>-->
-<!--                    </executions>-->
-<!--                </plugin>-->
                 <plugin>
                     <groupId>org.apache.maven.plugins</groupId>
                     <artifactId>maven-compiler-plugin</artifactId>
