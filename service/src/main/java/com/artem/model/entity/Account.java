@@ -1,12 +1,9 @@
 package com.artem.model.entity;
 
 import com.artem.model.type.AccountStatus;
-import com.artem.model.type.AccountType;
-import java.math.BigDecimal;
+import java.time.LocalDateTime;
 import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.EnumType;
-import javax.persistence.Enumerated;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -21,30 +18,27 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @Builder
 @Entity
-@Table(name = "bank_account", schema = "public")
-public class BankAccount {
+@Table(name = "account", schema = "public")
+public class Account {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    private String number;
+    //    OneToOne
+    @Column(name = "user_id")
+    private Long user;
 
-    @Enumerated(EnumType.STRING)
-    private AccountType type;
-
-    @Enumerated(EnumType.STRING)
     private AccountStatus status;
 
-    private BigDecimal availableBalance;
+    private LocalDateTime createdAt;
 
-    private BigDecimal actualBalance;
+    private String createdBy;
 
-    //    ManyToOne
-    @Column(name = "account_id") // to delete
-    private Long account;
+    private LocalDateTime updatedAt;
 
-//    ManyToMany
-//    Set<BankCard>
-//    private Long bankCard;
+    private String updatedBy;
+
+//      OneToMany
+//    private List<BankAccount> accounts;
 }

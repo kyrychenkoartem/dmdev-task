@@ -32,7 +32,7 @@ public class UtilityPayment {
     /**
      * Utility account number to which the transaction is made
      **/
-    @Column(name = "reference_number")
+//    @Column(name = "reference_number")
     private String referenceNumber;
 
     @Enumerated(EnumType.STRING)
@@ -42,7 +42,7 @@ public class UtilityPayment {
      * Utility account associated with payment
      **/
 //    OneToOne UtilityAccount
-    @Column(name = "utility_account") // to delete
+    @Column(name = "utility_account_id") // to delete
     private Long utilityAccount;
 
     /**

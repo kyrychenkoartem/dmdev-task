@@ -1,6 +1,5 @@
 package com.artem.model.entity;
 
-import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -25,6 +24,6 @@ public class UtilityAccount {
 
     private String number;
 
-    @Column(name = "provider_name")
+//    @Column(name = "provider_name")
     private String providerName;
 }

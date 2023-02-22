@@ -27,10 +27,8 @@ public class FundTransfer {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(name = "from_account")
     private String fromAccount;
 
-    @Column(name = "to_account")
     private String toAccount;
 
     private BigDecimal amount;

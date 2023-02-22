@@ -36,10 +36,8 @@ public class TransactionEntity {
     /**
      * Bank/Utility account number to which the transaction is made
      **/
-    @Column(name = "reference_number")
     private String referenceNumber;
 
-    @Column(name = "transaction_id")
     private String transactionId;
 
     /**
