@@ -6,7 +6,7 @@ import com.artem.model.entity.User;
 import com.artem.model.type.AccountStatus;
 import com.artem.model.type.AccountType;
 import com.artem.model.type.Role;
-import com.artem.util.HibernateUtil;
+import com.artem.util.HibernateTestUtil;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.time.LocalDate;
@@ -22,14 +22,14 @@ import org.junit.jupiter.api.Test;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-public class BankAccountMappingTest extends MappingTestBase {
+public class BankAccountMappingIT {
 
     private static SessionFactory sessionFactory;
     private static Session session;
 
     @BeforeAll
     static void init() {
-        sessionFactory = HibernateUtil.buildSessionFactory();
+        sessionFactory = HibernateTestUtil.buildSessionFactory();
     }
 
     @BeforeEach
@@ -53,10 +53,10 @@ public class BankAccountMappingTest extends MappingTestBase {
     void checkBankAccountGet() {
         var user = getUser("Denis", "Denisov", "denis@gmail.com");
         session.save(user);
-        var account = getAccount(user.getId());
+        var account = getAccount(user);
+        var expectedBankAccount = getBankAccount(account, "123454464754753");
+        account.addBankAccount(expectedBankAccount);
         session.save(account);
-        var expectedBankAccount = getBankAccount(account.getId(), "123454464754753");
-        session.save(expectedBankAccount);
         session.clear();
 
         var actualBankAccount = session.get(BankAccount.class, expectedBankAccount.getId());
@@ -68,15 +68,52 @@ public class BankAccountMappingTest extends MappingTestBase {
     void checkBankAccountInsert() {
         var user = getUser("Ivan", "Ivanov", "ivan@gmail.com");
         session.save(user);
-        var account = getAccount(user.getId());
+        var account = getAccount(user);
+        var expectedBankAccount = getBankAccount(account, "12345446475477687875653");
+        account.addBankAccount(expectedBankAccount);
         session.save(account);
-        var expectedBankAccount = getBankAccount(account.getId(), "12345446475477687875653");
-        session.save(expectedBankAccount);
         session.clear();
 
         var actualBankAccount = session.get(BankAccount.class, expectedBankAccount.getId());
 
         assertThat(actualBankAccount.getId()).isNotNull();
+    }
+
+    @Test
+    void checkBankAccountUpdate() {
+        var user = getUser("Ivan", "Ivanov", "ivan@gmail.com");
+        session.save(user);
+        var account = getAccount(user);
+        var expectedBankAccount = getBankAccount(account, "12345446475477687875653");
+        account.addBankAccount(expectedBankAccount);
+        session.save(account);
+        session.clear();
+        expectedBankAccount.setStatus(AccountStatus.BLOCKED);
+        session.update(expectedBankAccount);
+        session.flush();
+        session.clear();
+
+        var actualBankAccount = session.get(BankAccount.class, expectedBankAccount.getId());
+
+        assertThat(actualBankAccount.getStatus()).isEqualTo(AccountStatus.BLOCKED);
+    }
+
+    @Test
+    void checkBankAccountDelete() {
+        var user = getUser("Ivan", "Ivanov", "ivan@gmail.com");
+        session.save(user);
+        var account = getAccount(user);
+        var expectedBankAccount = getBankAccount(account, "12345446475477687875653");
+        account.addBankAccount(expectedBankAccount);
+        session.save(account);
+        session.clear();
+        session.delete(expectedBankAccount);
+        session.flush();
+        session.clear();
+
+        var actualBankAccount = session.get(BankAccount.class, expectedBankAccount.getId());
+
+        assertThat(actualBankAccount).isNull();
     }
 
     private static User getUser(String firstname, String lastname, String email) {
@@ -90,18 +127,18 @@ public class BankAccountMappingTest extends MappingTestBase {
                 .build();
     }
 
-    private static Account getAccount(Long userId) {
+    private static Account getAccount(User user) {
         return Account.builder()
-                .user(userId)
+                .user(user)
                 .status(AccountStatus.ACTIVE)
                 .createdAt(LocalDateTime.now().truncatedTo(ChronoUnit.SECONDS))
-                .createdBy(userId.toString())
+                .createdBy(user.getEmail())
                 .build();
     }
 
-    private static BankAccount getBankAccount(Long accountId, String number) {
+    private static BankAccount getBankAccount(Account account, String number) {
         return BankAccount.builder()
-                .account(accountId)
+                .account(account)
                 .number(number)
                 .type(AccountType.CHECKING_ACCOUNT)
                 .status(AccountStatus.ACTIVE)

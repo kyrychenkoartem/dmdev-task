@@ -17,6 +17,12 @@ import org.hibernate.cfg.Configuration;
 public class HibernateUtil {
 
     public static SessionFactory buildSessionFactory() {
+        Configuration configuration = buildConfiguration();
+        configuration.configure();
+        return configuration.buildSessionFactory();
+    }
+
+    public static Configuration buildConfiguration() {
         var configuration = new Configuration();
         configuration.addAnnotatedClass(User.class);
         configuration.addAnnotatedClass(Account.class);
@@ -27,7 +33,6 @@ public class HibernateUtil {
         configuration.addAnnotatedClass(UtilityAccount.class);
         configuration.addAnnotatedClass(UtilityPayment.class);
         configuration.setPhysicalNamingStrategy(new CamelCaseToUnderscoresNamingStrategy());
-        configuration.configure();
-        return configuration.buildSessionFactory();
+        return configuration;
     }
 }

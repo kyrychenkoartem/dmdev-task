@@ -11,7 +11,7 @@ import com.artem.model.type.AccountType;
 import com.artem.model.type.Role;
 import com.artem.model.type.TransactionStatus;
 import com.artem.model.type.TransactionType;
-import com.artem.util.HibernateUtil;
+import com.artem.util.HibernateTestUtil;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.time.LocalDate;
@@ -27,14 +27,14 @@ import org.junit.jupiter.api.Test;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-public class UtilityPaymentMappingTest extends MappingTestBase {
+public class UtilityPaymentMappingIT {
 
     private static SessionFactory sessionFactory;
     private static Session session;
 
     @BeforeAll
     static void init() {
-        sessionFactory = HibernateUtil.buildSessionFactory();
+        sessionFactory = HibernateTestUtil.buildSessionFactory();
     }
 
     @BeforeEach
@@ -58,17 +58,17 @@ public class UtilityPaymentMappingTest extends MappingTestBase {
     void checkUtilityPaymentGet() {
         var user = getUser("Mike", "Richards", "mike@gmail.com");
         session.save(user);
-        var account = getAccount(user.getId());
-        session.save(account);
-        var bankAccount = getBankAccount(account.getId(), "123456786543");
-        session.save(bankAccount);
-        var transaction = getTransaction("1234567890098765432", bankAccount.getId());
-        session.save(transaction);
+        var account = getAccount(user);
+        var bankAccount = getBankAccount(account, "123456786543");
+        account.addBankAccount(bankAccount);
+        var transaction = getTransaction("1234567890098765432", bankAccount);
+        bankAccount.addTransaction(transaction);
         var utilityAccount = getUtilityAccount("112345654356", "Telus");
+        var expectedUtilityPayment = getUtilityPayment(
+                utilityAccount.getNumber(), utilityAccount, transaction);
+        utilityAccount.addUtilityPayment(expectedUtilityPayment);
+        session.save(account);
         session.save(utilityAccount);
-        var expectedUtilityPayment = getUtilityPayment(utilityAccount.getNumber(),
-                utilityAccount.getId(), transaction.getId());
-        session.save(expectedUtilityPayment);
         session.clear();
 
         var actualUtilityPayment = session.get(UtilityPayment.class, expectedUtilityPayment.getId());
@@ -80,22 +80,73 @@ public class UtilityPaymentMappingTest extends MappingTestBase {
     void checkUtilityPaymentInsert() {
         var user = getUser("Mike", "Richards", "mike@gmail.com");
         session.save(user);
-        var account = getAccount(user.getId());
-        session.save(account);
-        var bankAccount = getBankAccount(account.getId(), "123456786543");
-        session.save(bankAccount);
-        var transaction = getTransaction("1234567890098765432", bankAccount.getId());
-        session.save(transaction);
+        var account = getAccount(user);
+        var bankAccount = getBankAccount(account, "123456786543");
+        account.addBankAccount(bankAccount);
+        var transaction = getTransaction("1234567890098765432", bankAccount);
+        bankAccount.addTransaction(transaction);
         var utilityAccount = getUtilityAccount("112345654356", "Telus");
+        var expectedUtilityPayment = getUtilityPayment(
+                utilityAccount.getNumber(), utilityAccount, transaction);
+        utilityAccount.addUtilityPayment(expectedUtilityPayment);
+        session.save(account);
         session.save(utilityAccount);
-        var expectedUtilityPayment = getUtilityPayment(utilityAccount.getNumber(),
-                utilityAccount.getId(), transaction.getId());
-        session.save(expectedUtilityPayment);
         session.clear();
 
         var actualUtilityPayment = session.get(UtilityPayment.class, expectedUtilityPayment.getId());
 
         assertThat(actualUtilityPayment.getId()).isNotNull();
+    }
+
+    @Test
+    void checkUtilityPaymentUpdate() {
+        var user = getUser("Mike", "Richards", "mike@gmail.com");
+        session.save(user);
+        var account = getAccount(user);
+        var bankAccount = getBankAccount(account, "123456786543");
+        account.addBankAccount(bankAccount);
+        var transaction = getTransaction("1234567890098765432", bankAccount);
+        bankAccount.addTransaction(transaction);
+        var utilityAccount = getUtilityAccount("112345654356", "Telus");
+        var expectedUtilityPayment = getUtilityPayment(
+                utilityAccount.getNumber(), utilityAccount, transaction);
+        utilityAccount.addUtilityPayment(expectedUtilityPayment);
+        session.save(account);
+        session.save(utilityAccount);
+        session.clear();
+        expectedUtilityPayment.setStatus(TransactionStatus.PROCESSING);
+        session.update(expectedUtilityPayment);
+        session.flush();
+        session.clear();
+
+        var actualUtilityPayment = session.get(UtilityPayment.class, expectedUtilityPayment.getId());
+
+        assertThat(actualUtilityPayment.getStatus()).isEqualTo(TransactionStatus.PROCESSING);
+    }
+
+    @Test
+    void checkUtilityPaymentDelete() {
+        var user = getUser("Mike", "Richards", "mike@gmail.com");
+        session.save(user);
+        var account = getAccount(user);
+        var bankAccount = getBankAccount(account, "123456786543");
+        account.addBankAccount(bankAccount);
+        var transaction = getTransaction("1234567890098765432", bankAccount);
+        bankAccount.addTransaction(transaction);
+        var utilityAccount = getUtilityAccount("112345654356", "Telus");
+        var expectedUtilityPayment = getUtilityPayment(
+                utilityAccount.getNumber(), utilityAccount, transaction);
+        utilityAccount.addUtilityPayment(expectedUtilityPayment);
+        session.save(account);
+        session.save(utilityAccount);
+        session.clear();
+        session.delete(expectedUtilityPayment);
+        session.flush();
+        session.clear();
+
+        var actualUtilityPayment = session.get(UtilityPayment.class, expectedUtilityPayment.getId());
+
+        assertThat(actualUtilityPayment).isNull();
     }
 
     private static User getUser(String firstname, String lastname, String email) {
@@ -109,18 +160,18 @@ public class UtilityPaymentMappingTest extends MappingTestBase {
                 .build();
     }
 
-    private static Account getAccount(Long userId) {
+    private static Account getAccount(User user) {
         return Account.builder()
-                .user(userId)
+                .user(user)
                 .status(AccountStatus.ACTIVE)
                 .createdAt(LocalDateTime.now().truncatedTo(ChronoUnit.SECONDS))
-                .createdBy(userId.toString())
+                .createdBy(user.getEmail())
                 .build();
     }
 
-    private static BankAccount getBankAccount(Long accountId, String number) {
+    private static BankAccount getBankAccount(Account account, String number) {
         return BankAccount.builder()
-                .account(accountId)
+                .account(account)
                 .number(number)
                 .type(AccountType.CHECKING_ACCOUNT)
                 .status(AccountStatus.ACTIVE)
@@ -129,13 +180,13 @@ public class UtilityPaymentMappingTest extends MappingTestBase {
                 .build();
     }
 
-    private static TransactionEntity getTransaction(String transactionId, Long bankAccountId) {
+    private static TransactionEntity getTransaction(String transactionId, BankAccount bankAccount) {
         return TransactionEntity.builder()
                 .amount(BigDecimal.valueOf(50).setScale(2, RoundingMode.CEILING))
                 .transactionType(TransactionType.DEPOSIT)
                 .referenceNumber("123453")
                 .transactionId(transactionId)
-                .bankAccount(bankAccountId)
+                .bankAccount(bankAccount)
                 .build();
     }
 
@@ -146,13 +197,13 @@ public class UtilityPaymentMappingTest extends MappingTestBase {
                 .build();
     }
 
-    private static UtilityPayment getUtilityPayment(String number, Long utilityAccountId, Long transactionId) {
+    private static UtilityPayment getUtilityPayment(String number, UtilityAccount utilityAccount, TransactionEntity transaction) {
         return UtilityPayment.builder()
                 .amount(BigDecimal.valueOf(50).setScale(2, RoundingMode.CEILING))
                 .referenceNumber(number)
                 .status(TransactionStatus.SUCCESS)
-                .utilityAccount(utilityAccountId)
-                .transaction(transactionId)
+                .utilityAccount(utilityAccount)
+                .transaction(transaction)
                 .build();
     }
 }

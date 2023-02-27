@@ -4,7 +4,7 @@ import com.artem.model.entity.Account;
 import com.artem.model.entity.User;
 import com.artem.model.type.AccountStatus;
 import com.artem.model.type.Role;
-import com.artem.util.HibernateUtil;
+import com.artem.util.HibernateTestUtil;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
@@ -18,14 +18,14 @@ import org.junit.jupiter.api.Test;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-public class AccountMappingTest extends MappingTestBase {
+public class AccountMappingIT {
 
     private static SessionFactory sessionFactory;
     private static Session session;
 
     @BeforeAll
     static void init() {
-        sessionFactory = HibernateUtil.buildSessionFactory();
+        sessionFactory = HibernateTestUtil.buildSessionFactory();
     }
 
     @BeforeEach
@@ -49,7 +49,7 @@ public class AccountMappingTest extends MappingTestBase {
     void checkAccountGet() {
         var user = getUser("Ivan", "Ivanov", "ivan@gmail.com");
         session.save(user);
-        var expectedAccount = getAccount(user.getId());
+        var expectedAccount = getAccount(user);
         session.save(expectedAccount);
         session.clear();
 
@@ -62,13 +62,46 @@ public class AccountMappingTest extends MappingTestBase {
     void checkAccountInsert() {
         var user = getUser("Petr", "Petrov", "petr@gmail.com");
         session.save(user);
-        var expectedAccount = getAccount(user.getId());
+        var expectedAccount = getAccount(user);
         session.save(expectedAccount);
         session.clear();
 
         var actualAccount = session.get(Account.class, expectedAccount.getId());
 
         assertThat(actualAccount.getId()).isNotNull();
+    }
+
+    @Test
+    void checkAccountUpdate() {
+        var user = getUser("Petr", "Petrov", "petr@gmail.com");
+        session.save(user);
+        var expectedAccount = getAccount(user);
+        session.save(expectedAccount);
+        session.clear();
+        expectedAccount.setStatus(AccountStatus.BLOCKED);
+        session.update(expectedAccount);
+        session.flush();
+        session.clear();
+
+        var actualAccount = session.get(Account.class, expectedAccount.getId());
+
+        assertThat(actualAccount.getStatus()).isEqualTo(AccountStatus.BLOCKED);
+    }
+
+    @Test
+    void checkAccountDelete() {
+        var user = getUser("Petr", "Petrov", "petr@gmail.com");
+        session.save(user);
+        var expectedAccount = getAccount(user);
+        session.save(expectedAccount);
+        session.clear();
+        session.delete(expectedAccount);
+        session.flush();
+        session.clear();
+
+        var actualAccount = session.get(Account.class, expectedAccount.getId());
+
+        assertThat(actualAccount).isNull();
     }
 
     private static User getUser(String firstname, String lastname, String email) {
@@ -82,12 +115,12 @@ public class AccountMappingTest extends MappingTestBase {
                 .build();
     }
 
-    private static Account getAccount(Long userId) {
+    private static Account getAccount(User user) {
         return Account.builder()
-                .user(userId)
+                .user(user)
                 .status(AccountStatus.ACTIVE)
                 .createdAt(LocalDateTime.now().truncatedTo(ChronoUnit.SECONDS))
-                .createdBy(userId.toString())
+                .createdBy(user.getEmail())
                 .build();
     }
 }

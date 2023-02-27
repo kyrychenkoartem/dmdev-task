@@ -1,7 +1,7 @@
 package com.artem.mapping;
 
 import com.artem.model.entity.UtilityAccount;
-import com.artem.util.HibernateUtil;
+import com.artem.util.HibernateTestUtil;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.junit.jupiter.api.AfterAll;
@@ -12,14 +12,14 @@ import org.junit.jupiter.api.Test;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-public class UtilityAccountMappingTest extends MappingTestBase {
+public class UtilityAccountMappingIT {
 
     private static SessionFactory sessionFactory;
     private static Session session;
 
     @BeforeAll
     static void init() {
-        sessionFactory = HibernateUtil.buildSessionFactory();
+        sessionFactory = HibernateTestUtil.buildSessionFactory();
     }
 
     @BeforeEach
@@ -59,6 +59,35 @@ public class UtilityAccountMappingTest extends MappingTestBase {
         var actualUtilityAccount = session.get(UtilityAccount.class, expectedUtilityAccount.getId());
 
         assertThat(actualUtilityAccount.getId()).isNotNull();
+    }
+
+    @Test
+    void checkUtilityAccountUpdate() {
+        var expectedUtilityAccount = getUtilityAccount("23456543567654", "Koodo");
+        session.save(expectedUtilityAccount);
+        session.clear();
+        expectedUtilityAccount.setProviderName("Telus");
+        session.update(expectedUtilityAccount);
+        session.flush();
+        session.clear();
+
+        var actualUtilityAccount = session.get(UtilityAccount.class, expectedUtilityAccount.getId());
+
+        assertThat(actualUtilityAccount.getProviderName()).isEqualTo("Telus");
+    }
+
+    @Test
+    void checkUtilityAccountDelete() {
+        var expectedUtilityAccount = getUtilityAccount("23456543567654", "Koodo");
+        session.save(expectedUtilityAccount);
+        session.clear();
+        session.delete(expectedUtilityAccount);
+        session.flush();
+        session.clear();
+
+        var actualUtilityAccount = session.get(UtilityAccount.class, expectedUtilityAccount.getId());
+
+        assertThat(actualUtilityAccount).isNull();
     }
 
     private static UtilityAccount getUtilityAccount(String number, String provider) {

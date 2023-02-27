@@ -11,7 +11,7 @@ CREATE TABLE IF NOT EXISTS users
 CREATE TABLE IF NOT EXISTS account
 (
     id         BIGSERIAL PRIMARY KEY,
-    user_id    BIGINT UNIQUE REFERENCES users (id),
+    user_id    BIGINT      NOT NULL UNIQUE REFERENCES users (id) ON DELETE CASCADE,
     status     VARCHAR(32) NOT NULL,
     created_at TIMESTAMP   NOT NULL,
     created_by VARCHAR(64) NOT NULL,
@@ -21,22 +21,22 @@ CREATE TABLE IF NOT EXISTS account
 CREATE TABLE IF NOT EXISTS bank_account
 (
     id                BIGSERIAL PRIMARY KEY,
-    account_id        BIGINT REFERENCES account (id) NOT NULL,
-    number            VARCHAR(34)                    NOT NULL UNIQUE,
-    type              VARCHAR(32)                    NOT NULL,
-    status            VARCHAR(32)                    NOT NULL,
+    account_id        BIGINT      NOT NULL REFERENCES account (id) ON DELETE CASCADE,
+    number            VARCHAR(34) NOT NULL UNIQUE,
+    type              VARCHAR(32) NOT NULL,
+    status            VARCHAR(32) NOT NULL,
     available_balance DECIMAL(19, 2) DEFAULT 0,
     actual_balance    DECIMAL(19, 2) DEFAULT 0
 );
 CREATE TABLE IF NOT EXISTS bank_card
 (
     id              BIGSERIAL PRIMARY KEY,
-    user_id         BIGINT REFERENCES users (id),
-    bank_account_id BIGINT REFERENCES bank_account (id),
+    user_id         BIGINT      NOT NULL REFERENCES users (id) ON DELETE CASCADE,
+    bank_account_id BIGINT      NOT NULL REFERENCES bank_account (id) ON DELETE CASCADE,
     card_number     VARCHAR(25) NOT NULL UNIQUE,
     expiry_date     VARCHAR(25) NOT NULL,
     bank            VARCHAR(32) NOT NULL,
-    cvv             CHAR(4)     NOT NULL,
+    cvv             VARCHAR(4)  NOT NULL,
     type            VARCHAR(32) NOT NULL
 );
 CREATE TABLE IF NOT EXISTS utility_account
@@ -48,11 +48,11 @@ CREATE TABLE IF NOT EXISTS utility_account
 CREATE TABLE IF NOT EXISTS banking_transaction
 (
     id               BIGSERIAL PRIMARY KEY,
-    amount           DECIMAL(19, 2)                      NOT NULL,
-    type             VARCHAR(64)                         NOT NULL,
-    reference_number VARCHAR(34)                         NOT NULL,
-    transaction_id   VARCHAR(64)                         NOT NULL UNIQUE,
-    bank_account_id  BIGINT REFERENCES bank_account (id) NOT NULL
+    amount           DECIMAL(19, 2) NOT NULL,
+    type             VARCHAR(64)    NOT NULL,
+    reference_number VARCHAR(34)    NOT NULL,
+    transaction_id   VARCHAR(64)    NOT NULL UNIQUE,
+    bank_account_id  BIGINT         NOT NULL REFERENCES bank_account (id) ON DELETE CASCADE
 );
 CREATE TABLE IF NOT EXISTS utility_payment
 (
@@ -60,8 +60,8 @@ CREATE TABLE IF NOT EXISTS utility_payment
     amount                 DECIMAL(19, 2) NOT NULL,
     reference_number       VARCHAR(34)    NOT NULL,
     status                 VARCHAR(64)    NOT NULL,
-    utility_account_id     BIGINT REFERENCES utility_account (id),
-    banking_transaction_id BIGINT UNIQUE REFERENCES banking_transaction (id)
+    utility_account_id     BIGINT         NOT NULL REFERENCES utility_account (id),
+    banking_transaction_id BIGINT         NOT NULL UNIQUE REFERENCES banking_transaction (id) ON DELETE CASCADE
 );
 CREATE TABLE IF NOT EXISTS fund_transfer
 (
@@ -70,5 +70,5 @@ CREATE TABLE IF NOT EXISTS fund_transfer
     to_account             VARCHAR(34)    NOT NULL,
     amount                 DECIMAL(19, 2) NOT NULL,
     status                 VARCHAR(64)    NOT NULL,
-    banking_transaction_id BIGINT UNIQUE REFERENCES banking_transaction (id)
+    banking_transaction_id BIGINT         NOT NULL UNIQUE REFERENCES banking_transaction (id) ON DELETE CASCADE
 );

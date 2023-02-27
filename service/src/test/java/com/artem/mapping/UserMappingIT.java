@@ -2,7 +2,7 @@ package com.artem.mapping;
 
 import com.artem.model.entity.User;
 import com.artem.model.type.Role;
-import com.artem.util.HibernateUtil;
+import com.artem.util.HibernateTestUtil;
 import java.time.LocalDate;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
@@ -14,14 +14,14 @@ import org.junit.jupiter.api.Test;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-public class UserMappingTest extends MappingTestBase {
+public class UserMappingIT {
 
     private static SessionFactory sessionFactory;
     private static Session session;
 
     @BeforeAll
     static void init() {
-        sessionFactory = HibernateUtil.buildSessionFactory();
+        sessionFactory = HibernateTestUtil.buildSessionFactory();
     }
 
     @BeforeEach
@@ -63,6 +63,37 @@ public class UserMappingTest extends MappingTestBase {
         assertThat(actualUser.getId()).isNotNull();
     }
 
+    @Test
+    void checkUserUpdate() {
+        var user = getUser("Ivan", "Ivanov", "ivan@gmail.com");
+        session.save(user);
+        session.clear();
+        user.setFirstName("Petr");
+        user.setLastName("Petrov");
+        session.update(user);
+        session.flush();
+        session.clear();
+
+        var actualUser = session.get(User.class, user.getId());
+
+        assertThat(actualUser.getFirstName()).isEqualTo("Petr");
+        assertThat(actualUser.getLastName()).isEqualTo("Petrov");
+    }
+
+    @Test
+    void checkUserDelete() {
+        var user = getUser("Ivan", "Ivanov", "ivan@gmail.com");
+        session.save(user);
+        session.clear();
+        session.delete(user);
+        session.flush();
+        session.clear();
+
+        var actualUser = session.get(User.class, user.getId());
+
+        assertThat(actualUser).isNull();
+
+    }
 
     private static User getUser(String firstname, String lastname, String email) {
         return User.builder()
