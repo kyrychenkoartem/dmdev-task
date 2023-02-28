@@ -2,7 +2,7 @@ package com.artem.mapping;
 
 import com.artem.model.entity.Account;
 import com.artem.model.entity.BankAccount;
-import com.artem.model.entity.TransactionEntity;
+import com.artem.model.entity.Transaction;
 import com.artem.model.entity.User;
 import com.artem.model.entity.UtilityAccount;
 import com.artem.model.entity.UtilityPayment;
@@ -180,8 +180,8 @@ public class UtilityPaymentMappingIT {
                 .build();
     }
 
-    private static TransactionEntity getTransaction(String transactionId, BankAccount bankAccount) {
-        return TransactionEntity.builder()
+    private static Transaction getTransaction(String transactionId, BankAccount bankAccount) {
+        return Transaction.builder()
                 .amount(BigDecimal.valueOf(50).setScale(2, RoundingMode.CEILING))
                 .transactionType(TransactionType.DEPOSIT)
                 .referenceNumber("123453")
@@ -197,7 +197,7 @@ public class UtilityPaymentMappingIT {
                 .build();
     }
 
-    private static UtilityPayment getUtilityPayment(String number, UtilityAccount utilityAccount, TransactionEntity transaction) {
+    private static UtilityPayment getUtilityPayment(String number, UtilityAccount utilityAccount, Transaction transaction) {
         return UtilityPayment.builder()
                 .amount(BigDecimal.valueOf(50).setScale(2, RoundingMode.CEILING))
                 .referenceNumber(number)

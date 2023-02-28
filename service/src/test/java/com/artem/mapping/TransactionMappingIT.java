@@ -2,7 +2,7 @@ package com.artem.mapping;
 
 import com.artem.model.entity.Account;
 import com.artem.model.entity.BankAccount;
-import com.artem.model.entity.TransactionEntity;
+import com.artem.model.entity.Transaction;
 import com.artem.model.entity.User;
 import com.artem.model.type.AccountStatus;
 import com.artem.model.type.AccountType;
@@ -63,7 +63,7 @@ public class TransactionMappingIT {
         session.save(account);
         session.clear();
 
-        var actualTransaction = session.get(TransactionEntity.class, expectedTransaction.getId());
+        var actualTransaction = session.get(Transaction.class, expectedTransaction.getId());
 
         assertThat(actualTransaction).isEqualTo(expectedTransaction);
     }
@@ -80,7 +80,7 @@ public class TransactionMappingIT {
         session.save(account);
         session.clear();
 
-        var actualTransaction = session.get(TransactionEntity.class, expectedTransaction.getId());
+        var actualTransaction = session.get(Transaction.class, expectedTransaction.getId());
 
         assertThat(actualTransaction.getId()).isNotNull();
     }
@@ -101,7 +101,7 @@ public class TransactionMappingIT {
         session.flush();
         session.clear();
 
-        var actualTransaction = session.get(TransactionEntity.class, expectedTransaction.getId());
+        var actualTransaction = session.get(Transaction.class, expectedTransaction.getId());
 
         assertThat(actualTransaction.getTransactionType()).isEqualTo(TransactionType.REFUND);
     }
@@ -121,7 +121,7 @@ public class TransactionMappingIT {
         session.flush();
         session.clear();
 
-        var actualTransaction = session.get(TransactionEntity.class, expectedTransaction.getId());
+        var actualTransaction = session.get(Transaction.class, expectedTransaction.getId());
 
         assertThat(actualTransaction).isNull();
     }
@@ -157,8 +157,8 @@ public class TransactionMappingIT {
                 .build();
     }
 
-    private static TransactionEntity getTransaction(String transactionId, BankAccount bankAccount) {
-        return TransactionEntity.builder()
+    private static Transaction getTransaction(String transactionId, BankAccount bankAccount) {
+        return Transaction.builder()
                 .amount(BigDecimal.valueOf(50).setScale(2, RoundingMode.CEILING))
                 .transactionType(TransactionType.DEPOSIT)
                 .referenceNumber("123453")

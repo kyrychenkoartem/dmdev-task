@@ -4,7 +4,7 @@ import com.artem.model.entity.Account;
 import com.artem.model.entity.BankAccount;
 import com.artem.model.entity.BankCard;
 import com.artem.model.entity.FundTransfer;
-import com.artem.model.entity.TransactionEntity;
+import com.artem.model.entity.Transaction;
 import com.artem.model.entity.User;
 import com.artem.model.entity.UtilityAccount;
 import com.artem.model.entity.UtilityPayment;
@@ -29,7 +29,7 @@ public class HibernateUtil {
         configuration.addAnnotatedClass(BankAccount.class);
         configuration.addAnnotatedClass(BankCard.class);
         configuration.addAnnotatedClass(FundTransfer.class);
-        configuration.addAnnotatedClass(TransactionEntity.class);
+        configuration.addAnnotatedClass(Transaction.class);
         configuration.addAnnotatedClass(UtilityAccount.class);
         configuration.addAnnotatedClass(UtilityPayment.class);
         configuration.setPhysicalNamingStrategy(new CamelCaseToUnderscoresNamingStrategy());

@@ -3,7 +3,7 @@ package com.artem.mapping;
 import com.artem.model.entity.Account;
 import com.artem.model.entity.BankAccount;
 import com.artem.model.entity.FundTransfer;
-import com.artem.model.entity.TransactionEntity;
+import com.artem.model.entity.Transaction;
 import com.artem.model.entity.User;
 import com.artem.model.type.AccountStatus;
 import com.artem.model.type.AccountType;
@@ -175,8 +175,8 @@ public class FundTransferMappingIT {
                 .build();
     }
 
-    private static TransactionEntity getTransaction(String transactionId, BankAccount bankAccount) {
-        return TransactionEntity.builder()
+    private static Transaction getTransaction(String transactionId, BankAccount bankAccount) {
+        return Transaction.builder()
                 .amount(BigDecimal.valueOf(50).setScale(2, RoundingMode.CEILING))
                 .transactionType(TransactionType.DEPOSIT)
                 .referenceNumber("123453")
@@ -185,7 +185,7 @@ public class FundTransferMappingIT {
                 .build();
     }
 
-    private static FundTransfer getFundTransfer(String fromAccount, String toAccount, TransactionEntity transaction) {
+    private static FundTransfer getFundTransfer(String fromAccount, String toAccount, Transaction transaction) {
         return FundTransfer.builder()
                 .fromAccount(fromAccount)
                 .toAccount(toAccount)

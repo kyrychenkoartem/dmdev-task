@@ -47,5 +47,5 @@ public class FundTransfer {
      **/
     @OneToOne(optional = false)
     @JoinColumn(name = "banking_transaction_id")
-    private TransactionEntity transaction;
+    private Transaction transaction;
 }

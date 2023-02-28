@@ -25,7 +25,7 @@ import lombok.ToString;
 @Builder
 @Entity
 @Table(name = "banking_transaction", schema = "public")
-public class TransactionEntity {
+public class Transaction {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

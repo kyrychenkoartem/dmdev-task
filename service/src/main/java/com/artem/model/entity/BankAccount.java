@@ -61,15 +61,15 @@ public class BankAccount {
     @EqualsAndHashCode.Exclude
     @ToString.Exclude
     @OneToMany(mappedBy = "bankAccount", cascade = CascadeType.ALL)
-    List<BankCard> bankCards = new ArrayList<>();
+    private List<BankCard> bankCards = new ArrayList<>();
 
     @Builder.Default
     @EqualsAndHashCode.Exclude
     @ToString.Exclude
     @OneToMany(mappedBy = "bankAccount", cascade = CascadeType.ALL)
-    List<TransactionEntity> transactions = new ArrayList<>();
+    private List<Transaction> transactions = new ArrayList<>();
 
-    public void addTransaction(TransactionEntity transaction) {
+    public void addTransaction(Transaction transaction) {
         transactions.add(transaction);
         transaction.setBankAccount(this);
     }

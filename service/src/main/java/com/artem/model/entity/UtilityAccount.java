@@ -39,7 +39,7 @@ public class UtilityAccount {
     @EqualsAndHashCode.Exclude
     @ToString.Exclude
     @OneToMany(mappedBy = "utilityAccount", cascade = CascadeType.ALL)
-    List<UtilityPayment> utilityPayments = new ArrayList<>();
+    private List<UtilityPayment> utilityPayments = new ArrayList<>();
 
     public void addUtilityPayment(UtilityPayment utilityPayment) {
         utilityPayments.add(utilityPayment);
