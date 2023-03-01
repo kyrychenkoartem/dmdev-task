@@ -9,6 +9,8 @@ import javax.persistence.Enumerated;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.OneToOne;
 import javax.persistence.Table;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -27,19 +29,23 @@ public class FundTransfer {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @Column(nullable = false)
     private String fromAccount;
 
+    @Column(nullable = false)
     private String toAccount;
 
+    @Column(nullable = false)
     private BigDecimal amount;
 
+    @Column(nullable = false)
     @Enumerated(EnumType.STRING)
     private TransactionStatus status;
 
     /**
      * Transaction associated with payment
      **/
-    //    OneToOne Transaction
-    @Column(name = "banking_transaction_id") // to delete
-    private Long transaction;
+    @OneToOne(optional = false)
+    @JoinColumn(name = "banking_transaction_id")
+    private Transaction transaction;
 }
