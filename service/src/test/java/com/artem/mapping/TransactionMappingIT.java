@@ -8,48 +8,16 @@ import com.artem.model.type.AccountStatus;
 import com.artem.model.type.AccountType;
 import com.artem.model.type.Role;
 import com.artem.model.type.TransactionType;
-import com.artem.util.HibernateTestUtil;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
-import org.hibernate.Session;
-import org.hibernate.SessionFactory;
-import org.junit.jupiter.api.AfterAll;
-import org.junit.jupiter.api.AfterEach;
-import org.junit.jupiter.api.BeforeAll;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-public class TransactionMappingIT {
-
-    private static SessionFactory sessionFactory;
-    private static Session session;
-
-    @BeforeAll
-    static void init() {
-        sessionFactory = HibernateTestUtil.buildSessionFactory();
-    }
-
-    @BeforeEach
-    void openSession() {
-        session = sessionFactory.openSession();
-        session.beginTransaction();
-    }
-
-    @AfterEach
-    void closeSession() {
-        session.getTransaction().rollback();
-        session.close();
-    }
-
-    @AfterAll
-    static void close() {
-        sessionFactory.close();
-    }
+public class TransactionMappingIT extends MappingBaseEntity {
 
     @Test
     void checkTransactionGet() {

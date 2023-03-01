@@ -2,44 +2,12 @@ package com.artem.mapping;
 
 import com.artem.model.entity.User;
 import com.artem.model.type.Role;
-import com.artem.util.HibernateTestUtil;
 import java.time.LocalDate;
-import org.hibernate.Session;
-import org.hibernate.SessionFactory;
-import org.junit.jupiter.api.AfterAll;
-import org.junit.jupiter.api.AfterEach;
-import org.junit.jupiter.api.BeforeAll;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-public class UserMappingIT {
-
-    private static SessionFactory sessionFactory;
-    private static Session session;
-
-    @BeforeAll
-    static void init() {
-        sessionFactory = HibernateTestUtil.buildSessionFactory();
-    }
-
-    @BeforeEach
-    void openSession() {
-        session = sessionFactory.openSession();
-        session.beginTransaction();
-    }
-
-    @AfterEach
-    void closeSession() {
-        session.getTransaction().rollback();
-        session.close();
-    }
-
-    @AfterAll
-    static void close() {
-        sessionFactory.close();
-    }
+public class UserMappingIT extends MappingBaseEntity {
 
     @Test
     void checkUserGet() {
