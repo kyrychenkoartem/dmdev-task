@@ -56,7 +56,7 @@ public class UtilityPayment {
     /**
      * Transaction id associated with payment
      **/
-    @OneToOne(optional = false)
+    @OneToOne(optional = false, fetch = FetchType.LAZY)
     @JoinColumn(name = "banking_transaction_id")
     private Transaction transaction;
 }

@@ -2,6 +2,7 @@ package com.artem.model.entity;
 
 import com.artem.model.type.TransactionType;
 import java.math.BigDecimal;
+import java.time.LocalDateTime;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
@@ -45,6 +46,9 @@ public class Transaction {
 
     @Column(nullable = false, unique = true)
     private String transactionId;
+
+    @Column(nullable = false)
+    private LocalDateTime time;
 
     /**
      * The bank account to/from which the transaction is made

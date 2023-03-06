@@ -10,6 +10,7 @@ import com.artem.model.type.AccountType;
 import com.artem.model.type.Role;
 import com.artem.model.type.TransactionStatus;
 import com.artem.model.type.TransactionType;
+import com.artem.util.DateTimeGenerator;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.time.LocalDate;
@@ -149,6 +150,7 @@ public class FundTransferMappingIT extends MappingBaseEntity {
                 .transactionType(TransactionType.DEPOSIT)
                 .referenceNumber("123453")
                 .transactionId(transactionId)
+                .time(DateTimeGenerator.getRandomDateTime())
                 .bankAccount(bankAccount)
                 .build();
     }
