@@ -109,8 +109,7 @@ public class TransactionDaoQuery {
                 .join(transaction.bankAccount, bankAccount)
                 .join(bankAccount.account, account)
                 .join(account.user, user)
-                .where(user.id.eq(userId))
-                .where(predicate)
+                .where(user.id.eq(userId).and(predicate))
                 .setHint(QueryHints.HINT_FETCHGRAPH, entityGraph)
                 .fetch();
     }

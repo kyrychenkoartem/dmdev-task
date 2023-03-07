@@ -10,6 +10,7 @@ import com.artem.model.entity.UtilityAccount_;
 import com.artem.util.EntityGraphUtil;
 import java.math.BigDecimal;
 import java.util.List;
+import javax.persistence.criteria.Predicate;
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
 import org.hibernate.Session;
@@ -21,15 +22,11 @@ import static com.artem.model.entity.Transaction_.bankAccount;
 import static com.artem.model.entity.UtilityAccount_.utilityPayments;
 import static com.artem.model.entity.UtilityPayment_.transaction;
 
-
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 public class TransactionDaoCriteria {
 
     private static final TransactionDaoCriteria INSTANCE = new TransactionDaoCriteria();
 
-    /**
-     * Return all transaction for each user
-     */
     public List<Transaction> getTransactionsByUser(Session session, Long userId) {
         var entityGraph = EntityGraphUtil.getTransactionGraphByUser(session);
         var cb = session.getCriteriaBuilder();
@@ -123,10 +120,14 @@ public class TransactionDaoCriteria {
         var accountJoin = bankAccountJoin.join(account);
         var userJoin = accountJoin.join(user);
 
+        var predicates = CriteriaPredicate.builder()
+                .add(cb.equal(transaction.get(Transaction_.referenceNumber), filter.getReferenceNumber()), filter.getReferenceNumber())
+                .add(cb.greaterThan(transaction.get(Transaction_.time), filter.getTime()), filter.getTime())
+                .add(cb.equal(userJoin.get(User_.ID), userId), userId)
+                .build();
+
         criteria.select(transaction)
-                .where(cb.equal(userJoin.get(User_.ID), userId),
-                        cb.equal(transaction.get(Transaction_.referenceNumber), filter.getReferenceNumber()),
-                        cb.greaterThan(transaction.get(Transaction_.time), filter.getTime()));
+                .where(predicates.toArray(Predicate[]::new));
 
         return session.createQuery(criteria).setHint(QueryHints.HINT_FETCHGRAPH, entityGraph).list();
     }

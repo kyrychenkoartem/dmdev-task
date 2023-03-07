@@ -18,12 +18,13 @@ public class TransactionDaoQueryTest extends DaoTestBase {
 
     private final TransactionDaoQuery transactionDaoQuery = TransactionDaoQuery.getInstance();
 
-
     @Test
     void checkGetTransactionByUser() {
         var transactions = transactionDaoQuery.getTransactionsByUser(session, 1L);
 
-        var userEmail = transactions.stream().map(it -> it.getBankAccount().getAccount().getUser().getEmail()).findFirst();
+        var userEmail = transactions.stream()
+                .map(it -> it.getBankAccount().getAccount().getUser().getEmail())
+                .findFirst();
 
         assertThat(transactions).hasSize(14);
         assertThat(userEmail.get()).isEqualTo("ivan@gmail.com");
@@ -33,7 +34,9 @@ public class TransactionDaoQueryTest extends DaoTestBase {
     void checkGetTransactionsByBankAccount() {
         var transactions = transactionDaoQuery.getTransactionsByBankAccount(session, 10L);
 
-        var bankAccountNumber = transactions.stream().map(it -> it.getBankAccount().getNumber()).findFirst();
+        var bankAccountNumber = transactions.stream()
+                .map(it -> it.getBankAccount().getNumber())
+                .findFirst();
 
         assertThat(transactions).hasSize(4);
         assertThat(bankAccountNumber.get()).isEqualTo("0123456789");
@@ -57,7 +60,9 @@ public class TransactionDaoQueryTest extends DaoTestBase {
     void checkGetLimitedTransactionsByBankAccountOrderedByTime() {
         var transactions = transactionDaoQuery.getLimitedTransactionsByBankAccountOrderedByTimeAsc(session, 3L, 10);
 
-        var times = transactions.stream().map(Transaction::getTime).toList();
+        var times = transactions.stream()
+                .map(Transaction::getTime)
+                .toList();
 
         assertThat(transactions).hasSize(3);
         assertThat(times.get(0)).isBefore(times.get(2));
@@ -67,7 +72,9 @@ public class TransactionDaoQueryTest extends DaoTestBase {
     void checkGetTransactionsByUserOrderedByTimeDesc() {
         var transactions = transactionDaoQuery.getTransactionsByUserOrderedByTimeDesc(session, 2L);
 
-        var times = transactions.stream().map(Transaction::getTime).toList();
+        var times = transactions.stream()
+                .map(Transaction::getTime)
+                .toList();
 
         assertThat(transactions).hasSize(9);
         assertThat(times.get(0)).isAfter(times.get(1));
@@ -78,16 +85,18 @@ public class TransactionDaoQueryTest extends DaoTestBase {
     void checkGetTransactionsByAccountByLastDateAndReferenceNumber() {
         var filter = TransactionFilter.builder()
                 .referenceNumber("1134567890")
-                .time(LocalDateTime.of(2000, 1, 1, 0, 0))
+                .time(LocalDateTime.of(1980, 1, 1, 0, 0))
                 .build();
         var transactions = transactionDaoQuery.getTransactionsByUserByLastDate(session, 4L, filter);
 
-        var referenceNumbers = transactions.stream().map(Transaction::getReferenceNumber).toList();
-        var times = transactions.stream().map(Transaction::getTime).toList();
+        var referenceNumbers = transactions.stream()
+                .map(Transaction::getReferenceNumber)
+                .toList();
+        var times = transactions.stream()
+                .map(Transaction::getTime)
+                .toList();
 
         assertTrue(referenceNumbers.stream().anyMatch(it -> it.equals("1134567890")));
-        if (!times.isEmpty()) {
-            assertTrue(times.stream().allMatch(it -> LocalDateTime.of(2000, 1, 1, 0, 0).isBefore(it)));
-        }
+        assertTrue(times.stream().allMatch(it -> LocalDateTime.of(1980, 1, 1, 0, 0).isBefore(it)));
     }
 }

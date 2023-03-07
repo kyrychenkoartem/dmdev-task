@@ -11,7 +11,6 @@ import org.junit.jupiter.api.BeforeEach;
 
 public abstract class DaoTestBase {
 
-
     private static SessionFactory sessionFactory;
     protected Session session;
 
