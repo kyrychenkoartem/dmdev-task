@@ -121,9 +121,9 @@ public class TransactionDaoCriteria {
         var userJoin = accountJoin.join(user);
 
         var predicates = CriteriaPredicate.builder()
-                .add(cb.equal(transaction.get(Transaction_.referenceNumber), filter.getReferenceNumber()), filter.getReferenceNumber())
-                .add(cb.greaterThan(transaction.get(Transaction_.time), filter.getTime()), filter.getTime())
-                .add(cb.equal(userJoin.get(User_.ID), userId), userId)
+                .add(filter.getReferenceNumber(), it -> cb.equal(transaction.get(Transaction_.referenceNumber), it))
+                .add(filter.getTime(), it -> cb.greaterThan(transaction.get(Transaction_.time), it))
+                .add(userId, it -> cb.equal(userJoin.get(User_.ID), it))
                 .build();
 
         criteria.select(transaction)

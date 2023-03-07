@@ -2,12 +2,11 @@ package com.artem.dao;
 
 import java.util.ArrayList;
 import java.util.List;
-import javax.persistence.criteria.CriteriaBuilder;
+import java.util.function.Function;
 import javax.persistence.criteria.Predicate;
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
 import org.apache.commons.lang3.ObjectUtils;
-import org.hibernate.SessionFactory;
 
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 public class CriteriaPredicate {
@@ -18,13 +17,9 @@ public class CriteriaPredicate {
         return new CriteriaPredicate();
     }
 
-    public static CriteriaBuilder builder(SessionFactory sessionFactory) {
-        return sessionFactory.getCriteriaBuilder();
-    }
-
-    public <T> CriteriaPredicate add(Predicate predicate, T object) {
+    public <T> CriteriaPredicate add(T object, Function<T, Predicate>  function) {
         if (ObjectUtils.isNotEmpty(object)) {
-            predicates.add(predicate);
+            predicates.add(function.apply(object));
         }
         return this;
     }

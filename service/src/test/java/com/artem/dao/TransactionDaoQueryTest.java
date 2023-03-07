@@ -3,12 +3,20 @@ package com.artem.dao;
 
 import com.artem.model.dto.TransactionFilter;
 import com.artem.model.entity.Transaction;
+import com.artem.util.ConstantUtil;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.time.LocalDateTime;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestInstance;
 
+import static com.artem.util.ConstantUtil.BANK_ACCOUNT_ID_FIFTEEN;
+import static com.artem.util.ConstantUtil.BANK_ACCOUNT_ID_TEN;
+import static com.artem.util.ConstantUtil.BANK_ACCOUNT_ID_THREE;
+import static com.artem.util.ConstantUtil.USER_ID_FOUR;
+import static com.artem.util.ConstantUtil.USER_ID_ONE;
+import static com.artem.util.ConstantUtil.USER_ID_TWO;
+import static com.artem.util.ConstantUtil.UTILITY_ACCOUNT_KOODO;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.junit.jupiter.api.TestInstance.Lifecycle.PER_CLASS;
@@ -20,7 +28,7 @@ public class TransactionDaoQueryTest extends DaoTestBase {
 
     @Test
     void checkGetTransactionByUser() {
-        var transactions = transactionDaoQuery.getTransactionsByUser(session, 1L);
+        var transactions = transactionDaoQuery.getTransactionsByUser(session, USER_ID_ONE);
 
         var userEmail = transactions.stream()
                 .map(it -> it.getBankAccount().getAccount().getUser().getEmail())
@@ -32,7 +40,7 @@ public class TransactionDaoQueryTest extends DaoTestBase {
 
     @Test
     void checkGetTransactionsByBankAccount() {
-        var transactions = transactionDaoQuery.getTransactionsByBankAccount(session, 10L);
+        var transactions = transactionDaoQuery.getTransactionsByBankAccount(session, BANK_ACCOUNT_ID_TEN);
 
         var bankAccountNumber = transactions.stream()
                 .map(it -> it.getBankAccount().getNumber())
@@ -44,21 +52,21 @@ public class TransactionDaoQueryTest extends DaoTestBase {
 
     @Test
     void checkGetTransactionByUtilityAccountName() {
-        var transactions = transactionDaoQuery.getTransactionByUtilityAccountName(session, "Koodo");
+        var transactions = transactionDaoQuery.getTransactionByUtilityAccountName(session, UTILITY_ACCOUNT_KOODO);
 
         assertThat(transactions).hasSize(4);
     }
 
     @Test
     void checkGetSumTransactionsPaymentByBankAccount() {
-        var sumTransactionsPayment = transactionDaoQuery.getSumTransactionsPaymentByBankAccount(session, 15L);
+        var sumTransactionsPayment = transactionDaoQuery.getSumTransactionsPaymentByBankAccount(session, BANK_ACCOUNT_ID_FIFTEEN);
 
         assertThat(sumTransactionsPayment).isEqualTo(BigDecimal.valueOf(150).setScale(2, RoundingMode.CEILING));
     }
 
     @Test
     void checkGetLimitedTransactionsByBankAccountOrderedByTime() {
-        var transactions = transactionDaoQuery.getLimitedTransactionsByBankAccountOrderedByTimeAsc(session, 3L, 10);
+        var transactions = transactionDaoQuery.getLimitedTransactionsByBankAccountOrderedByTimeAsc(session, BANK_ACCOUNT_ID_THREE, 10);
 
         var times = transactions.stream()
                 .map(Transaction::getTime)
@@ -70,7 +78,7 @@ public class TransactionDaoQueryTest extends DaoTestBase {
 
     @Test
     void checkGetTransactionsByUserOrderedByTimeDesc() {
-        var transactions = transactionDaoQuery.getTransactionsByUserOrderedByTimeDesc(session, 2L);
+        var transactions = transactionDaoQuery.getTransactionsByUserOrderedByTimeDesc(session, USER_ID_TWO);
 
         var times = transactions.stream()
                 .map(Transaction::getTime)
@@ -87,7 +95,7 @@ public class TransactionDaoQueryTest extends DaoTestBase {
                 .referenceNumber("1134567890")
                 .time(LocalDateTime.of(1980, 1, 1, 0, 0))
                 .build();
-        var transactions = transactionDaoQuery.getTransactionsByUserByLastDate(session, 4L, filter);
+        var transactions = transactionDaoQuery.getTransactionsByUserByLastDate(session, USER_ID_FOUR, filter);
 
         var referenceNumbers = transactions.stream()
                 .map(Transaction::getReferenceNumber)
