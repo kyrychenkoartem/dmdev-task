@@ -2,6 +2,7 @@ package com.artem.mapping;
 
 import com.artem.model.entity.User;
 import com.artem.model.type.Role;
+import com.artem.model.type.UserStatus;
 import java.time.LocalDate;
 import org.junit.jupiter.api.Test;
 
@@ -71,6 +72,7 @@ public class UserMappingIT extends MappingBaseEntity {
                 .password("123")
                 .birthDate(LocalDate.of(2000, 1, 1))
                 .role(Role.USER)
+                .status(UserStatus.ACTIVE)
                 .build();
     }
 }

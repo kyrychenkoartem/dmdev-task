@@ -4,6 +4,7 @@ import com.artem.model.entity.Account;
 import com.artem.model.entity.User;
 import com.artem.model.type.AccountStatus;
 import com.artem.model.type.Role;
+import com.artem.model.type.UserStatus;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
@@ -80,6 +81,7 @@ public class AccountMappingIT extends MappingBaseEntity {
                 .password("123")
                 .birthDate(LocalDate.of(2000, 1, 1))
                 .role(Role.USER)
+                .status(UserStatus.ACTIVE)
                 .build();
     }
 

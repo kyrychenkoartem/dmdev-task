@@ -1,6 +1,7 @@
 package com.artem.model.entity;
 
 import com.artem.model.type.Role;
+import com.artem.model.type.UserStatus;
 import java.time.LocalDate;
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -45,4 +46,8 @@ public class User {
     @Column(nullable = false)
     @Enumerated(EnumType.STRING)
     private Role role;
+
+    @Column(nullable = false)
+    @Enumerated(EnumType.STRING)
+    private UserStatus status;
 }

@@ -12,6 +12,7 @@ import com.artem.model.type.AccountType;
 import com.artem.model.type.Role;
 import com.artem.model.type.TransactionStatus;
 import com.artem.model.type.TransactionType;
+import com.artem.model.type.UserStatus;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.time.LocalDate;
@@ -271,6 +272,7 @@ public class TestDataImporter {
                 .password("123")
                 .birthDate(LocalDate.of(2000, 1, 1))
                 .role(Role.USER)
+                .status(UserStatus.ACTIVE)
                 .build();
     }
 
@@ -344,7 +346,7 @@ public class TestDataImporter {
                 .toAccount(toAccount)
                 .amount(BigDecimal.valueOf(50).setScale(2, RoundingMode.CEILING))
                 .status(TransactionStatus.SUCCESS)
-                .transaction(transaction)
+                .transaction(transaction.getTransactionId())
                 .build();
     }
 
@@ -361,7 +363,7 @@ public class TestDataImporter {
                 .referenceNumber(number)
                 .status(TransactionStatus.SUCCESS)
                 .utilityAccount(utilityAccount)
-                .transaction(transaction)
+                .transaction(transaction.getTransactionId())
                 .build();
     }
 

@@ -12,7 +12,6 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
-import javax.persistence.OneToOne;
 import javax.persistence.Table;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -56,7 +55,6 @@ public class UtilityPayment {
     /**
      * Transaction id associated with payment
      **/
-    @OneToOne(optional = false, fetch = FetchType.LAZY)
-    @JoinColumn(name = "banking_transaction_id")
-    private Transaction transaction;
+    @Column(name = "transaction_id", unique = true)
+    private String transaction;
 }
