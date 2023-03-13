@@ -1,8 +1,6 @@
 package com.artem.util;
 
-import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.time.Month;
 import java.time.temporal.ChronoUnit;
 import java.util.Random;
 import lombok.experimental.UtilityClass;

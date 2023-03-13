@@ -11,6 +11,7 @@ import com.artem.model.type.AccountType;
 import com.artem.model.type.Role;
 import com.artem.model.type.TransactionStatus;
 import com.artem.model.type.TransactionType;
+import com.artem.model.type.UserStatus;
 import com.artem.util.DateTimeGenerator;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
@@ -126,6 +127,7 @@ public class UtilityPaymentMappingIT extends MappingBaseEntity {
                 .password("123")
                 .birthDate(LocalDate.of(2000, 1, 1))
                 .role(Role.USER)
+                .status(UserStatus.ACTIVE)
                 .build();
     }
 
@@ -173,7 +175,7 @@ public class UtilityPaymentMappingIT extends MappingBaseEntity {
                 .referenceNumber(number)
                 .status(TransactionStatus.SUCCESS)
                 .utilityAccount(utilityAccount)
-                .transaction(transaction)
+                .transaction(transaction.getTransactionId())
                 .build();
     }
 }

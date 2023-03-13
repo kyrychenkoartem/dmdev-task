@@ -6,7 +6,8 @@ CREATE TABLE IF NOT EXISTS users
     email      VARCHAR(128) NOT NULL UNIQUE,
     password   VARCHAR(128) NOT NULL,
     birth_date DATE         NOT NULL,
-    role       VARCHAR(32)  NOT NULL
+    role       VARCHAR(32)  NOT NULL,
+    status     VARCHAR(32)  NOT NULL
 );
 CREATE TABLE IF NOT EXISTS account
 (
@@ -57,19 +58,19 @@ CREATE TABLE IF NOT EXISTS banking_transaction
 );
 CREATE TABLE IF NOT EXISTS utility_payment
 (
-    id                     BIGSERIAL PRIMARY KEY,
-    amount                 DECIMAL(19, 2) NOT NULL,
-    reference_number       VARCHAR(34)    NOT NULL,
-    status                 VARCHAR(64)    NOT NULL,
-    utility_account_id     BIGINT         NOT NULL REFERENCES utility_account (id),
-    banking_transaction_id BIGINT         NOT NULL UNIQUE REFERENCES banking_transaction (id) ON DELETE CASCADE
+    id                 BIGSERIAL PRIMARY KEY,
+    amount             DECIMAL(19, 2) NOT NULL,
+    reference_number   VARCHAR(34)    NOT NULL,
+    status             VARCHAR(64)    NOT NULL,
+    utility_account_id BIGINT         NOT NULL REFERENCES utility_account (id),
+    transaction_id     VARCHAR(64)    NOT NULL UNIQUE
 );
 CREATE TABLE IF NOT EXISTS fund_transfer
 (
-    id                     BIGSERIAL PRIMARY KEY,
-    from_account           VARCHAR(34)    NOT NULL,
-    to_account             VARCHAR(34)    NOT NULL,
-    amount                 DECIMAL(19, 2) NOT NULL,
-    status                 VARCHAR(64)    NOT NULL,
-    banking_transaction_id BIGINT         NOT NULL UNIQUE REFERENCES banking_transaction (id) ON DELETE CASCADE
+    id             BIGSERIAL PRIMARY KEY,
+    from_account   VARCHAR(34)    NOT NULL,
+    to_account     VARCHAR(34)    NOT NULL,
+    amount         DECIMAL(19, 2) NOT NULL,
+    status         VARCHAR(64)    NOT NULL,
+    transaction_id VARCHAR(64)    NOT NULL UNIQUE
 );

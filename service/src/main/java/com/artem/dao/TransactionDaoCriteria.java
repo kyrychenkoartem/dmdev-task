@@ -5,8 +5,6 @@ import com.artem.model.entity.BankAccount_;
 import com.artem.model.entity.Transaction;
 import com.artem.model.entity.Transaction_;
 import com.artem.model.entity.User_;
-import com.artem.model.entity.UtilityAccount;
-import com.artem.model.entity.UtilityAccount_;
 import com.artem.util.EntityGraphUtil;
 import java.math.BigDecimal;
 import java.util.List;
@@ -19,8 +17,6 @@ import org.hibernate.jpa.QueryHints;
 import static com.artem.model.entity.Account_.user;
 import static com.artem.model.entity.BankAccount_.account;
 import static com.artem.model.entity.Transaction_.bankAccount;
-import static com.artem.model.entity.UtilityAccount_.utilityPayments;
-import static com.artem.model.entity.UtilityPayment_.transaction;
 
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 public class TransactionDaoCriteria {
@@ -53,18 +49,6 @@ public class TransactionDaoCriteria {
                 .where(cb.equal(bankAccountJoin.get(BankAccount_.ID), bankAccountId));
 
         return session.createQuery(criteria).setHint(QueryHints.HINT_FETCHGRAPH, entityGraph).list();
-    }
-
-    public List<Transaction> getTransactionByUtilityAccountName(Session session, String utilityAccountName) {
-        var cb = session.getCriteriaBuilder();
-        var criteria = cb.createQuery(Transaction.class);
-        var utilityAccount = criteria.from(UtilityAccount.class);
-        var utilityPaymentJoin = utilityAccount.join(utilityPayments);
-        var transactionJoin = utilityPaymentJoin.join(transaction);
-
-        criteria.select(transactionJoin)
-                .where(cb.equal(utilityAccount.get(UtilityAccount_.providerName), utilityAccountName));
-        return session.createQuery(criteria).list();
     }
 
     public BigDecimal getSumTransactionsPaymentByBankAccount(Session session, Long bankAccountId) {

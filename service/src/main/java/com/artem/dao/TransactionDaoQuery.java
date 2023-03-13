@@ -53,10 +53,16 @@ public class TransactionDaoQuery {
     public List<Transaction> getTransactionByUtilityAccountName(Session session, String utilityAccountName) {
         return new JPAQuery<Transaction>(session)
                 .select(transaction)
-                .from(utilityAccount, utilityAccount)
-                .join(utilityAccount.utilityPayments, utilityPayment)
-                .join(utilityPayment.transaction, transaction)
-                .where(utilityAccount.providerName.eq(utilityAccountName))
+                .from(transaction)
+                .where(transaction.transactionId.in(
+                        new JPAQuery<String>(session)
+                                .select(utilityPayment.transaction)
+                                .from(utilityAccount)
+                                .where(utilityAccount.providerName.eq(utilityAccountName))
+                                .join(utilityAccount.utilityPayments, utilityPayment)
+                                .fetch()
+                ))
+                .groupBy()
                 .fetch();
     }
 

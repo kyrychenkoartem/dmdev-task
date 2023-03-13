@@ -3,14 +3,14 @@ package com.artem.util;
 import com.artem.model.entity.Account;
 import com.artem.model.entity.BankAccount;
 import com.artem.model.entity.Transaction;
+import javax.persistence.EntityGraph;
+import javax.persistence.EntityManager;
 import lombok.experimental.UtilityClass;
-import org.hibernate.Session;
-import org.hibernate.graph.RootGraph;
 
 @UtilityClass
 public class EntityGraphUtil {
 
-    public static RootGraph<Transaction> getTransactionGraphByUser(Session session) {
+    public static EntityGraph<Transaction> getTransactionGraphByUser(EntityManager session) {
         var entityGraph = session.createEntityGraph(Transaction.class);
         entityGraph.addAttributeNodes("bankAccount");
         var bankAccountSubGraph = entityGraph.addSubgraph("bankAccount", BankAccount.class);
@@ -20,7 +20,7 @@ public class EntityGraphUtil {
         return entityGraph;
     }
 
-    public static RootGraph<Transaction> getTransactionGraphByBankAccount(Session session) {
+    public static EntityGraph<Transaction> getTransactionGraphByBankAccount(EntityManager session) {
         var entityGraph = session.createEntityGraph(Transaction.class);
         entityGraph.addAttributeNodes("bankAccount");
         return entityGraph;

@@ -9,6 +9,7 @@ import com.artem.model.type.AccountType;
 import com.artem.model.type.BankType;
 import com.artem.model.type.CardType;
 import com.artem.model.type.Role;
+import com.artem.model.type.UserStatus;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.time.LocalDate;
@@ -108,6 +109,7 @@ public class BankCardMappingIT extends MappingBaseEntity {
                 .password("123")
                 .birthDate(LocalDate.of(2000, 1, 1))
                 .role(Role.USER)
+                .status(UserStatus.ACTIVE)
                 .build();
     }
 

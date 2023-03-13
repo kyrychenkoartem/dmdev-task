@@ -10,6 +10,7 @@ import com.artem.model.type.AccountType;
 import com.artem.model.type.Role;
 import com.artem.model.type.TransactionStatus;
 import com.artem.model.type.TransactionType;
+import com.artem.model.type.UserStatus;
 import com.artem.util.DateTimeGenerator;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
@@ -121,6 +122,7 @@ public class FundTransferMappingIT extends MappingBaseEntity {
                 .password("123")
                 .birthDate(LocalDate.of(2000, 1, 1))
                 .role(Role.USER)
+                .status(UserStatus.ACTIVE)
                 .build();
     }
 
@@ -161,7 +163,7 @@ public class FundTransferMappingIT extends MappingBaseEntity {
                 .toAccount(toAccount)
                 .amount(BigDecimal.valueOf(50).setScale(2, RoundingMode.CEILING))
                 .status(TransactionStatus.SUCCESS)
-                .transaction(transaction)
+                .transaction(transaction.getTransactionId())
                 .build();
     }
 }
