@@ -1,6 +1,5 @@
 package com.artem.model.dto;
 
-import com.artem.model.entity.BankAccount;
 import com.artem.model.type.TransactionType;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
@@ -12,5 +11,5 @@ public record TransactionCreateDto(BigDecimal amount,
                                    String referenceNumber,
                                    String transactionId,
                                    LocalDateTime time,
-                                   BankAccount bankAccount) {
+                                   Long bankAccountId) {
 }

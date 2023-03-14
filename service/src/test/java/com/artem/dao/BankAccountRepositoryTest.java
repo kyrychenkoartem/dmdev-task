@@ -3,34 +3,35 @@ package com.artem.dao;
 import com.artem.mapper.BankAccountMapper;
 import com.artem.model.dto.BankAccountCreateDto;
 import com.artem.model.dto.BankAccountUpdateDto;
-import com.artem.model.entity.Account;
 import com.artem.model.entity.BankAccount;
 import com.artem.model.type.AccountStatus;
 import com.artem.model.type.AccountType;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
-import java.util.Optional;
 import org.junit.jupiter.api.Test;
 
+import static com.artem.util.ConstantUtil.ACCOUNT_ID_ONE;
 import static com.artem.util.ConstantUtil.ALL_BANK_ACCOUNTS;
+import static com.artem.util.ConstantUtil.BANK_ACCOUNT_ID_ONE;
 import static org.assertj.core.api.Assertions.assertThat;
 
-public class BankAccountRepositoryTestIT extends RepositoryTestBase {
+public class BankAccountRepositoryTest extends RepositoryTestBase {
 
     private final BankAccountRepository bankAccountRepository = new BankAccountRepository(session);
     private final AccountRepository accountRepository = new AccountRepository(session);
-    private final BankAccountMapper accountMapper = new BankAccountMapper();
+    private final BankAccountMapper accountMapper = new BankAccountMapper(accountRepository);
 
     @Test
     void checkBankAccountSave() {
         BankAccount expectedBankAccount = saveBankAccount();
+        session.clear();
 
-        assertThat(expectedBankAccount.getId()).isNotNull();
+        assertThat(bankAccountRepository.findById(expectedBankAccount.getId()).get().getId()).isNotNull();
     }
 
     @Test
     void checkBankAccountDelete() {
-        var actualBankAccount = bankAccountRepository.findById(1L);
+        var actualBankAccount = bankAccountRepository.findById(BANK_ACCOUNT_ID_ONE);
 
         bankAccountRepository.delete(actualBankAccount.get());
 
@@ -39,18 +40,19 @@ public class BankAccountRepositoryTestIT extends RepositoryTestBase {
 
     @Test
     void checkBankAccountUpdate() {
-        var actualBankAccount = bankAccountRepository.findById(1L);
+        var maybeBankAccount = bankAccountRepository.findById(BANK_ACCOUNT_ID_ONE);
         var updateDto = getBankAccountUpdateDto();
-        var expectedBankAccount = accountMapper.mapFrom(actualBankAccount.get(), updateDto);
+        var expectedBankAccount = accountMapper.mapFrom(maybeBankAccount.get(), updateDto);
 
         bankAccountRepository.update(expectedBankAccount);
         session.clear();
+        var actualBankAccount = bankAccountRepository.findById(BANK_ACCOUNT_ID_ONE).get();
 
-        assertThat(bankAccountRepository.findById(1L).get().getType()).isEqualTo(AccountType.LOAN_ACCOUNT);
-        assertThat(bankAccountRepository.findById(1L).get().getStatus()).isEqualTo(AccountStatus.BLOCKED);
-        assertThat(bankAccountRepository.findById(1L).get().getAvailableBalance())
+        assertThat(actualBankAccount.getType()).isEqualTo(AccountType.LOAN_ACCOUNT);
+        assertThat(actualBankAccount.getStatus()).isEqualTo(AccountStatus.BLOCKED);
+        assertThat(actualBankAccount.getAvailableBalance())
                 .isEqualTo(BigDecimal.valueOf(500).setScale(2, RoundingMode.CEILING));
-        assertThat(bankAccountRepository.findById(1L).get().getActualBalance())
+        assertThat(actualBankAccount.getActualBalance())
                 .isEqualTo(BigDecimal.valueOf(600).setScale(2, RoundingMode.CEILING));
     }
 
@@ -80,9 +82,9 @@ public class BankAccountRepositoryTestIT extends RepositoryTestBase {
                 .build();
     }
 
-    private BankAccountCreateDto getBankAccountCreateDto(Optional<Account> account) {
+    private BankAccountCreateDto getBankAccountCreateDto() {
         return BankAccountCreateDto.builder()
-                .account(account.get())
+                .accountId(ACCOUNT_ID_ONE)
                 .number("234554356765646586")
                 .accountType(AccountType.SAVINGS_ACCOUNT)
                 .accountStatus(AccountStatus.ACTIVE)
@@ -92,8 +94,7 @@ public class BankAccountRepositoryTestIT extends RepositoryTestBase {
     }
 
     private BankAccount saveBankAccount() {
-        var account = accountRepository.findById(1L);
-        var accountCreateDto = getBankAccountCreateDto(account);
+        var accountCreateDto = getBankAccountCreateDto();
         var bankAccount = accountMapper.mapFrom(accountCreateDto);
         var expectedBankAccount = bankAccountRepository.save(bankAccount);
         return expectedBankAccount;

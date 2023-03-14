@@ -1,10 +1,15 @@
 package com.artem.mapper;
 
+import com.artem.dao.BankAccountRepository;
 import com.artem.model.dto.TransactionCreateDto;
 import com.artem.model.dto.TransactionUpdateDto;
 import com.artem.model.entity.Transaction;
+import lombok.RequiredArgsConstructor;
 
+@RequiredArgsConstructor
 public class TransactionMapper implements Mapper<TransactionCreateDto, Transaction> {
+
+    private final BankAccountRepository bankAccountRepository;
     @Override
     public Transaction mapFrom(TransactionCreateDto createDto) {
         return Transaction.builder()
@@ -13,7 +18,7 @@ public class TransactionMapper implements Mapper<TransactionCreateDto, Transacti
                 .referenceNumber(createDto.referenceNumber())
                 .transactionId(createDto.transactionId())
                 .time(createDto.time())
-                .bankAccount(createDto.bankAccount())
+                .bankAccount(bankAccountRepository.findById(createDto.bankAccountId()).get())
                 .build();
     }
 

@@ -10,17 +10,17 @@ import static com.artem.util.ConstantUtil.ALL_UTILITY_ACCOUNTS;
 import static com.artem.util.ConstantUtil.PROVIDER_NAME_EXPECTED;
 import static org.assertj.core.api.Assertions.assertThat;
 
-public class UtilityAccountRepositoryTestIT extends RepositoryTestBase {
+public class UtilityAccountRepositoryTest extends RepositoryTestBase {
 
     private final UtilityAccountRepository utilityAccountRepository = new UtilityAccountRepository(session);
     private final UtilityAccountMapper accountMapper = new UtilityAccountMapper();
 
-
     @Test
     void checkUtilityAccountSave() {
         UtilityAccount expectedUtilityAccount = saveUtilityAccount();
+        session.clear();
 
-        assertThat(expectedUtilityAccount.getId()).isNotNull();
+        assertThat(utilityAccountRepository.findById(expectedUtilityAccount.getId()).get().getId()).isNotNull();
     }
 
     @Test

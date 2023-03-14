@@ -11,26 +11,28 @@ import com.artem.model.type.Role;
 import java.time.LocalDate;
 import org.junit.jupiter.api.Test;
 
-import static com.artem.util.ConstantUtil.ALL_USERS;
+import static com.artem.util.ConstantUtil.ACCOUNT_ID_ONE;
+import static com.artem.util.ConstantUtil.ALL_ACCOUNTS;
 import static org.assertj.core.api.Assertions.assertThat;
 
-public class AccountRepositoryTestIT extends RepositoryTestBase {
+public class AccountRepositoryTest extends RepositoryTestBase {
 
     private final AccountRepository accountRepository = new AccountRepository(session);
     private final UserRepository userRepository = new UserRepository(session);
-    private final AccountMapper accountMapper = new AccountMapper();
+    private final AccountMapper accountMapper = new AccountMapper(userRepository);
     private final UserMapper userMapper = new UserMapper();
 
     @Test
     void checkAccountSave() {
         Account expectedAccount = saveAccount();
+        session.clear();
 
-        assertThat(expectedAccount.getId()).isNotNull();
+        assertThat(accountRepository.findById(expectedAccount.getId()).get().getId()).isNotNull();
     }
 
     @Test
     void checkAccountDelete() {
-        var actualAccount = accountRepository.findById(1L);
+        var actualAccount = accountRepository.findById(ACCOUNT_ID_ONE);
 
         accountRepository.delete(actualAccount.get());
 
@@ -39,17 +41,18 @@ public class AccountRepositoryTestIT extends RepositoryTestBase {
 
     @Test
     void checkAccountUpdate() {
-        var actualAccount = accountRepository.findById(1L);
+        var maybeAccount = accountRepository.findById(ACCOUNT_ID_ONE);
         var updateDto = AccountUpdateDto.builder()
                 .status(AccountStatus.BLOCKED)
                 .build();
-        var expectedAccount = accountMapper.mapFrom(actualAccount.get(), updateDto);
+        var expectedAccount = accountMapper.mapFrom(maybeAccount.get(), updateDto);
 
         accountRepository.update(expectedAccount);
         session.clear();
+        var actualAccount = accountRepository.findById(ACCOUNT_ID_ONE).get();
 
-        assertThat(accountRepository.findById(1L).get().getStatus()).isEqualTo(AccountStatus.BLOCKED);
-        assertThat(accountRepository.findById(1L).get().getUpdatedBy()).isEqualTo(expectedAccount.getUpdatedBy());
+        assertThat(actualAccount.getStatus()).isEqualTo(AccountStatus.BLOCKED);
+        assertThat(actualAccount.getUpdatedBy()).isEqualTo(expectedAccount.getUpdatedBy());
     }
 
     @Test
@@ -66,7 +69,7 @@ public class AccountRepositoryTestIT extends RepositoryTestBase {
     void checkFindAllAccounts() {
         var accountList = accountRepository.findAll();
 
-        assertThat(accountList.size()).isEqualTo(ALL_USERS);
+        assertThat(accountList.size()).isEqualTo(ALL_ACCOUNTS);
     }
 
     private UserCreateDto getAccountCreateDto() {
@@ -85,7 +88,7 @@ public class AccountRepositoryTestIT extends RepositoryTestBase {
         var user = userMapper.mapFrom(userCreateDto);
         var actualUser = userRepository.save(user);
         var accountCreateDto = AccountCreateDto.builder()
-                .user(actualUser)
+                .userId(actualUser.getId())
                 .build();
         var account = accountMapper.mapFrom(accountCreateDto);
         var expectedAccount = accountRepository.save(account);

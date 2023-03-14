@@ -1,19 +1,25 @@
 package com.artem.mapper;
 
+import com.artem.dao.AccountRepository;
 import com.artem.model.dto.BankAccountCreateDto;
 import com.artem.model.dto.BankAccountUpdateDto;
 import com.artem.model.entity.BankAccount;
+import lombok.RequiredArgsConstructor;
 import org.hibernate.Hibernate;
 
+@RequiredArgsConstructor
 public class BankAccountMapper implements Mapper<BankAccountCreateDto, BankAccount> {
+
+    private final AccountRepository accountRepository;
+
     @Override
     public BankAccount mapFrom(BankAccountCreateDto createDto) {
-        var account = createDto.account();
+        var account = accountRepository.findById(createDto.accountId()).get();
         var user = account.getUser();
         Hibernate.initialize(account);
         Hibernate.initialize(user);
         return BankAccount.builder()
-                .account(createDto.account())
+                .account(account)
                 .number(createDto.number())
                 .type(createDto.accountType())
                 .status(createDto.accountStatus())

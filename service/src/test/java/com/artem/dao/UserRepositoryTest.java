@@ -9,9 +9,11 @@ import java.time.LocalDate;
 import org.junit.jupiter.api.Test;
 
 import static com.artem.util.ConstantUtil.ALL_USERS;
+import static com.artem.util.ConstantUtil.USER_ID_ONE;
+import static com.artem.util.ConstantUtil.USER_ID_TWO;
 import static org.assertj.core.api.Assertions.assertThat;
 
-public class UserRepositoryTestIT extends RepositoryTestBase {
+public class UserRepositoryTest extends RepositoryTestBase {
 
     private final UserRepository userRepository = new UserRepository(session);
     private final UserMapper userMapper = new UserMapper();
@@ -22,33 +24,36 @@ public class UserRepositoryTestIT extends RepositoryTestBase {
         var expectedUser = userMapper.mapFrom(userCreateDto);
 
         var actualUser = userRepository.save(expectedUser);
+        session.clear();
 
-        assertThat(actualUser.getId()).isNotNull();
+        assertThat(userRepository.findById(actualUser.getId()).get().getId()).isNotNull();
     }
 
     @Test
     void checkUserDelete() {
-        var actualUser = userRepository.findById(2L);
+        var actualUser = userRepository.findById(USER_ID_TWO);
         actualUser.get().setStatus(UserStatus.DELETED);
 
         userRepository.delete(actualUser.get());
 
-        assertThat(userRepository.findById(2L).get().getStatus()).isEqualTo(UserStatus.DELETED);
+
+        assertThat(userRepository.findById(USER_ID_TWO).get().getStatus()).isEqualTo(UserStatus.DELETED);
     }
 
     @Test
     void checkUpdateUser() {
-        var actualUser = userRepository.findById(1L);
+        var maybeUser = userRepository.findById(USER_ID_ONE);
         var updateDto = getUserUpdateDto();
-        var expectedUser = userMapper.mapFrom(actualUser.get(), updateDto);
+        var expectedUser = userMapper.mapFrom(maybeUser.get(), updateDto);
 
         userRepository.update(expectedUser);
         session.clear();
+        var actualUser = userRepository.findById(maybeUser.get().getId()).get();
 
-        assertThat(userRepository.findById(actualUser.get().getId()).get().getFirstName()).isEqualTo("Test");
-        assertThat(userRepository.findById(actualUser.get().getId()).get().getLastName()).isEqualTo("Test");
-        assertThat(userRepository.findById(actualUser.get().getId()).get().getPassword()).isEqualTo("updatedPassword");
-        assertThat(userRepository.findById(actualUser.get().getId()).get().getRole()).isEqualTo(Role.ADMIN);
+        assertThat(actualUser.getFirstName()).isEqualTo("Test");
+        assertThat(actualUser.getLastName()).isEqualTo("Test");
+        assertThat(actualUser.getPassword()).isEqualTo("updatedPassword");
+        assertThat(actualUser.getRole()).isEqualTo(Role.ADMIN);
     }
 
     @Test

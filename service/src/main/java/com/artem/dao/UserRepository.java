@@ -11,5 +11,6 @@ public class UserRepository extends RepositoryBase<Long, User> {
     @Override
     public void delete(User entity) {
         getEntityManager().merge(entity);
+        getEntityManager().flush();
     }
 }

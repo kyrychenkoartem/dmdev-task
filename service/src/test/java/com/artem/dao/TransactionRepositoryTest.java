@@ -17,8 +17,15 @@ import org.junit.jupiter.api.Test;
 
 import static com.artem.util.ConstantUtil.ALL_TRANSACTIONS;
 import static com.artem.util.ConstantUtil.BANK_ACCOUNT_ID_FIFTEEN;
+import static com.artem.util.ConstantUtil.BANK_ACCOUNT_ID_ONE;
 import static com.artem.util.ConstantUtil.BANK_ACCOUNT_ID_TEN;
 import static com.artem.util.ConstantUtil.BANK_ACCOUNT_ID_THREE;
+import static com.artem.util.ConstantUtil.BANK_ACCOUNT_ID_TWO;
+import static com.artem.util.ConstantUtil.TRANSACTION_COUNT_FOURTEEN_EXPECTED;
+import static com.artem.util.ConstantUtil.TRANSACTION_COUNT_FOUR_EXPECTED;
+import static com.artem.util.ConstantUtil.TRANSACTION_COUNT_NINE_EXPECTED;
+import static com.artem.util.ConstantUtil.TRANSACTION_COUNT_THREE_EXPECTED;
+import static com.artem.util.ConstantUtil.TRANSACTION_ID_ONE;
 import static com.artem.util.ConstantUtil.USER_ID_FOUR;
 import static com.artem.util.ConstantUtil.USER_ID_ONE;
 import static com.artem.util.ConstantUtil.USER_ID_TWO;
@@ -26,22 +33,23 @@ import static com.artem.util.ConstantUtil.UTILITY_ACCOUNT_KOODO;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
-public class TransactionRepositoryTestIT extends RepositoryTestBase {
+public class TransactionRepositoryTest extends RepositoryTestBase {
 
     private final TransactionRepository transactionRepository = new TransactionRepository(session);
     private final BankAccountRepository bankAccountRepository = new BankAccountRepository(session);
-    private final TransactionMapper transactionMapper = new TransactionMapper();
+    private final TransactionMapper transactionMapper = new TransactionMapper(bankAccountRepository);
 
     @Test
     void checkAccountSave() {
         var expectedTransaction = saveTransaction();
+        session.clear();
 
-        assertThat(expectedTransaction.getId()).isNotNull();
+        assertThat(transactionRepository.findById(expectedTransaction.getId()).get().getId()).isNotNull();
     }
 
     @Test
     void checkAccountDelete() {
-        var actualTransaction = transactionRepository.findById(1L);
+        var actualTransaction = transactionRepository.findById(TRANSACTION_ID_ONE);
 
         transactionRepository.delete(actualTransaction.get());
 
@@ -50,17 +58,16 @@ public class TransactionRepositoryTestIT extends RepositoryTestBase {
 
     @Test
     void checkAccountUpdate() {
-        var actualTransaction = transactionRepository.findById(1L);
+        var maybeTransaction = transactionRepository.findById(TRANSACTION_ID_ONE);
         var updateDto = getTransactionUpdateDto();
-        var expectedTransaction = transactionMapper.mapFrom(actualTransaction.get(), updateDto);
+        var expectedTransaction = transactionMapper.mapFrom(maybeTransaction.get(), updateDto);
 
         transactionRepository.update(expectedTransaction);
         session.clear();
+        var actualTransaction = transactionRepository.findById(TRANSACTION_ID_ONE).get();
 
-        assertThat(transactionRepository.findById(1L).get().getAmount())
-                .isEqualTo(BigDecimal.valueOf(60).setScale(2, RoundingMode.CEILING));
-        assertThat(transactionRepository.findById(1L).get().getTransactionType())
-                .isEqualTo(TransactionType.REFUND);
+        assertThat(actualTransaction.getAmount()).isEqualTo(BigDecimal.valueOf(60).setScale(2, RoundingMode.CEILING));
+        assertThat(actualTransaction.getTransactionType()).isEqualTo(TransactionType.REFUND);
     }
 
     @Test
@@ -87,7 +94,7 @@ public class TransactionRepositoryTestIT extends RepositoryTestBase {
                 .map(it -> it.getBankAccount().getAccount().getUser().getEmail())
                 .findFirst();
 
-        assertThat(transactions).hasSize(14);
+        assertThat(transactions).hasSize(TRANSACTION_COUNT_FOURTEEN_EXPECTED);
         assertThat(userEmail.get()).isEqualTo("ivan@gmail.com");
     }
 
@@ -99,7 +106,7 @@ public class TransactionRepositoryTestIT extends RepositoryTestBase {
                 .map(it -> it.getBankAccount().getNumber())
                 .findFirst();
 
-        assertThat(transactions).hasSize(4);
+        assertThat(transactions).hasSize(TRANSACTION_COUNT_FOUR_EXPECTED);
         assertThat(bankAccountNumber.get()).isEqualTo("0123456789");
     }
 
@@ -107,7 +114,7 @@ public class TransactionRepositoryTestIT extends RepositoryTestBase {
     void checkGetTransactionByUtilityAccountName() {
         var transactions = transactionRepository.getTransactionByUtilityAccountName(UTILITY_ACCOUNT_KOODO);
 
-        assertThat(transactions).hasSize(4);
+        assertThat(transactions).hasSize(TRANSACTION_COUNT_FOUR_EXPECTED);
     }
 
     @Test
@@ -125,7 +132,7 @@ public class TransactionRepositoryTestIT extends RepositoryTestBase {
                 .map(Transaction::getTime)
                 .toList();
 
-        assertThat(transactions).hasSize(3);
+        assertThat(transactions).hasSize(TRANSACTION_COUNT_THREE_EXPECTED);
         assertThat(times.get(0)).isBefore(times.get(2));
     }
 
@@ -137,7 +144,7 @@ public class TransactionRepositoryTestIT extends RepositoryTestBase {
                 .map(Transaction::getTime)
                 .toList();
 
-        assertThat(transactions).hasSize(9);
+        assertThat(transactions).hasSize(TRANSACTION_COUNT_NINE_EXPECTED);
         assertThat(times.get(0)).isAfter(times.get(1));
         assertThat(times.get(7)).isAfter(times.get(8));
     }
@@ -165,21 +172,20 @@ public class TransactionRepositoryTestIT extends RepositoryTestBase {
         return UUID.randomUUID().toString();
     }
 
-    private TransactionCreateDto getTransactionCreateDto(Optional<BankAccount> bankAccount1, Optional<BankAccount> bankAccount2) {
+    private TransactionCreateDto getTransactionCreateDto(Optional<BankAccount> bankAccount2) {
         return TransactionCreateDto.builder()
                 .amount(BigDecimal.valueOf(50).setScale(2, RoundingMode.CEILING))
                 .type(TransactionType.DEPOSIT)
                 .referenceNumber(bankAccount2.get().getNumber())
                 .transactionId(getTransactionId())
                 .time(DateTimeGenerator.getRandomDateTime())
-                .bankAccount(bankAccount1.get())
+                .bankAccountId(BANK_ACCOUNT_ID_ONE)
                 .build();
     }
 
     private Transaction saveTransaction() {
-        var bankAccount1 = bankAccountRepository.findById(1L);
-        var bankAccount2 = bankAccountRepository.findById(2L);
-        var transactionCreateDto = getTransactionCreateDto(bankAccount1, bankAccount2);
+        var bankAccount2 = bankAccountRepository.findById(BANK_ACCOUNT_ID_TWO);
+        var transactionCreateDto = getTransactionCreateDto(bankAccount2);
         var transaction = transactionMapper.mapFrom(transactionCreateDto);
         return transactionRepository.save(transaction);
     }

@@ -3,33 +3,33 @@ package com.artem.dao;
 import com.artem.mapper.BankCardMapper;
 import com.artem.model.dto.BankCardCreateDto;
 import com.artem.model.dto.BankCardUpdateDto;
-import com.artem.model.entity.BankAccount;
 import com.artem.model.entity.BankCard;
-import com.artem.model.entity.User;
 import com.artem.model.type.BankType;
 import com.artem.model.type.CardType;
 
-import java.util.Optional;
 import org.junit.jupiter.api.Test;
 
 import static com.artem.util.ConstantUtil.ALL_BANK_CARDS;
+import static com.artem.util.ConstantUtil.BANK_ACCOUNT_ID_THREE;
+import static com.artem.util.ConstantUtil.BANK_ACCOUNT_ID_TWO;
 import static com.artem.util.ConstantUtil.EXPIRY_DATE_EXPECTED;
+import static com.artem.util.ConstantUtil.USER_ID_ONE;
 import static org.assertj.core.api.Assertions.assertThat;
 
 
-public class BankCardRepositoryTestIT extends RepositoryTestBase {
+public class BankCardRepositoryTest extends RepositoryTestBase {
 
     private final BankCardRepository cardRepository = new BankCardRepository(session);
     private final UserRepository userRepository = new UserRepository(session);
     private final BankAccountRepository bankAccountRepository = new BankAccountRepository(session);
-    private final BankCardMapper cardMapper = new BankCardMapper();
-
+    private final BankCardMapper cardMapper = new BankCardMapper(bankAccountRepository, userRepository);
 
     @Test
     void checkSaveBankCard() {
         BankCard expectedBankCard = saveBankCard();
+        session.clear();
 
-        assertThat(expectedBankCard.getId()).isNotNull();
+        assertThat(bankAccountRepository.findById(expectedBankCard.getId()).get().getId()).isNotNull();
     }
 
     @Test
@@ -45,17 +45,16 @@ public class BankCardRepositoryTestIT extends RepositoryTestBase {
     @Test
     void checkUpdateBankCard() {
         BankCard expectedBankCard = saveBankCard();
-        var actualBankCard = cardRepository.findById(expectedBankCard.getId());
+        var maybeBankCard = cardRepository.findById(expectedBankCard.getId());
         var cardUpdateDto = getBankCardUpdateDto();
-        var bankCardToUpdate = cardMapper.mapFrom(actualBankCard.get(), cardUpdateDto);
+        var bankCardToUpdate = cardMapper.mapFrom(maybeBankCard.get(), cardUpdateDto);
 
         cardRepository.update(bankCardToUpdate);
         session.clear();
+        var actualBankCard = cardRepository.findById(bankCardToUpdate.getId()).get();
 
-        assertThat(cardRepository.findById(bankCardToUpdate.getId()).get().getBankAccount())
-                .isEqualTo(bankAccountRepository.findById(2L).get());
-        assertThat(cardRepository.findById(bankCardToUpdate.getId()).get().getExpiryDate())
-                .isEqualTo(EXPIRY_DATE_EXPECTED);
+        assertThat(actualBankCard.getBankAccount()).isEqualTo(bankAccountRepository.findById(BANK_ACCOUNT_ID_TWO).get());
+        assertThat(actualBankCard.getExpiryDate()).isEqualTo(EXPIRY_DATE_EXPECTED);
     }
 
     @Test
@@ -69,7 +68,7 @@ public class BankCardRepositoryTestIT extends RepositoryTestBase {
 
     @Test
     void checkFindAllBankCards() {
-        var expectedBankCard = saveBankCard();
+        saveBankCard();
 
         var bankCardList = cardRepository.findAll();
 
@@ -77,10 +76,10 @@ public class BankCardRepositoryTestIT extends RepositoryTestBase {
     }
 
 
-    private BankCardCreateDto getBankCardCreateDto(Optional<User> user, Optional<BankAccount> bankAccount) {
+    private BankCardCreateDto getBankCardCreateDto() {
         return BankCardCreateDto.builder()
-                .user(user.get())
-                .bankAccount(bankAccount.get())
+                .userId(USER_ID_ONE)
+                .bankAccountId(BANK_ACCOUNT_ID_THREE)
                 .cardNumber("4567906543456789")
                 .expiryDate("12/28")
                 .bank(BankType.CIBC)
@@ -91,15 +90,13 @@ public class BankCardRepositoryTestIT extends RepositoryTestBase {
 
     private BankCardUpdateDto getBankCardUpdateDto() {
         return BankCardUpdateDto.builder()
-                .bankAccount(bankAccountRepository.findById(2L).get())
+                .bankAccount(bankAccountRepository.findById(BANK_ACCOUNT_ID_TWO).get())
                 .expiryDate("11/30")
                 .build();
     }
 
     private BankCard saveBankCard() {
-        var user = userRepository.findById(1L);
-        var bankAccount = bankAccountRepository.findById(1L);
-        var bankCardCreateDto = getBankCardCreateDto(user, bankAccount);
+        var bankCardCreateDto = getBankCardCreateDto();
         var bankCard = cardMapper.mapFrom(bankCardCreateDto);
         var expectedBankCard = cardRepository.save(bankCard);
         return expectedBankCard;
