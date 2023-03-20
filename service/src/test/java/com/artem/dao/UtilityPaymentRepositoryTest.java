@@ -24,12 +24,11 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 public class UtilityPaymentRepositoryTest extends RepositoryTestBase {
 
-    private final TransactionRepository transactionRepository = new TransactionRepository(session);
-    private final UtilityPaymentRepository utilityPaymentRepository = new UtilityPaymentRepository(session);
-    private final BankAccountRepository bankAccountRepository = new BankAccountRepository(session);
-    private final UtilityAccountRepository utilityAccountRepository = new UtilityAccountRepository(session);
-    private final UtilityPaymentMapper utilityPaymentMapper = new UtilityPaymentMapper(utilityAccountRepository);
-    private final TransactionMapper transactionMapper = new TransactionMapper(bankAccountRepository);
+    private final TransactionRepository transactionRepository = context.getBean(TransactionRepository.class);
+    private final UtilityPaymentRepository utilityPaymentRepository = context.getBean(UtilityPaymentRepository.class);
+    private final UtilityAccountRepository utilityAccountRepository = context.getBean(UtilityAccountRepository.class);
+    private final UtilityPaymentMapper utilityPaymentMapper = context.getBean(UtilityPaymentMapper.class);
+    private final TransactionMapper transactionMapper = context.getBean(TransactionMapper.class);
 
     @Test
     void checkAccountSave() {

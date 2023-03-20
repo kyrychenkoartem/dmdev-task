@@ -15,8 +15,8 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 public class UserRepositoryTest extends RepositoryTestBase {
 
-    private final UserRepository userRepository = new UserRepository(session);
-    private final UserMapper userMapper = new UserMapper();
+    private final UserRepository userRepository = context.getBean(UserRepository.class);
+    private final UserMapper userMapper = context.getBean(UserMapper.class);
 
     @Test
     void checkSaveUser() {

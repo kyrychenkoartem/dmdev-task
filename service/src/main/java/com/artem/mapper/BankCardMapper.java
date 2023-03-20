@@ -6,7 +6,9 @@ import com.artem.model.dto.BankCardCreateDto;
 import com.artem.model.dto.BankCardUpdateDto;
 import com.artem.model.entity.BankCard;
 import lombok.RequiredArgsConstructor;
+import org.springframework.stereotype.Component;
 
+@Component
 @RequiredArgsConstructor
 public class BankCardMapper implements Mapper<BankCardCreateDto, BankCard> {
 

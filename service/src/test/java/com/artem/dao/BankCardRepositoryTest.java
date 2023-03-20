@@ -19,10 +19,10 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 public class BankCardRepositoryTest extends RepositoryTestBase {
 
-    private final BankCardRepository cardRepository = new BankCardRepository(session);
-    private final UserRepository userRepository = new UserRepository(session);
-    private final BankAccountRepository bankAccountRepository = new BankAccountRepository(session);
-    private final BankCardMapper cardMapper = new BankCardMapper(bankAccountRepository, userRepository);
+    private final BankCardRepository cardRepository = context.getBean(BankCardRepository.class);
+    private final UserRepository userRepository = context.getBean(UserRepository.class);
+    private final BankAccountRepository bankAccountRepository = context.getBean(BankAccountRepository.class);
+    private final BankCardMapper cardMapper = context.getBean(BankCardMapper.class);
 
     @Test
     void checkSaveBankCard() {

@@ -8,6 +8,7 @@ import java.math.BigDecimal;
 import java.util.List;
 import javax.persistence.EntityManager;
 import org.hibernate.jpa.QueryHints;
+import org.springframework.stereotype.Repository;
 
 import static com.artem.model.entity.QAccount.account;
 import static com.artem.model.entity.QBankAccount.bankAccount;
@@ -16,6 +17,7 @@ import static com.artem.model.entity.QUser.user;
 import static com.artem.model.entity.QUtilityAccount.utilityAccount;
 import static com.artem.model.entity.QUtilityPayment.utilityPayment;
 
+@Repository
 public class TransactionRepository extends RepositoryBase<Long, Transaction> {
 
     public TransactionRepository(EntityManager entityManager) {

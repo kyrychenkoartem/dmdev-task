@@ -10,6 +10,7 @@ import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
 import org.hibernate.Session;
 import org.hibernate.jpa.QueryHints;
+import org.springframework.stereotype.Repository;
 
 import static com.artem.model.entity.QAccount.account;
 import static com.artem.model.entity.QBankAccount.bankAccount;
@@ -18,6 +19,7 @@ import static com.artem.model.entity.QUser.user;
 import static com.artem.model.entity.QUtilityAccount.utilityAccount;
 import static com.artem.model.entity.QUtilityPayment.utilityPayment;
 
+@Repository
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 public class TransactionDaoQuery {
 

@@ -24,11 +24,11 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 public class FundTransferRepositoryTest extends RepositoryTestBase {
 
-    private final FundTransferRepository fundTransferRepository = new FundTransferRepository(session);
-    private final TransactionRepository transactionRepository = new TransactionRepository(session);
-    private final BankAccountRepository bankAccountRepository = new BankAccountRepository(session);
-    private final FundTransferMapper fundTransferMapper = new FundTransferMapper();
-    private final TransactionMapper transactionMapper = new TransactionMapper(bankAccountRepository);
+    private final FundTransferRepository fundTransferRepository = context.getBean(FundTransferRepository.class);
+    private final TransactionRepository transactionRepository = context.getBean(TransactionRepository.class);
+    private final BankAccountRepository bankAccountRepository = context.getBean(BankAccountRepository.class);
+    private final FundTransferMapper fundTransferMapper = context.getBean(FundTransferMapper.class);
+    private final TransactionMapper transactionMapper = context.getBean(TransactionMapper.class);
 
     @Test
     void checkAccountSave() {

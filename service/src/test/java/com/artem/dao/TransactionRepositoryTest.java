@@ -35,9 +35,9 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 
 public class TransactionRepositoryTest extends RepositoryTestBase {
 
-    private final TransactionRepository transactionRepository = new TransactionRepository(session);
-    private final BankAccountRepository bankAccountRepository = new BankAccountRepository(session);
-    private final TransactionMapper transactionMapper = new TransactionMapper(bankAccountRepository);
+    private final TransactionRepository transactionRepository = context.getBean(TransactionRepository.class);
+    private final BankAccountRepository bankAccountRepository = context.getBean(BankAccountRepository.class);
+    private final TransactionMapper transactionMapper = context.getBean(TransactionMapper.class);
 
     @Test
     void checkAccountSave() {

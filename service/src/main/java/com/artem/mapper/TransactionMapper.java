@@ -5,7 +5,9 @@ import com.artem.model.dto.TransactionCreateDto;
 import com.artem.model.dto.TransactionUpdateDto;
 import com.artem.model.entity.Transaction;
 import lombok.RequiredArgsConstructor;
+import org.springframework.stereotype.Component;
 
+@Component
 @RequiredArgsConstructor
 public class TransactionMapper implements Mapper<TransactionCreateDto, Transaction> {
 

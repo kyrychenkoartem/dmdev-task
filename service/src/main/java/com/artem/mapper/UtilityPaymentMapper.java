@@ -5,7 +5,9 @@ import com.artem.model.dto.UtilityPaymentCreateDto;
 import com.artem.model.dto.UtilityPaymentUpdateDto;
 import com.artem.model.entity.UtilityPayment;
 import lombok.RequiredArgsConstructor;
+import org.springframework.stereotype.Component;
 
+@Component
 @RequiredArgsConstructor
 public class UtilityPaymentMapper implements Mapper<UtilityPaymentCreateDto, UtilityPayment> {
 

@@ -5,7 +5,9 @@ import com.artem.model.dto.UserReadDto;
 import com.artem.model.dto.UserUpdateDto;
 import com.artem.model.entity.User;
 import com.artem.model.type.UserStatus;
+import org.springframework.stereotype.Component;
 
+@Component
 public class UserMapper implements Mapper<UserCreateDto, User> {
     @Override
     public User mapFrom(UserCreateDto createDto) {

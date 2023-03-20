@@ -17,9 +17,9 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 public class BankAccountRepositoryTest extends RepositoryTestBase {
 
-    private final BankAccountRepository bankAccountRepository = new BankAccountRepository(session);
-    private final AccountRepository accountRepository = new AccountRepository(session);
-    private final BankAccountMapper accountMapper = new BankAccountMapper(accountRepository);
+    private final BankAccountRepository bankAccountRepository = context.getBean(BankAccountRepository.class);
+    private final AccountRepository accountRepository = context.getBean(AccountRepository.class);
+    private final BankAccountMapper accountMapper = context.getBean(BankAccountMapper.class);
 
     @Test
     void checkBankAccountSave() {

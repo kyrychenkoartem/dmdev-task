@@ -3,7 +3,9 @@ package com.artem.mapper;
 import com.artem.model.dto.FundTransferCreateDto;
 import com.artem.model.dto.FundTransferUpdateDto;
 import com.artem.model.entity.FundTransfer;
+import org.springframework.stereotype.Component;
 
+@Component
 public class FundTransferMapper implements Mapper<FundTransferCreateDto, FundTransfer> {
     @Override
     public FundTransfer mapFrom(FundTransferCreateDto createDto) {

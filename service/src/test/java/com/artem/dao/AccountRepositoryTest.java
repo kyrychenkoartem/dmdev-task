@@ -17,10 +17,10 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 public class AccountRepositoryTest extends RepositoryTestBase {
 
-    private final AccountRepository accountRepository = new AccountRepository(session);
-    private final UserRepository userRepository = new UserRepository(session);
-    private final AccountMapper accountMapper = new AccountMapper(userRepository);
-    private final UserMapper userMapper = new UserMapper();
+    private final AccountRepository accountRepository = context.getBean(AccountRepository.class);
+    private final UserRepository userRepository = context.getBean(UserRepository.class);
+    private final AccountMapper accountMapper = context.getBean(AccountMapper.class);
+    private final UserMapper userMapper = context.getBean(UserMapper.class);
 
     @Test
     void checkAccountSave() {

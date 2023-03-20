@@ -7,7 +7,6 @@ import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.time.LocalDateTime;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.TestInstance;
 
 import static com.artem.util.ConstantUtil.BANK_ACCOUNT_ID_FIFTEEN;
 import static com.artem.util.ConstantUtil.BANK_ACCOUNT_ID_TEN;
@@ -18,12 +17,10 @@ import static com.artem.util.ConstantUtil.USER_ID_TWO;
 import static com.artem.util.ConstantUtil.UTILITY_ACCOUNT_KOODO;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertTrue;
-import static org.junit.jupiter.api.TestInstance.Lifecycle.PER_CLASS;
 
-@TestInstance(PER_CLASS)
 public class TransactionRepositoryQueryTest extends RepositoryTestBase {
 
-    private final TransactionDaoQuery transactionDaoQuery = TransactionDaoQuery.getInstance();
+    private final TransactionDaoQuery transactionDaoQuery = context.getBean(TransactionDaoQuery.class);
 
     @Test
     void checkGetTransactionByUser() {

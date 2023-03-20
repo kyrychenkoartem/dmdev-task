@@ -13,11 +13,13 @@ import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
 import org.hibernate.Session;
 import org.hibernate.jpa.QueryHints;
+import org.springframework.stereotype.Repository;
 
 import static com.artem.model.entity.Account_.user;
 import static com.artem.model.entity.BankAccount_.account;
 import static com.artem.model.entity.Transaction_.bankAccount;
 
+@Repository
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 public class TransactionDaoCriteria {
 

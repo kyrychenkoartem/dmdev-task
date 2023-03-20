@@ -8,7 +8,9 @@ import com.artem.model.type.AccountStatus;
 import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
 import lombok.RequiredArgsConstructor;
+import org.springframework.stereotype.Component;
 
+@Component
 @RequiredArgsConstructor
 public class AccountMapper implements Mapper<AccountCreateDto, Account> {
 

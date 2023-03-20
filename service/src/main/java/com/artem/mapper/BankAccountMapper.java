@@ -6,7 +6,9 @@ import com.artem.model.dto.BankAccountUpdateDto;
 import com.artem.model.entity.BankAccount;
 import lombok.RequiredArgsConstructor;
 import org.hibernate.Hibernate;
+import org.springframework.stereotype.Component;
 
+@Component
 @RequiredArgsConstructor
 public class BankAccountMapper implements Mapper<BankAccountCreateDto, BankAccount> {
 
