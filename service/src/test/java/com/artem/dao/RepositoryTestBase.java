@@ -1,6 +1,6 @@
 package com.artem.dao;
 
-import com.artem.config.ApplicationConfiguration;
+import com.artem.config.TestApplicationConfiguration;
 import com.artem.util.TestDataImporter;
 import javax.annotation.PreDestroy;
 import javax.persistence.EntityManager;
@@ -18,8 +18,8 @@ public abstract class RepositoryTestBase {
 
     @BeforeAll
     static void init() {
-        context = new AnnotationConfigApplicationContext(ApplicationConfiguration.class);
-        sessionFactory = context.getBean("buildSessionFactory", SessionFactory.class);
+        context = new AnnotationConfigApplicationContext(TestApplicationConfiguration.class);
+        sessionFactory = context.getBean("sessionFactory", SessionFactory.class);
         TestDataImporter.importData(sessionFactory);
         session = context.getBean("entityManager", EntityManager.class);
     }

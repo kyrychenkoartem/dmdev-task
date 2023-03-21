@@ -19,7 +19,7 @@ public abstract class MappingBaseEntity {
     @BeforeAll
     static void init() {
         context = new AnnotationConfigApplicationContext(ApplicationConfiguration.class);
-        sessionFactory = context.getBean("buildSessionFactory", SessionFactory.class);
+        sessionFactory = context.getBean("sessionFactory", SessionFactory.class);
     }
 
     @BeforeEach
