@@ -1,1 +1,1 @@
-![.png](db_image.png)
+![.png](db_schema.png)
