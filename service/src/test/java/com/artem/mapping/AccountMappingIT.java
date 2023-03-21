@@ -12,7 +12,7 @@ import org.junit.jupiter.api.Test;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-public class AccountMappingIT extends MappingBaseEntity {
+class AccountMappingIT extends MappingBaseEntity {
 
     @Test
     void checkAccountGet() {

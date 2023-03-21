@@ -19,7 +19,7 @@ import org.junit.jupiter.api.Test;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-public class TransactionMappingIT extends MappingBaseEntity {
+class TransactionMappingIT extends MappingBaseEntity {
 
     @Test
     void checkTransactionGet() {

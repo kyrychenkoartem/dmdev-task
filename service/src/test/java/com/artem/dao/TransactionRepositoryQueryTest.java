@@ -18,7 +18,7 @@ import static com.artem.util.ConstantUtil.UTILITY_ACCOUNT_KOODO;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
-public class TransactionRepositoryQueryTest extends RepositoryTestBase {
+class TransactionRepositoryQueryTest extends RepositoryTestBase {
 
     private final TransactionDaoQuery transactionDaoQuery = context.getBean(TransactionDaoQuery.class);
 

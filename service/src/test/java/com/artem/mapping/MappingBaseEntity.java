@@ -2,9 +2,9 @@ package com.artem.mapping;
 
 import com.artem.config.ApplicationConfiguration;
 
+import javax.annotation.PreDestroy;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
-import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
@@ -16,16 +16,15 @@ public abstract class MappingBaseEntity {
     protected Session session;
     protected static AnnotationConfigApplicationContext context;
 
-
     @BeforeAll
     static void init() {
         context = new AnnotationConfigApplicationContext(ApplicationConfiguration.class);
-        sessionFactory = (SessionFactory) context.getBean("buildSessionFactory");
+        sessionFactory = context.getBean("buildSessionFactory", SessionFactory.class);
     }
 
     @BeforeEach
     void openSession() {
-        session = (Session) context.getBean("entityManager");
+        session = context.getBean("entityManager", Session.class);
         session.beginTransaction();
     }
 
@@ -34,9 +33,9 @@ public abstract class MappingBaseEntity {
         session.getTransaction().rollback();
     }
 
-    @AfterAll
-    static void close() {
-        sessionFactory.close();
+    @PreDestroy
+    void closeContext() {
         context.close();
+        sessionFactory.close();
     }
 }

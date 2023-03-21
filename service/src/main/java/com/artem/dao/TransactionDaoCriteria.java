@@ -8,10 +8,10 @@ import com.artem.model.entity.User_;
 import com.artem.util.EntityGraphUtil;
 import java.math.BigDecimal;
 import java.util.List;
+import javax.persistence.EntityManager;
 import javax.persistence.criteria.Predicate;
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
-import org.hibernate.Session;
 import org.hibernate.jpa.QueryHints;
 import org.springframework.stereotype.Repository;
 
@@ -25,7 +25,7 @@ public class TransactionDaoCriteria {
 
     private static final TransactionDaoCriteria INSTANCE = new TransactionDaoCriteria();
 
-    public List<Transaction> getTransactionsByUser(Session session, Long userId) {
+    public List<Transaction> getTransactionsByUser(EntityManager session, Long userId) {
         var entityGraph = EntityGraphUtil.getTransactionGraphByUser(session);
         var cb = session.getCriteriaBuilder();
         var criteria = cb.createQuery(Transaction.class);
@@ -37,10 +37,10 @@ public class TransactionDaoCriteria {
         criteria.select(transaction)
                 .where(cb.equal(userJoin.get(User_.ID), userId));
 
-        return session.createQuery(criteria).setHint(QueryHints.HINT_FETCHGRAPH, entityGraph).list();
+        return session.createQuery(criteria).setHint(QueryHints.HINT_FETCHGRAPH, entityGraph).getResultList();
     }
 
-    public List<Transaction> getTransactionsByBankAccount(Session session, Long bankAccountId) {
+    public List<Transaction> getTransactionsByBankAccount(EntityManager session, Long bankAccountId) {
         var entityGraph = EntityGraphUtil.getTransactionGraphByBankAccount(session);
         var cb = session.getCriteriaBuilder();
         var criteria = cb.createQuery(Transaction.class);
@@ -50,10 +50,10 @@ public class TransactionDaoCriteria {
         criteria.select(transaction)
                 .where(cb.equal(bankAccountJoin.get(BankAccount_.ID), bankAccountId));
 
-        return session.createQuery(criteria).setHint(QueryHints.HINT_FETCHGRAPH, entityGraph).list();
+        return session.createQuery(criteria).setHint(QueryHints.HINT_FETCHGRAPH, entityGraph).getResultList();
     }
 
-    public BigDecimal getSumTransactionsPaymentByBankAccount(Session session, Long bankAccountId) {
+    public BigDecimal getSumTransactionsPaymentByBankAccount(EntityManager session, Long bankAccountId) {
         var cb = session.getCriteriaBuilder();
         var criteria = cb.createQuery(BigDecimal.class);
         var transaction = criteria.from(Transaction.class);
@@ -61,10 +61,10 @@ public class TransactionDaoCriteria {
 
         criteria.select(cb.sum(transaction.get(Transaction_.amount)))
                 .where(cb.equal(bankAccountJoin.get(BankAccount_.ID), bankAccountId));
-        return session.createQuery(criteria).uniqueResult();
+        return session.createQuery(criteria).getSingleResult();
     }
 
-    public List<Transaction> getLimitedTransactionsByBankAccountOrderedByTimeAsc(Session session, Long bankAccountId, int limit) {
+    public List<Transaction> getLimitedTransactionsByBankAccountOrderedByTimeAsc(EntityManager session, Long bankAccountId, int limit) {
         var entityGraph = EntityGraphUtil.getTransactionGraphByBankAccount(session);
         var cb = session.getCriteriaBuilder();
         var criteria = cb.createQuery(Transaction.class);
@@ -77,10 +77,10 @@ public class TransactionDaoCriteria {
         return session.createQuery(criteria)
                 .setHint(QueryHints.HINT_FETCHGRAPH, entityGraph)
                 .setMaxResults(limit)
-                .list();
+                .getResultList();
     }
 
-    public List<Transaction> getTransactionsByUserOrderedByTimeDesc(Session session, Long userId) {
+    public List<Transaction> getTransactionsByUserOrderedByTimeDesc(EntityManager session, Long userId) {
         var entityGraph = EntityGraphUtil.getTransactionGraphByUser(session);
         var cb = session.getCriteriaBuilder();
         var criteria = cb.createQuery(Transaction.class);
@@ -93,11 +93,11 @@ public class TransactionDaoCriteria {
                 .where(cb.equal(userJoin.get(User_.ID), userId))
                 .orderBy(cb.desc(transaction.get(Transaction_.time)));
 
-        return session.createQuery(criteria).setHint(QueryHints.HINT_FETCHGRAPH, entityGraph).list();
+        return session.createQuery(criteria).setHint(QueryHints.HINT_FETCHGRAPH, entityGraph).getResultList();
     }
 
     public List<Transaction> getTransactionsByUserByLastDate(
-            Session session, Long userId, TransactionFilter filter) {
+            EntityManager session, Long userId, TransactionFilter filter) {
         var entityGraph = EntityGraphUtil.getTransactionGraphByUser(session);
         var cb = session.getCriteriaBuilder();
         var criteria = cb.createQuery(Transaction.class);
@@ -115,7 +115,7 @@ public class TransactionDaoCriteria {
         criteria.select(transaction)
                 .where(predicates.toArray(Predicate[]::new));
 
-        return session.createQuery(criteria).setHint(QueryHints.HINT_FETCHGRAPH, entityGraph).list();
+        return session.createQuery(criteria).setHint(QueryHints.HINT_FETCHGRAPH, entityGraph).getResultList();
     }
 
 

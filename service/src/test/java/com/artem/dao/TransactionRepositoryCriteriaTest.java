@@ -16,7 +16,7 @@ import static com.artem.util.ConstantUtil.USER_ID_TWO;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
-public class TransactionRepositoryCriteriaTest extends RepositoryTestBase {
+class TransactionRepositoryCriteriaTest extends RepositoryTestBase {
 
     private final TransactionDaoCriteria transactionDaoCriteria = context.getBean(TransactionDaoCriteria.class);
 

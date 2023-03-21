@@ -6,9 +6,9 @@ import com.artem.util.EntityGraphUtil;
 import com.querydsl.jpa.impl.JPAQuery;
 import java.math.BigDecimal;
 import java.util.List;
+import javax.persistence.EntityManager;
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
-import org.hibernate.Session;
 import org.hibernate.jpa.QueryHints;
 import org.springframework.stereotype.Repository;
 
@@ -28,7 +28,7 @@ public class TransactionDaoQuery {
     /**
      * Return all transaction for each user
      */
-    public List<Transaction> getTransactionsByUser(Session session, Long userId) {
+    public List<Transaction> getTransactionsByUser(EntityManager session, Long userId) {
         var entityGraph = EntityGraphUtil.getTransactionGraphByUser(session);
         return new JPAQuery<Transaction>(session)
                 .select(transaction)
@@ -41,7 +41,7 @@ public class TransactionDaoQuery {
                 .fetch();
     }
 
-    public List<Transaction> getTransactionsByBankAccount(Session session, Long bankAccountId) {
+    public List<Transaction> getTransactionsByBankAccount(EntityManager session, Long bankAccountId) {
         var entityGraph = EntityGraphUtil.getTransactionGraphByBankAccount(session);
         return new JPAQuery<Transaction>(session)
                 .select(transaction)
@@ -52,7 +52,7 @@ public class TransactionDaoQuery {
                 .fetch();
     }
 
-    public List<Transaction> getTransactionByUtilityAccountName(Session session, String utilityAccountName) {
+    public List<Transaction> getTransactionByUtilityAccountName(EntityManager session, String utilityAccountName) {
         return new JPAQuery<Transaction>(session)
                 .select(transaction)
                 .from(transaction)
@@ -68,7 +68,7 @@ public class TransactionDaoQuery {
                 .fetch();
     }
 
-    public BigDecimal getSumTransactionsPaymentByBankAccount(Session session, Long bankAccountId) {
+    public BigDecimal getSumTransactionsPaymentByBankAccount(EntityManager session, Long bankAccountId) {
         return new JPAQuery<BigDecimal>(session)
                 .select(transaction.amount.sum())
                 .from(transaction)
@@ -77,7 +77,7 @@ public class TransactionDaoQuery {
                 .fetchOne();
     }
 
-    public List<Transaction> getLimitedTransactionsByBankAccountOrderedByTimeAsc(Session session, Long bankAccountId, int limit) {
+    public List<Transaction> getLimitedTransactionsByBankAccountOrderedByTimeAsc(EntityManager session, Long bankAccountId, int limit) {
         var entityGraph = EntityGraphUtil.getTransactionGraphByBankAccount(session);
         return new JPAQuery<Transaction>(session)
                 .select(transaction)
@@ -90,7 +90,7 @@ public class TransactionDaoQuery {
                 .fetch();
     }
 
-    public List<Transaction> getTransactionsByUserOrderedByTimeDesc(Session session, Long userId) {
+    public List<Transaction> getTransactionsByUserOrderedByTimeDesc(EntityManager session, Long userId) {
         var entityGraph = EntityGraphUtil.getTransactionGraphByUser(session);
         return new JPAQuery<Transaction>(session)
                 .select(transaction)
@@ -105,7 +105,7 @@ public class TransactionDaoQuery {
     }
 
     public List<Transaction> getTransactionsByUserByLastDate(
-            Session session, Long userId, TransactionFilter filter) {
+            EntityManager session, Long userId, TransactionFilter filter) {
         var entityGraph = EntityGraphUtil.getTransactionGraphByUser(session);
         var predicate = QPredicate.builder()
                 .add(filter.getReferenceNumber(), transaction.referenceNumber::eq)

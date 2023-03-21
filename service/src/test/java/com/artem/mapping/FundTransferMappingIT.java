@@ -21,7 +21,7 @@ import org.junit.jupiter.api.Test;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-public class FundTransferMappingIT extends MappingBaseEntity {
+class FundTransferMappingIT extends MappingBaseEntity {
 
     @Test
     void checkFundTransferGet() {

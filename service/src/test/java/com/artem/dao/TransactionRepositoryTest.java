@@ -33,7 +33,7 @@ import static com.artem.util.ConstantUtil.UTILITY_ACCOUNT_KOODO;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
-public class TransactionRepositoryTest extends RepositoryTestBase {
+class TransactionRepositoryTest extends RepositoryTestBase {
 
     private final TransactionRepository transactionRepository = context.getBean(TransactionRepository.class);
     private final BankAccountRepository bankAccountRepository = context.getBean(BankAccountRepository.class);

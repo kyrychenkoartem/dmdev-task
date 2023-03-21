@@ -1,6 +1,5 @@
 package com.artem.dao;
 
-import com.artem.mapper.AccountMapper;
 import com.artem.mapper.UtilityAccountMapper;
 import com.artem.model.dto.UtilityAccountCreateDto;
 import com.artem.model.dto.UtilityAccountUpdateDto;
@@ -11,7 +10,7 @@ import static com.artem.util.ConstantUtil.ALL_UTILITY_ACCOUNTS;
 import static com.artem.util.ConstantUtil.PROVIDER_NAME_EXPECTED;
 import static org.assertj.core.api.Assertions.assertThat;
 
-public class UtilityAccountRepositoryTest extends RepositoryTestBase {
+class UtilityAccountRepositoryTest extends RepositoryTestBase {
 
     private final UtilityAccountRepository utilityAccountRepository = context.getBean(UtilityAccountRepository.class);
     private final UtilityAccountMapper accountMapper = context.getBean(UtilityAccountMapper.class);

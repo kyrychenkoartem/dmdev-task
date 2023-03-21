@@ -13,7 +13,7 @@ import static com.artem.util.ConstantUtil.USER_ID_ONE;
 import static com.artem.util.ConstantUtil.USER_ID_TWO;
 import static org.assertj.core.api.Assertions.assertThat;
 
-public class UserRepositoryTest extends RepositoryTestBase {
+class UserRepositoryTest extends RepositoryTestBase {
 
     private final UserRepository userRepository = context.getBean(UserRepository.class);
     private final UserMapper userMapper = context.getBean(UserMapper.class);

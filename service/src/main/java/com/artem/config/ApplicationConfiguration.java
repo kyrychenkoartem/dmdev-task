@@ -14,15 +14,20 @@ import org.springframework.context.annotation.Configuration;
 public class ApplicationConfiguration {
 
     @Bean
-    public static SessionFactory buildSessionFactory() {
-        org.hibernate.cfg.Configuration configuration = HibernateUtil.buildConfiguration();
-        configuration.configure();
-        return configuration.buildSessionFactory();
+    org.hibernate.cfg.Configuration configuration() {
+        return HibernateUtil.buildConfiguration();
     }
 
     @Bean
-    public EntityManager entityManager() {
-        var sessionFactory = HibernateUtil.buildSessionFactory();
+    SessionFactory buildSessionFactory() {
+        var configuration = configuration();
+        configuration.configure();
+        return configuration().buildSessionFactory();
+    }
+
+    @Bean
+    EntityManager entityManager() {
+        var sessionFactory = buildSessionFactory();
         return (Session) Proxy.newProxyInstance(SessionFactory.class.getClassLoader(), new Class[]{Session.class},
                 (proxy, method, args1) -> method.invoke(sessionFactory.getCurrentSession(), args1));
     }

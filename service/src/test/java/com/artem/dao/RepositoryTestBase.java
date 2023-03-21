@@ -2,9 +2,9 @@ package com.artem.dao;
 
 import com.artem.config.ApplicationConfiguration;
 import com.artem.util.TestDataImporter;
-import org.hibernate.Session;
+import javax.annotation.PreDestroy;
+import javax.persistence.EntityManager;
 import org.hibernate.SessionFactory;
-import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
@@ -13,20 +13,20 @@ import org.springframework.context.annotation.AnnotationConfigApplicationContext
 public abstract class RepositoryTestBase {
 
     private static SessionFactory sessionFactory;
-    protected static Session session;
+    protected static EntityManager session;
     protected static AnnotationConfigApplicationContext context;
 
     @BeforeAll
     static void init() {
         context = new AnnotationConfigApplicationContext(ApplicationConfiguration.class);
-        sessionFactory = (SessionFactory) context.getBean("buildSessionFactory");
+        sessionFactory = context.getBean("buildSessionFactory", SessionFactory.class);
         TestDataImporter.importData(sessionFactory);
-        session = (Session) context.getBean("entityManager");
+        session = context.getBean("entityManager", EntityManager.class);
     }
 
     @BeforeEach
     void openSession() {
-        session.beginTransaction();
+        session.getTransaction().begin();
     }
 
     @AfterEach
@@ -34,8 +34,8 @@ public abstract class RepositoryTestBase {
         session.getTransaction().rollback();
     }
 
-    @AfterAll
-    static void close() {
+    @PreDestroy
+    void closeContext() {
         context.close();
         sessionFactory.close();
     }

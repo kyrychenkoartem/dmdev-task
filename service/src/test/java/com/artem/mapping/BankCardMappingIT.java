@@ -19,7 +19,7 @@ import org.junit.jupiter.api.Test;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-public class BankCardMappingIT extends MappingBaseEntity {
+class BankCardMappingIT extends MappingBaseEntity {
 
     @Test
     void checkBankCardGet() {

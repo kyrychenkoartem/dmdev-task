@@ -15,10 +15,9 @@ import static com.artem.util.ConstantUtil.ALL_BANK_ACCOUNTS;
 import static com.artem.util.ConstantUtil.BANK_ACCOUNT_ID_ONE;
 import static org.assertj.core.api.Assertions.assertThat;
 
-public class BankAccountRepositoryTest extends RepositoryTestBase {
+class BankAccountRepositoryTest extends RepositoryTestBase {
 
     private final BankAccountRepository bankAccountRepository = context.getBean(BankAccountRepository.class);
-    private final AccountRepository accountRepository = context.getBean(AccountRepository.class);
     private final BankAccountMapper accountMapper = context.getBean(BankAccountMapper.class);
 
     @Test

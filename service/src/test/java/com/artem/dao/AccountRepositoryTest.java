@@ -15,7 +15,7 @@ import static com.artem.util.ConstantUtil.ACCOUNT_ID_ONE;
 import static com.artem.util.ConstantUtil.ALL_ACCOUNTS;
 import static org.assertj.core.api.Assertions.assertThat;
 
-public class AccountRepositoryTest extends RepositoryTestBase {
+class AccountRepositoryTest extends RepositoryTestBase {
 
     private final AccountRepository accountRepository = context.getBean(AccountRepository.class);
     private final UserRepository userRepository = context.getBean(UserRepository.class);

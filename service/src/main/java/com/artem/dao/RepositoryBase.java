@@ -7,7 +7,6 @@ import java.util.Optional;
 import javax.persistence.EntityManager;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
-import org.springframework.stereotype.Component;
 
 @RequiredArgsConstructor
 public abstract class RepositoryBase<K extends Serializable, E> implements Repository<K, E> {

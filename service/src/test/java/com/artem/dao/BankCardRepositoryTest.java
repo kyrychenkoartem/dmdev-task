@@ -17,7 +17,7 @@ import static com.artem.util.ConstantUtil.USER_ID_ONE;
 import static org.assertj.core.api.Assertions.assertThat;
 
 
-public class BankCardRepositoryTest extends RepositoryTestBase {
+class BankCardRepositoryTest extends RepositoryTestBase {
 
     private final BankCardRepository cardRepository = context.getBean(BankCardRepository.class);
     private final UserRepository userRepository = context.getBean(UserRepository.class);

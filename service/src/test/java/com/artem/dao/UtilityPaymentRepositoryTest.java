@@ -22,7 +22,7 @@ import static com.artem.util.ConstantUtil.UTILITY_ACCOUNT_ID_TWO;
 import static com.artem.util.ConstantUtil.UTILITY_PAYMENT_ID_ONE;
 import static org.assertj.core.api.Assertions.assertThat;
 
-public class UtilityPaymentRepositoryTest extends RepositoryTestBase {
+class UtilityPaymentRepositoryTest extends RepositoryTestBase {
 
     private final TransactionRepository transactionRepository = context.getBean(TransactionRepository.class);
     private final UtilityPaymentRepository utilityPaymentRepository = context.getBean(UtilityPaymentRepository.class);

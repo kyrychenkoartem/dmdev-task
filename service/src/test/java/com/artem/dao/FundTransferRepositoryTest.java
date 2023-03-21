@@ -22,7 +22,7 @@ import static com.artem.util.ConstantUtil.BANK_ACCOUNT_ID_TWO;
 import static com.artem.util.ConstantUtil.FUND_TRANSFER_ID_ONE;
 import static org.assertj.core.api.Assertions.assertThat;
 
-public class FundTransferRepositoryTest extends RepositoryTestBase {
+class FundTransferRepositoryTest extends RepositoryTestBase {
 
     private final FundTransferRepository fundTransferRepository = context.getBean(FundTransferRepository.class);
     private final TransactionRepository transactionRepository = context.getBean(TransactionRepository.class);
