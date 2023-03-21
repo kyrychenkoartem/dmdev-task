@@ -8,6 +8,7 @@ import com.artem.model.type.AccountStatus;
 import com.artem.model.type.AccountType;
 import com.artem.model.type.Role;
 import com.artem.model.type.TransactionType;
+import com.artem.model.type.UserStatus;
 import com.artem.util.DateTimeGenerator;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
@@ -18,7 +19,7 @@ import org.junit.jupiter.api.Test;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-public class TransactionMappingIT extends MappingBaseEntity {
+class TransactionMappingIT extends MappingBaseEntity {
 
     @Test
     void checkTransactionGet() {
@@ -103,6 +104,7 @@ public class TransactionMappingIT extends MappingBaseEntity {
                 .password("123")
                 .birthDate(LocalDate.of(2000, 1, 1))
                 .role(Role.USER)
+                .status(UserStatus.ACTIVE)
                 .build();
     }
 

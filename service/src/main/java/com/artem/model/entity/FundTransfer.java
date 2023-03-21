@@ -6,12 +6,9 @@ import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
-import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.OneToOne;
 import javax.persistence.Table;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -46,7 +43,6 @@ public class FundTransfer {
     /**
      * Transaction associated with payment
      **/
-    @OneToOne(optional = false, fetch = FetchType.LAZY)
-    @JoinColumn(name = "banking_transaction_id")
-    private Transaction transaction;
+    @Column(name = "transaction_id", unique = true)
+    private String transaction;
 }
