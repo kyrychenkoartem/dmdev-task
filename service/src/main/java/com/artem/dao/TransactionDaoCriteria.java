@@ -10,8 +10,6 @@ import java.math.BigDecimal;
 import java.util.List;
 import javax.persistence.EntityManager;
 import javax.persistence.criteria.Predicate;
-import lombok.AccessLevel;
-import lombok.NoArgsConstructor;
 import org.hibernate.jpa.QueryHints;
 import org.springframework.stereotype.Repository;
 
@@ -20,10 +18,8 @@ import static com.artem.model.entity.BankAccount_.account;
 import static com.artem.model.entity.Transaction_.bankAccount;
 
 @Repository
-@NoArgsConstructor(access = AccessLevel.PRIVATE)
 public class TransactionDaoCriteria {
 
-    private static final TransactionDaoCriteria INSTANCE = new TransactionDaoCriteria();
 
     public List<Transaction> getTransactionsByUser(EntityManager session, Long userId) {
         var entityGraph = EntityGraphUtil.getTransactionGraphByUser(session);
@@ -119,7 +115,7 @@ public class TransactionDaoCriteria {
     }
 
 
-    public static TransactionDaoCriteria getInstance() {
-        return INSTANCE;
-    }
+//    public static TransactionDaoCriteria getInstance() {
+//        return INSTANCE;
+//    }
 }

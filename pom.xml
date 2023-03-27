@@ -4,6 +4,13 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
+    <parent>
+        <groupId>org.springframework.boot</groupId>
+        <artifactId>spring-boot-starter-parent</artifactId>
+        <version>2.7.10</version>
+        <relativePath/>
+    </parent>
+
     <groupId>com.artem</groupId>
     <artifactId>dmdev-task</artifactId>
     <version>1.0-SNAPSHOT</version>
@@ -18,10 +25,6 @@
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <maven.compiler.source>18</maven.compiler.source>
         <maven.compiler.target>18</maven.compiler.target>
-        <spring.version>5.3.25</spring.version>
-        <org.projectlombok.version>1.18.26</org.projectlombok.version>
-        <slf4j-log4j12.version>2.0.6</slf4j-log4j12.version>
-        <hibernate-core.version>5.6.15.Final</hibernate-core.version>
         <postgresql.vesrion>42.5.4</postgresql.vesrion>
         <hibernate.jpamodelgen.version>5.6.15.Final</hibernate.jpamodelgen.version>
         <javax.persistence-api>2.2</javax.persistence-api>
@@ -44,29 +47,9 @@
 
             <dependency>
                 <groupId>org.hibernate</groupId>
-                <artifactId>hibernate-core</artifactId>
-                <version>${hibernate-core.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>org.hibernate</groupId>
                 <artifactId>hibernate-jpamodelgen</artifactId>
                 <version>${hibernate.jpamodelgen.version}</version>
                 <scope>provided</scope>
-            </dependency>
-            <dependency>
-                <groupId>org.springframework</groupId>
-                <artifactId>spring-core</artifactId>
-                <version>${spring.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>org.springframework</groupId>
-                <artifactId>spring-context</artifactId>
-                <version>${spring.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>jakarta.annotation</groupId>
-                <artifactId>jakarta.annotation-api</artifactId>
-                <version>1.3.5</version>
             </dependency>
 
             <dependency>
@@ -82,40 +65,11 @@
             </dependency>
 
             <dependency>
-                <groupId>org.slf4j</groupId>
-                <artifactId>slf4j-log4j12</artifactId>
-                <version>${slf4j-log4j12.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>org.projectlombok</groupId>
-                <artifactId>lombok</artifactId>
-                <version>${org.projectlombok.version}</version>
-                <scope>provided</scope>
-            </dependency>
-            <dependency>
                 <groupId>org.apache.commons</groupId>
                 <artifactId>commons-lang3</artifactId>
                 <version>3.12.0</version>
             </dependency>
 
-            <dependency>
-                <groupId>org.junit.jupiter</groupId>
-                <artifactId>junit-jupiter-engine</artifactId>
-                <version>5.9.2</version>
-                <scope>test</scope>
-            </dependency>
-            <dependency>
-                <groupId>org.assertj</groupId>
-                <artifactId>assertj-core</artifactId>
-                <version>3.24.2</version>
-                <scope>test</scope>
-            </dependency>
-            <dependency>
-                <groupId>com.h2database</groupId>
-                <artifactId>h2</artifactId>
-                <version>2.1.210</version>
-                <scope>test</scope>
-            </dependency>
             <dependency>
                 <groupId>org.testcontainers</groupId>
                 <artifactId>postgresql</artifactId>
@@ -129,6 +83,10 @@
     <build>
         <pluginManagement>
             <plugins>
+                <plugin>
+                    <groupId>org.springframework.boot</groupId>
+                    <artifactId>spring-boot-maven-plugin</artifactId>
+                </plugin>
                 <plugin>
                     <groupId>org.jacoco</groupId>
                     <artifactId>jacoco-maven-plugin</artifactId>
@@ -205,11 +163,6 @@
                             <annotationProcessor>org.hibernate.jpamodelgen.JPAMetaModelEntityProcessor</annotationProcessor>
                         </annotationProcessors>
                         <annotationProcessorPaths>
-                            <path>
-                                <groupId>org.projectlombok</groupId>
-                                <artifactId>lombok</artifactId>
-                                <version>${org.projectlombok.version}</version>
-                            </path>
                             <path>
                                 <groupId>com.querydsl</groupId>
                                 <artifactId>querydsl-apt</artifactId>
