@@ -1,28 +1,50 @@
-package com.artem.dao;
+package com.artem.integration.dao;
 
+import com.artem.dao.AccountRepository;
+import com.artem.dao.BankAccountRepository;
+import com.artem.dao.UserRepository;
+import com.artem.mapper.AccountMapper;
 import com.artem.mapper.BankAccountMapper;
+import com.artem.mapper.UserMapper;
+import com.artem.model.dto.AccountCreateDto;
 import com.artem.model.dto.BankAccountCreateDto;
 import com.artem.model.dto.BankAccountUpdateDto;
+import com.artem.model.dto.UserCreateDto;
 import com.artem.model.entity.BankAccount;
 import com.artem.model.type.AccountStatus;
 import com.artem.model.type.AccountType;
+import com.artem.model.type.Role;
+import com.artem.util.TestDataImporter;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
+import java.time.LocalDate;
+import javax.persistence.EntityManager;
+import lombok.RequiredArgsConstructor;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-import static com.artem.util.ConstantUtil.ACCOUNT_ID_ONE;
 import static com.artem.util.ConstantUtil.ALL_BANK_ACCOUNTS;
-import static com.artem.util.ConstantUtil.BANK_ACCOUNT_ID_ONE;
 import static org.assertj.core.api.Assertions.assertThat;
 
+@RequiredArgsConstructor
 class BankAccountRepositoryTest extends RepositoryTestBase {
 
-    private final BankAccountRepository bankAccountRepository = context.getBean(BankAccountRepository.class);
-    private final BankAccountMapper accountMapper = context.getBean(BankAccountMapper.class);
+    private final BankAccountRepository bankAccountRepository;
+    private final UserRepository userRepository;
+    private final AccountRepository accountRepository;
+    private final AccountMapper accountMapper;
+    private final BankAccountMapper bankAccountMapper;
+    private final UserMapper userMapper;
+    private final EntityManager session;
+
+    @BeforeEach
+    void initData() {
+        TestDataImporter.importData(session);
+    }
 
     @Test
     void checkBankAccountSave() {
-        BankAccount expectedBankAccount = saveBankAccount();
+        var expectedBankAccount = saveBankAccount();
         session.clear();
 
         assertThat(bankAccountRepository.findById(expectedBankAccount.getId()).get().getId()).isNotNull();
@@ -30,7 +52,9 @@ class BankAccountRepositoryTest extends RepositoryTestBase {
 
     @Test
     void checkBankAccountDelete() {
-        var actualBankAccount = bankAccountRepository.findById(BANK_ACCOUNT_ID_ONE);
+        var expectedBankAccount = saveBankAccount();
+        session.clear();
+        var actualBankAccount = bankAccountRepository.findById(expectedBankAccount.getId());
 
         bankAccountRepository.delete(actualBankAccount.get());
 
@@ -39,13 +63,15 @@ class BankAccountRepositoryTest extends RepositoryTestBase {
 
     @Test
     void checkBankAccountUpdate() {
-        var maybeBankAccount = bankAccountRepository.findById(BANK_ACCOUNT_ID_ONE);
+        var bankAccount = saveBankAccount();
+        session.clear();
+        var maybeBankAccount = bankAccountRepository.findById(bankAccount.getId());
         var updateDto = getBankAccountUpdateDto();
-        var expectedBankAccount = accountMapper.mapFrom(maybeBankAccount.get(), updateDto);
+        var expectedBankAccount = bankAccountMapper.mapFrom(maybeBankAccount.get(), updateDto);
 
         bankAccountRepository.update(expectedBankAccount);
         session.clear();
-        var actualBankAccount = bankAccountRepository.findById(BANK_ACCOUNT_ID_ONE).get();
+        var actualBankAccount = bankAccountRepository.findById(expectedBankAccount.getId()).get();
 
         assertThat(actualBankAccount.getType()).isEqualTo(AccountType.LOAN_ACCOUNT);
         assertThat(actualBankAccount.getStatus()).isEqualTo(AccountStatus.BLOCKED);
@@ -81,9 +107,28 @@ class BankAccountRepositoryTest extends RepositoryTestBase {
                 .build();
     }
 
+    private UserCreateDto getUserCreateDto() {
+        return UserCreateDto.builder()
+                .firstname("Test")
+                .lastname("Test")
+                .email("test@gmail.com")
+                .password("testPassword")
+                .birthDate(LocalDate.of(2023, 3, 11))
+                .role(Role.USER)
+                .build();
+    }
+
     private BankAccountCreateDto getBankAccountCreateDto() {
+        var userCreateDto = getUserCreateDto();
+        var user = userMapper.mapFrom(userCreateDto);
+        var actualUser = userRepository.save(user);
+        var accountCreateDto = AccountCreateDto.builder()
+                .userId(actualUser.getId())
+                .build();
+        var account = accountMapper.mapFrom(accountCreateDto);
+        var expectedAccount = accountRepository.save(account);
         return BankAccountCreateDto.builder()
-                .accountId(ACCOUNT_ID_ONE)
+                .accountId(expectedAccount.getId())
                 .number("234554356765646586")
                 .accountType(AccountType.SAVINGS_ACCOUNT)
                 .accountStatus(AccountStatus.ACTIVE)
@@ -94,7 +139,7 @@ class BankAccountRepositoryTest extends RepositoryTestBase {
 
     private BankAccount saveBankAccount() {
         var accountCreateDto = getBankAccountCreateDto();
-        var bankAccount = accountMapper.mapFrom(accountCreateDto);
+        var bankAccount = bankAccountMapper.mapFrom(accountCreateDto);
         var expectedBankAccount = bankAccountRepository.save(bankAccount);
         return expectedBankAccount;
     }

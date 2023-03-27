@@ -1,19 +1,31 @@
-package com.artem.dao;
+package com.artem.integration.dao;
 
+import com.artem.dao.UtilityAccountRepository;
 import com.artem.mapper.UtilityAccountMapper;
 import com.artem.model.dto.UtilityAccountCreateDto;
 import com.artem.model.dto.UtilityAccountUpdateDto;
 import com.artem.model.entity.UtilityAccount;
+import com.artem.util.TestDataImporter;
+import javax.persistence.EntityManager;
+import lombok.RequiredArgsConstructor;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import static com.artem.util.ConstantUtil.ALL_UTILITY_ACCOUNTS;
 import static com.artem.util.ConstantUtil.PROVIDER_NAME_EXPECTED;
 import static org.assertj.core.api.Assertions.assertThat;
 
+@RequiredArgsConstructor
 class UtilityAccountRepositoryTest extends RepositoryTestBase {
 
-    private final UtilityAccountRepository utilityAccountRepository = context.getBean(UtilityAccountRepository.class);
-    private final UtilityAccountMapper accountMapper = context.getBean(UtilityAccountMapper.class);
+    private final UtilityAccountRepository utilityAccountRepository;
+    private final UtilityAccountMapper accountMapper;
+    private final EntityManager session;
+
+    @BeforeEach
+    void initData() {
+        TestDataImporter.importData(session);
+    }
 
     @Test
     void checkUtilityAccountSave() {

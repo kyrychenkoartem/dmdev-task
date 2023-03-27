@@ -1,22 +1,34 @@
-package com.artem.dao;
+package com.artem.integration.dao;
 
+import com.artem.dao.UserRepository;
+import com.artem.integration.annotation.IT;
 import com.artem.mapper.UserMapper;
 import com.artem.model.dto.UserCreateDto;
 import com.artem.model.dto.UserUpdateDto;
 import com.artem.model.type.Role;
 import com.artem.model.type.UserStatus;
+import com.artem.util.TestDataImporter;
 import java.time.LocalDate;
+import javax.persistence.EntityManager;
+import lombok.RequiredArgsConstructor;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import static com.artem.util.ConstantUtil.ALL_USERS;
-import static com.artem.util.ConstantUtil.USER_ID_ONE;
-import static com.artem.util.ConstantUtil.USER_ID_TWO;
 import static org.assertj.core.api.Assertions.assertThat;
+
+@RequiredArgsConstructor
 
 class UserRepositoryTest extends RepositoryTestBase {
 
-    private final UserRepository userRepository = context.getBean(UserRepository.class);
-    private final UserMapper userMapper = context.getBean(UserMapper.class);
+    private final UserRepository userRepository;
+    private final UserMapper userMapper;
+    private final EntityManager session;
+
+    @BeforeEach
+    void initData() {
+        TestDataImporter.importData(session);
+    }
 
     @Test
     void checkSaveUser() {
@@ -31,18 +43,25 @@ class UserRepositoryTest extends RepositoryTestBase {
 
     @Test
     void checkUserDelete() {
-        var actualUser = userRepository.findById(USER_ID_TWO);
+        var userCreateDto = getUserCreateDto();
+        var expectedUser = userMapper.mapFrom(userCreateDto);
+        var user = userRepository.save(expectedUser);
+        session.clear();
+        var actualUser = userRepository.findById(user.getId());
         actualUser.get().setStatus(UserStatus.DELETED);
 
         userRepository.delete(actualUser.get());
 
-
-        assertThat(userRepository.findById(USER_ID_TWO).get().getStatus()).isEqualTo(UserStatus.DELETED);
+        assertThat(userRepository.findById(actualUser.get().getId()).get().getStatus()).isEqualTo(UserStatus.DELETED);
     }
 
     @Test
     void checkUpdateUser() {
-        var maybeUser = userRepository.findById(USER_ID_ONE);
+        var userCreateDto = getUserCreateDto();
+        var userToSave = userMapper.mapFrom(userCreateDto);
+        var user = userRepository.save(userToSave);
+        session.clear();
+        var maybeUser = userRepository.findById(user.getId());
         var updateDto = getUserUpdateDto();
         var expectedUser = userMapper.mapFrom(maybeUser.get(), updateDto);
 

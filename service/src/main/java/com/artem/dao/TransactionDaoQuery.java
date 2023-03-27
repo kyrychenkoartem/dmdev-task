@@ -7,8 +7,6 @@ import com.querydsl.jpa.impl.JPAQuery;
 import java.math.BigDecimal;
 import java.util.List;
 import javax.persistence.EntityManager;
-import lombok.AccessLevel;
-import lombok.NoArgsConstructor;
 import org.hibernate.jpa.QueryHints;
 import org.springframework.stereotype.Repository;
 
@@ -20,10 +18,8 @@ import static com.artem.model.entity.QUtilityAccount.utilityAccount;
 import static com.artem.model.entity.QUtilityPayment.utilityPayment;
 
 @Repository
-@NoArgsConstructor(access = AccessLevel.PRIVATE)
 public class TransactionDaoQuery {
 
-    private static final TransactionDaoQuery INSTANCE = new TransactionDaoQuery();
 
     /**
      * Return all transaction for each user
@@ -123,7 +119,7 @@ public class TransactionDaoQuery {
     }
 
 
-    public static TransactionDaoQuery getInstance() {
-        return INSTANCE;
-    }
+//    public static TransactionDaoQuery getInstance() {
+//        return INSTANCE;
+//    }
 }

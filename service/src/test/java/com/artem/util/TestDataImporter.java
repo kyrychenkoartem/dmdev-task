@@ -20,6 +20,7 @@ import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
 import java.util.Arrays;
 import java.util.UUID;
+import javax.persistence.EntityManager;
 import lombok.Cleanup;
 import lombok.experimental.UtilityClass;
 import org.hibernate.Session;
@@ -28,8 +29,8 @@ import org.hibernate.SessionFactory;
 @UtilityClass
 public class TestDataImporter {
 
-    public void importData(SessionFactory sessionFactory) {
-        @Cleanup Session session = sessionFactory.openSession();
+    public void importData(EntityManager session) {
+//        @Cleanup Session session = sessionFactory.openSession();
 
         var user1 = getUser("Ivan", "Ivanov", "ivan@gmail.com");
         var user2 = getUser("Artem", "Artemov", "artem@gmail.com");
@@ -37,11 +38,11 @@ public class TestDataImporter {
         var user4 = getUser("John", "Liskov", "john@gmail.com");
         var user5 = getUser("Mike", "Dunk", "mike@gmail.com");
 
-        session.save(user1);
-        session.save(user2);
-        session.save(user3);
-        session.save(user4);
-        session.save(user5);
+        session.persist(user1);
+        session.persist(user2);
+        session.persist(user3);
+        session.persist(user4);
+        session.persist(user5);
 
         var account1 = getAccount(user1);
         var account2 = getAccount(user2);
@@ -145,11 +146,11 @@ public class TestDataImporter {
         addTransaction(bankAccount14, transaction48, transaction49, transaction50);
         addTransaction(bankAccount15, transaction51, transaction52, transaction53);
 
-        session.save(account1);
-        session.save(account2);
-        session.save(account3);
-        session.save(account4);
-        session.save(account5);
+        session.persist(account1);
+        session.persist(account2);
+        session.persist(account3);
+        session.persist(account4);
+        session.persist(account5);
 
 
         var utilityPayment1 = getUtilityPayment(utilityAccount1.getNumber(), utilityAccount1, transaction1);
@@ -169,9 +170,9 @@ public class TestDataImporter {
         addUtilityPayment(utilityAccount2, utilityPayment5, utilityPayment6, utilityPayment7, utilityPayment8);
         addUtilityPayment(utilityAccount3, utilityPayment9, utilityPayment10, utilityPayment11, utilityPayment12);
 
-        session.save(utilityAccount1);
-        session.save(utilityAccount2);
-        session.save(utilityAccount3);
+        session.persist(utilityAccount1);
+        session.persist(utilityAccount2);
+        session.persist(utilityAccount3);
 
         var fundTransfer1 = getFundTransfer(bankAccount1.getNumber(), bankAccount2.getNumber(), transaction2);
         var fundTransfer2 = getFundTransfer(bankAccount2.getNumber(), bankAccount3.getNumber(), transaction3);
@@ -219,47 +220,47 @@ public class TestDataImporter {
         var fundTransfer40 = getFundTransfer(bankAccount15.getNumber(), bankAccount13.getNumber(), transaction50);
         var fundTransfer41 = getFundTransfer(bankAccount13.getNumber(), bankAccount15.getNumber(), transaction52);
 
-        session.save(fundTransfer1);
-        session.save(fundTransfer2);
-        session.save(fundTransfer3);
-        session.save(fundTransfer4);
-        session.save(fundTransfer5);
-        session.save(fundTransfer6);
-        session.save(fundTransfer7);
-        session.save(fundTransfer8);
-        session.save(fundTransfer9);
-        session.save(fundTransfer10);
-        session.save(fundTransfer11);
-        session.save(fundTransfer12);
-        session.save(fundTransfer13);
-        session.save(fundTransfer14);
-        session.save(fundTransfer15);
-        session.save(fundTransfer16);
-        session.save(fundTransfer17);
-        session.save(fundTransfer18);
-        session.save(fundTransfer19);
-        session.save(fundTransfer20);
-        session.save(fundTransfer21);
-        session.save(fundTransfer22);
-        session.save(fundTransfer23);
-        session.save(fundTransfer24);
-        session.save(fundTransfer25);
-        session.save(fundTransfer26);
-        session.save(fundTransfer27);
-        session.save(fundTransfer28);
-        session.save(fundTransfer29);
-        session.save(fundTransfer30);
-        session.save(fundTransfer31);
-        session.save(fundTransfer32);
-        session.save(fundTransfer33);
-        session.save(fundTransfer34);
-        session.save(fundTransfer35);
-        session.save(fundTransfer36);
-        session.save(fundTransfer37);
-        session.save(fundTransfer38);
-        session.save(fundTransfer39);
-        session.save(fundTransfer40);
-        session.save(fundTransfer41);
+        session.persist(fundTransfer1);
+        session.persist(fundTransfer2);
+        session.persist(fundTransfer3);
+        session.persist(fundTransfer4);
+        session.persist(fundTransfer5);
+        session.persist(fundTransfer6);
+        session.persist(fundTransfer7);
+        session.persist(fundTransfer8);
+        session.persist(fundTransfer9);
+        session.persist(fundTransfer10);
+        session.persist(fundTransfer11);
+        session.persist(fundTransfer12);
+        session.persist(fundTransfer13);
+        session.persist(fundTransfer14);
+        session.persist(fundTransfer15);
+        session.persist(fundTransfer16);
+        session.persist(fundTransfer17);
+        session.persist(fundTransfer18);
+        session.persist(fundTransfer19);
+        session.persist(fundTransfer20);
+        session.persist(fundTransfer21);
+        session.persist(fundTransfer22);
+        session.persist(fundTransfer23);
+        session.persist(fundTransfer24);
+        session.persist(fundTransfer25);
+        session.persist(fundTransfer26);
+        session.persist(fundTransfer27);
+        session.persist(fundTransfer28);
+        session.persist(fundTransfer29);
+        session.persist(fundTransfer30);
+        session.persist(fundTransfer31);
+        session.persist(fundTransfer32);
+        session.persist(fundTransfer33);
+        session.persist(fundTransfer34);
+        session.persist(fundTransfer35);
+        session.persist(fundTransfer36);
+        session.persist(fundTransfer37);
+        session.persist(fundTransfer38);
+        session.persist(fundTransfer39);
+        session.persist(fundTransfer40);
+        session.persist(fundTransfer41);
 
     }
 

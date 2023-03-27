@@ -1,0 +1,22 @@
+spring:
+  datasource:
+    driver-class-name: org.postgresql.Driver
+
+  jpa:
+    properties:
+      hibernate:
+        show_sql: true
+        format_sql: true
+        hbm2ddl:
+          auto: create
+        current_session_context_class: thread
+        dialect: org.hibernate.dialect.PostgreSQL10Dialect
+  main:
+    allow-bean-definition-overriding: true
+  output:
+    ansi:
+      enabled: always
+
+logging:
+  level:
+    root: INFO
