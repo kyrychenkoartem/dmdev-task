@@ -4,7 +4,6 @@ import com.artem.dao.AccountRepository;
 import com.artem.dao.BankAccountRepository;
 import com.artem.dao.TransactionRepository;
 import com.artem.dao.UserRepository;
-import com.artem.integration.annotation.IT;
 import com.artem.mapper.AccountMapper;
 import com.artem.mapper.BankAccountMapper;
 import com.artem.mapper.TransactionMapper;
@@ -41,7 +40,6 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 @RequiredArgsConstructor
-@IT
 class TransactionRepositoryTest extends RepositoryTestBase {
 
     private final TransactionRepository transactionRepository;

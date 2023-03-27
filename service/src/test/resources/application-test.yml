@@ -11,12 +11,6 @@ spring:
           auto: create
         current_session_context_class: thread
         dialect: org.hibernate.dialect.PostgreSQL10Dialect
-  main:
-    allow-bean-definition-overriding: true
   output:
     ansi:
       enabled: always
-
-logging:
-  level:
-    root: INFO
