@@ -25,7 +25,7 @@
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <maven.compiler.source>18</maven.compiler.source>
         <maven.compiler.target>18</maven.compiler.target>
-        <postgresql.vesrion>42.5.4</postgresql.vesrion>
+        <org.projectlombok.version>1.18.26</org.projectlombok.version>
         <hibernate.jpamodelgen.version>5.6.15.Final</hibernate.jpamodelgen.version>
         <javax.persistence-api>2.2</javax.persistence-api>
         <querydsl.version>5.0.0</querydsl.version>
@@ -39,16 +39,17 @@
                 <version>5.0.0</version>
                 <scope>provided</scope>
             </dependency>
-            <dependency>
-                <groupId>org.postgresql</groupId>
-                <artifactId>postgresql</artifactId>
-                <version>${postgresql.vesrion}</version>
-            </dependency>
 
             <dependency>
                 <groupId>org.hibernate</groupId>
                 <artifactId>hibernate-jpamodelgen</artifactId>
                 <version>${hibernate.jpamodelgen.version}</version>
+                <scope>provided</scope>
+            </dependency>
+            <dependency>
+                <groupId>org.projectlombok</groupId>
+                <artifactId>lombok</artifactId>
+                <version>${org.projectlombok.version}</version>
                 <scope>provided</scope>
             </dependency>
 
@@ -163,6 +164,11 @@
                             <annotationProcessor>org.hibernate.jpamodelgen.JPAMetaModelEntityProcessor</annotationProcessor>
                         </annotationProcessors>
                         <annotationProcessorPaths>
+                            <path>
+                                <groupId>org.projectlombok</groupId>
+                                <artifactId>lombok</artifactId>
+                                <version>${org.projectlombok.version}</version>
+                            </path>
                             <path>
                                 <groupId>com.querydsl</groupId>
                                 <artifactId>querydsl-apt</artifactId>

@@ -5,10 +5,8 @@ import com.artem.mapper.UtilityAccountMapper;
 import com.artem.model.dto.UtilityAccountCreateDto;
 import com.artem.model.dto.UtilityAccountUpdateDto;
 import com.artem.model.entity.UtilityAccount;
-import com.artem.util.TestDataImporter;
 import javax.persistence.EntityManager;
 import lombok.RequiredArgsConstructor;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import static com.artem.util.ConstantUtil.ALL_UTILITY_ACCOUNTS;
@@ -21,11 +19,6 @@ class UtilityAccountRepositoryTest extends RepositoryTestBase {
     private final UtilityAccountRepository utilityAccountRepository;
     private final UtilityAccountMapper accountMapper;
     private final EntityManager session;
-
-    @BeforeEach
-    void initData() {
-        TestDataImporter.importData(session);
-    }
 
     @Test
     void checkUtilityAccountSave() {
@@ -52,7 +45,7 @@ class UtilityAccountRepositoryTest extends RepositoryTestBase {
         var updateDto = getUpdateDto();
         var expectedUtilityAccount = accountMapper.mapFrom(actualUtilityAccount.get(), updateDto);
 
-        utilityAccountRepository.update(expectedUtilityAccount);
+        utilityAccountRepository.saveAndFlush(expectedUtilityAccount);
         session.clear();
 
         assertThat(utilityAccountRepository.findById(expectedUtilityAccount.getId()).get().getProviderName())

@@ -24,14 +24,12 @@ import com.artem.model.type.Role;
 import com.artem.model.type.TransactionStatus;
 import com.artem.model.type.TransactionType;
 import com.artem.util.DateTimeGenerator;
-import com.artem.util.TestDataImporter;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.time.LocalDate;
 import java.util.UUID;
 import javax.persistence.EntityManager;
 import lombok.RequiredArgsConstructor;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import static com.artem.util.ConstantUtil.ALL_FUND_TRANSFERS;
@@ -51,11 +49,6 @@ class FundTransferRepositoryTest extends RepositoryTestBase {
     private final FundTransferMapper fundTransferMapper;
     private final TransactionMapper transactionMapper;
     private final EntityManager session;
-
-    @BeforeEach
-    void initData() {
-        TestDataImporter.importData(session);
-    }
 
     @Test
     void checkAccountSave() {
@@ -108,7 +101,7 @@ class FundTransferRepositoryTest extends RepositoryTestBase {
         var transferUpdateDto = getTransferUpdateDto();
         var expectedFundTransfer = fundTransferMapper.mapFrom(maybeFundTransfer.get(), transferUpdateDto);
 
-        fundTransferRepository.update(expectedFundTransfer);
+        fundTransferRepository.saveAndFlush(expectedFundTransfer);
         session.clear();
         var actualFundTransfer = fundTransferRepository.findById(expectedFundTransfer.getId()).get();
 

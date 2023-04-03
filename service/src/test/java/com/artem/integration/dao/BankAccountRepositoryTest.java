@@ -14,13 +14,11 @@ import com.artem.model.entity.BankAccount;
 import com.artem.model.type.AccountStatus;
 import com.artem.model.type.AccountType;
 import com.artem.model.type.Role;
-import com.artem.util.TestDataImporter;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.time.LocalDate;
 import javax.persistence.EntityManager;
 import lombok.RequiredArgsConstructor;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import static com.artem.util.ConstantUtil.ALL_BANK_ACCOUNTS;
@@ -36,11 +34,6 @@ class BankAccountRepositoryTest extends RepositoryTestBase {
     private final BankAccountMapper bankAccountMapper;
     private final UserMapper userMapper;
     private final EntityManager session;
-
-    @BeforeEach
-    void initData() {
-        TestDataImporter.importData(session);
-    }
 
     @Test
     void checkBankAccountSave() {
@@ -69,7 +62,7 @@ class BankAccountRepositoryTest extends RepositoryTestBase {
         var updateDto = getBankAccountUpdateDto();
         var expectedBankAccount = bankAccountMapper.mapFrom(maybeBankAccount.get(), updateDto);
 
-        bankAccountRepository.update(expectedBankAccount);
+        bankAccountRepository.saveAndFlush(expectedBankAccount);
         session.clear();
         var actualBankAccount = bankAccountRepository.findById(expectedBankAccount.getId()).get();
 

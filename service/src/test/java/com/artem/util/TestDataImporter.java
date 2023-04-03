@@ -21,16 +21,12 @@ import java.time.temporal.ChronoUnit;
 import java.util.Arrays;
 import java.util.UUID;
 import javax.persistence.EntityManager;
-import lombok.Cleanup;
 import lombok.experimental.UtilityClass;
-import org.hibernate.Session;
-import org.hibernate.SessionFactory;
 
 @UtilityClass
 public class TestDataImporter {
 
     public void importData(EntityManager session) {
-//        @Cleanup Session session = sessionFactory.openSession();
 
         var user1 = getUser("Ivan", "Ivanov", "ivan@gmail.com");
         var user2 = getUser("Artem", "Artemov", "artem@gmail.com");
