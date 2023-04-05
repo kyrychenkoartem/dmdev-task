@@ -1,9 +1,9 @@
-package com.artem.integration.dao;
+package com.artem.integration.repository;
 
-import com.artem.dao.AccountRepository;
-import com.artem.dao.BankAccountRepository;
-import com.artem.dao.BankCardRepository;
-import com.artem.dao.UserRepository;
+import com.artem.repository.AccountRepository;
+import com.artem.repository.BankAccountRepository;
+import com.artem.repository.BankCardRepository;
+import com.artem.repository.UserRepository;
 import com.artem.mapper.AccountMapper;
 import com.artem.mapper.BankAccountMapper;
 import com.artem.mapper.BankCardMapper;
@@ -21,13 +21,11 @@ import com.artem.model.type.BankType;
 import com.artem.model.type.CardType;
 
 import com.artem.model.type.Role;
-import com.artem.util.TestDataImporter;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.time.LocalDate;
 import javax.persistence.EntityManager;
 import lombok.RequiredArgsConstructor;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import static com.artem.util.ConstantUtil.ALL_BANK_CARDS;
@@ -46,11 +44,6 @@ class BankCardRepositoryTest extends RepositoryTestBase {
     private final UserMapper userMapper;
     private final BankCardMapper cardMapper;
     private final EntityManager session;
-
-    @BeforeEach
-    void initData() {
-        TestDataImporter.importData(session);
-    }
 
     @Test
     void checkSaveBankCard() {
@@ -77,7 +70,7 @@ class BankCardRepositoryTest extends RepositoryTestBase {
         var cardUpdateDto = getBankCardUpdateDto(maybeBankCard.get().getBankAccount());
         var bankCardToUpdate = cardMapper.mapFrom(maybeBankCard.get(), cardUpdateDto);
 
-        cardRepository.update(bankCardToUpdate);
+        cardRepository.saveAndFlush(bankCardToUpdate);
         session.clear();
         var actualBankCard = cardRepository.findById(bankCardToUpdate.getId()).get();
 

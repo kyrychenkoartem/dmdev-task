@@ -8,7 +8,7 @@ spring:
         show_sql: true
         format_sql: true
         hbm2ddl:
-          auto: create
+          auto: validate
         current_session_context_class: thread
         dialect: org.hibernate.dialect.PostgreSQL10Dialect
   output:

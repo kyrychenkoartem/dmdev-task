@@ -1,4 +1,4 @@
-package com.artem.dao;
+package com.artem.repository;
 
 import com.artem.model.dto.TransactionFilter;
 import com.artem.model.entity.Transaction;
@@ -18,15 +18,15 @@ import static com.artem.model.entity.QUtilityAccount.utilityAccount;
 import static com.artem.model.entity.QUtilityPayment.utilityPayment;
 
 @Repository
-public class TransactionRepository extends RepositoryBase<Long, Transaction> {
+public class TransactionDaoQuery {
 
-    public TransactionRepository(EntityManager entityManager) {
-        super(Transaction.class, entityManager);
-    }
 
-    public List<Transaction> getTransactionsByUser(Long userId) {
-        var entityGraph = EntityGraphUtil.getTransactionGraphByUser(getEntityManager());
-        return new JPAQuery<Transaction>(getEntityManager())
+    /**
+     * Return all transaction for each user
+     */
+    public List<Transaction> getTransactionsByUser(EntityManager session, Long userId) {
+        var entityGraph = EntityGraphUtil.getTransactionGraphByUser(session);
+        return new JPAQuery<Transaction>(session)
                 .select(transaction)
                 .from(transaction)
                 .join(transaction.bankAccount, bankAccount)
@@ -37,9 +37,9 @@ public class TransactionRepository extends RepositoryBase<Long, Transaction> {
                 .fetch();
     }
 
-    public List<Transaction> getTransactionsByBankAccount(Long bankAccountId) {
-        var entityGraph = EntityGraphUtil.getTransactionGraphByBankAccount(getEntityManager());
-        return new JPAQuery<Transaction>(getEntityManager())
+    public List<Transaction> getTransactionsByBankAccount(EntityManager session, Long bankAccountId) {
+        var entityGraph = EntityGraphUtil.getTransactionGraphByBankAccount(session);
+        return new JPAQuery<Transaction>(session)
                 .select(transaction)
                 .from(transaction)
                 .join(transaction.bankAccount, bankAccount)
@@ -48,12 +48,12 @@ public class TransactionRepository extends RepositoryBase<Long, Transaction> {
                 .fetch();
     }
 
-    public List<Transaction> getTransactionByUtilityAccountName(String utilityAccountName) {
-        return new JPAQuery<Transaction>(getEntityManager())
+    public List<Transaction> getTransactionByUtilityAccountName(EntityManager session, String utilityAccountName) {
+        return new JPAQuery<Transaction>(session)
                 .select(transaction)
                 .from(transaction)
                 .where(transaction.transactionId.in(
-                        new JPAQuery<String>(getEntityManager())
+                        new JPAQuery<String>(session)
                                 .select(utilityPayment.transaction)
                                 .from(utilityAccount)
                                 .where(utilityAccount.providerName.eq(utilityAccountName))
@@ -64,8 +64,8 @@ public class TransactionRepository extends RepositoryBase<Long, Transaction> {
                 .fetch();
     }
 
-    public BigDecimal getSumTransactionsPaymentByBankAccount(Long bankAccountId) {
-        return new JPAQuery<BigDecimal>(getEntityManager())
+    public BigDecimal getSumTransactionsPaymentByBankAccount(EntityManager session, Long bankAccountId) {
+        return new JPAQuery<BigDecimal>(session)
                 .select(transaction.amount.sum())
                 .from(transaction)
                 .join(transaction.bankAccount, bankAccount)
@@ -73,9 +73,9 @@ public class TransactionRepository extends RepositoryBase<Long, Transaction> {
                 .fetchOne();
     }
 
-    public List<Transaction> getLimitedTransactionsByBankAccountOrderedByTimeAsc(Long bankAccountId, int limit) {
-        var entityGraph = EntityGraphUtil.getTransactionGraphByBankAccount(getEntityManager());
-        return new JPAQuery<Transaction>(getEntityManager())
+    public List<Transaction> getLimitedTransactionsByBankAccountOrderedByTimeAsc(EntityManager session, Long bankAccountId, int limit) {
+        var entityGraph = EntityGraphUtil.getTransactionGraphByBankAccount(session);
+        return new JPAQuery<Transaction>(session)
                 .select(transaction)
                 .from(transaction)
                 .join(transaction.bankAccount, bankAccount)
@@ -86,9 +86,9 @@ public class TransactionRepository extends RepositoryBase<Long, Transaction> {
                 .fetch();
     }
 
-    public List<Transaction> getTransactionsByUserOrderedByTimeDesc(Long userId) {
-        var entityGraph = EntityGraphUtil.getTransactionGraphByUser(getEntityManager());
-        return new JPAQuery<Transaction>(getEntityManager())
+    public List<Transaction> getTransactionsByUserOrderedByTimeDesc(EntityManager session, Long userId) {
+        var entityGraph = EntityGraphUtil.getTransactionGraphByUser(session);
+        return new JPAQuery<Transaction>(session)
                 .select(transaction)
                 .from(transaction)
                 .join(transaction.bankAccount, bankAccount)
@@ -100,13 +100,14 @@ public class TransactionRepository extends RepositoryBase<Long, Transaction> {
                 .fetch();
     }
 
-    public List<Transaction> getTransactionsByUserByLastDate(Long userId, TransactionFilter filter) {
-        var entityGraph = EntityGraphUtil.getTransactionGraphByUser(getEntityManager());
+    public List<Transaction> getTransactionsByUserByLastDate(
+            EntityManager session, Long userId, TransactionFilter filter) {
+        var entityGraph = EntityGraphUtil.getTransactionGraphByUser(session);
         var predicate = QPredicate.builder()
                 .add(filter.getReferenceNumber(), transaction.referenceNumber::eq)
                 .add(filter.getTime(), transaction.time::after)
                 .buildAnd();
-        return new JPAQuery<Transaction>(getEntityManager())
+        return new JPAQuery<Transaction>(session)
                 .select(transaction)
                 .from(transaction)
                 .join(transaction.bankAccount, bankAccount)
@@ -116,4 +117,9 @@ public class TransactionRepository extends RepositoryBase<Long, Transaction> {
                 .setHint(QueryHints.HINT_FETCHGRAPH, entityGraph)
                 .fetch();
     }
+
+
+//    public static TransactionDaoQuery getInstance() {
+//        return INSTANCE;
+//    }
 }

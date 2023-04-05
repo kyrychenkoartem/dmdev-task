@@ -1,3 +1,6 @@
+--liquibase formatted sql
+
+--changeset artemkyrychenko:1
 CREATE TABLE IF NOT EXISTS users
 (
     id         BIGSERIAL PRIMARY KEY,
@@ -9,6 +12,9 @@ CREATE TABLE IF NOT EXISTS users
     role       VARCHAR(32)  NOT NULL,
     status     VARCHAR(32)  NOT NULL
 );
+--rollback DROP TABLE users;
+
+--changeset artemkyrychenko:2
 CREATE TABLE IF NOT EXISTS account
 (
     id         BIGSERIAL PRIMARY KEY,
@@ -19,6 +25,9 @@ CREATE TABLE IF NOT EXISTS account
     updated_at TIMESTAMP,
     updated_by VARCHAR(64)
 );
+--rollback DROP TABLE account;
+
+--changeset artemkyrychenko:3
 CREATE TABLE IF NOT EXISTS bank_account
 (
     id                BIGSERIAL PRIMARY KEY,
@@ -29,6 +38,9 @@ CREATE TABLE IF NOT EXISTS bank_account
     available_balance DECIMAL(19, 2) DEFAULT 0,
     actual_balance    DECIMAL(19, 2) DEFAULT 0
 );
+--rollback DROP TABLE bank_account;
+
+--changeset artemkyrychenko:4
 CREATE TABLE IF NOT EXISTS bank_card
 (
     id              BIGSERIAL PRIMARY KEY,
@@ -40,12 +52,18 @@ CREATE TABLE IF NOT EXISTS bank_card
     cvv             VARCHAR(4)  NOT NULL,
     type            VARCHAR(32) NOT NULL
 );
+--rollback DROP TABLE bank_card;
+
+--changeset artemkyrychenko:5
 CREATE TABLE IF NOT EXISTS utility_account
 (
     id            BIGSERIAL PRIMARY KEY,
     number        VARCHAR(128) NOT NULL UNIQUE,
     provider_name VARCHAR(64)  NOT NULL
 );
+--rollback DROP TABLE utility_account;
+
+--changeset artemkyrychenko:6
 CREATE TABLE IF NOT EXISTS banking_transaction
 (
     id               BIGSERIAL PRIMARY KEY,
@@ -56,6 +74,9 @@ CREATE TABLE IF NOT EXISTS banking_transaction
     time             TIMESTAMP      NOT NULL,
     bank_account_id  BIGINT         NOT NULL REFERENCES bank_account (id) ON DELETE CASCADE
 );
+--rollback DROP TABLE banking_transaction;
+
+--changeset artemkyrychenko:7
 CREATE TABLE IF NOT EXISTS utility_payment
 (
     id                 BIGSERIAL PRIMARY KEY,
@@ -65,6 +86,9 @@ CREATE TABLE IF NOT EXISTS utility_payment
     utility_account_id BIGINT         NOT NULL REFERENCES utility_account (id),
     transaction_id     VARCHAR(64)    NOT NULL UNIQUE
 );
+--rollback DROP TABLE utility_payment;
+
+--changeset artemkyrychenko:8
 CREATE TABLE IF NOT EXISTS fund_transfer
 (
     id             BIGSERIAL PRIMARY KEY,
@@ -74,3 +98,4 @@ CREATE TABLE IF NOT EXISTS fund_transfer
     status         VARCHAR(64)    NOT NULL,
     transaction_id VARCHAR(64)    NOT NULL UNIQUE
 );
+--rollback DROP TABLE fund_transfer;

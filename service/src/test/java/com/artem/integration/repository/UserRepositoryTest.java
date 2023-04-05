@@ -1,34 +1,25 @@
-package com.artem.integration.dao;
+package com.artem.integration.repository;
 
-import com.artem.dao.UserRepository;
-import com.artem.integration.annotation.IT;
+import com.artem.repository.UserRepository;
 import com.artem.mapper.UserMapper;
 import com.artem.model.dto.UserCreateDto;
 import com.artem.model.dto.UserUpdateDto;
 import com.artem.model.type.Role;
 import com.artem.model.type.UserStatus;
-import com.artem.util.TestDataImporter;
 import java.time.LocalDate;
 import javax.persistence.EntityManager;
 import lombok.RequiredArgsConstructor;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import static com.artem.util.ConstantUtil.ALL_USERS;
 import static org.assertj.core.api.Assertions.assertThat;
 
 @RequiredArgsConstructor
-
 class UserRepositoryTest extends RepositoryTestBase {
 
     private final UserRepository userRepository;
     private final UserMapper userMapper;
     private final EntityManager session;
-
-    @BeforeEach
-    void initData() {
-        TestDataImporter.importData(session);
-    }
 
     @Test
     void checkSaveUser() {
@@ -50,7 +41,7 @@ class UserRepositoryTest extends RepositoryTestBase {
         var actualUser = userRepository.findById(user.getId());
         actualUser.get().setStatus(UserStatus.DELETED);
 
-        userRepository.delete(actualUser.get());
+        userRepository.deleteUser(actualUser.get());
 
         assertThat(userRepository.findById(actualUser.get().getId()).get().getStatus()).isEqualTo(UserStatus.DELETED);
     }
@@ -65,7 +56,7 @@ class UserRepositoryTest extends RepositoryTestBase {
         var updateDto = getUserUpdateDto();
         var expectedUser = userMapper.mapFrom(maybeUser.get(), updateDto);
 
-        userRepository.update(expectedUser);
+        userRepository.saveAndFlush(expectedUser);
         session.clear();
         var actualUser = userRepository.findById(maybeUser.get().getId()).get();
 

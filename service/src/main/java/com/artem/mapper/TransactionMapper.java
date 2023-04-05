@@ -1,6 +1,6 @@
 package com.artem.mapper;
 
-import com.artem.dao.BankAccountRepository;
+import com.artem.repository.BankAccountRepository;
 import com.artem.model.dto.TransactionCreateDto;
 import com.artem.model.dto.TransactionUpdateDto;
 import com.artem.model.entity.Transaction;

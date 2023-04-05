@@ -1,6 +1,6 @@
 package com.artem.mapper;
 
-import com.artem.dao.UtilityAccountRepository;
+import com.artem.repository.UtilityAccountRepository;
 import com.artem.model.dto.UtilityPaymentCreateDto;
 import com.artem.model.dto.UtilityPaymentUpdateDto;
 import com.artem.model.entity.UtilityPayment;
