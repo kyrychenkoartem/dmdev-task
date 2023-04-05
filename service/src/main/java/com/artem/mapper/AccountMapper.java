@@ -1,6 +1,6 @@
 package com.artem.mapper;
 
-import com.artem.dao.UserRepository;
+import com.artem.repository.UserRepository;
 import com.artem.model.dto.AccountCreateDto;
 import com.artem.model.dto.AccountUpdateDto;
 import com.artem.model.entity.Account;

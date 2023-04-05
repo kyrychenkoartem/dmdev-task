@@ -1,4 +1,4 @@
-package com.artem.dao;
+package com.artem.repository;
 
 import java.util.ArrayList;
 import java.util.List;

@@ -1,11 +1,11 @@
-package com.artem.integration.dao;
+package com.artem.integration.repository;
 
-import com.artem.dao.AccountRepository;
-import com.artem.dao.BankAccountRepository;
-import com.artem.dao.TransactionRepository;
-import com.artem.dao.UserRepository;
-import com.artem.dao.UtilityAccountRepository;
-import com.artem.dao.UtilityPaymentRepository;
+import com.artem.repository.AccountRepository;
+import com.artem.repository.BankAccountRepository;
+import com.artem.repository.TransactionRepository;
+import com.artem.repository.UserRepository;
+import com.artem.repository.UtilityAccountRepository;
+import com.artem.repository.UtilityPaymentRepository;
 import com.artem.mapper.AccountMapper;
 import com.artem.mapper.BankAccountMapper;
 import com.artem.mapper.TransactionMapper;

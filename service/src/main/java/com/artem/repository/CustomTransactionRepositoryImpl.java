@@ -1,4 +1,4 @@
-package com.artem.dao;
+package com.artem.repository;
 
 import com.artem.model.dto.TransactionFilter;
 import com.artem.model.entity.Transaction;
@@ -7,8 +7,8 @@ import com.querydsl.jpa.impl.JPAQuery;
 import java.math.BigDecimal;
 import java.util.List;
 import javax.persistence.EntityManager;
+import lombok.RequiredArgsConstructor;
 import org.hibernate.jpa.QueryHints;
-import org.springframework.stereotype.Repository;
 
 import static com.artem.model.entity.QAccount.account;
 import static com.artem.model.entity.QBankAccount.bankAccount;
@@ -17,16 +17,15 @@ import static com.artem.model.entity.QUser.user;
 import static com.artem.model.entity.QUtilityAccount.utilityAccount;
 import static com.artem.model.entity.QUtilityPayment.utilityPayment;
 
-@Repository
-public class TransactionDaoQuery {
+@RequiredArgsConstructor
+public class CustomTransactionRepositoryImpl implements CustomTransactionRepository {
 
+    private final EntityManager entityManager;
 
-    /**
-     * Return all transaction for each user
-     */
-    public List<Transaction> getTransactionsByUser(EntityManager session, Long userId) {
-        var entityGraph = EntityGraphUtil.getTransactionGraphByUser(session);
-        return new JPAQuery<Transaction>(session)
+    @Override
+    public List<Transaction> getTransactionsByUser(Long userId) {
+        var entityGraph = EntityGraphUtil.getTransactionGraphByUser(entityManager);
+        return new JPAQuery<Transaction>(entityManager)
                 .select(transaction)
                 .from(transaction)
                 .join(transaction.bankAccount, bankAccount)
@@ -37,9 +36,10 @@ public class TransactionDaoQuery {
                 .fetch();
     }
 
-    public List<Transaction> getTransactionsByBankAccount(EntityManager session, Long bankAccountId) {
-        var entityGraph = EntityGraphUtil.getTransactionGraphByBankAccount(session);
-        return new JPAQuery<Transaction>(session)
+    @Override
+    public List<Transaction> getTransactionsByBankAccount(Long bankAccountId) {
+        var entityGraph = EntityGraphUtil.getTransactionGraphByBankAccount(entityManager);
+        return new JPAQuery<Transaction>(entityManager)
                 .select(transaction)
                 .from(transaction)
                 .join(transaction.bankAccount, bankAccount)
@@ -48,12 +48,13 @@ public class TransactionDaoQuery {
                 .fetch();
     }
 
-    public List<Transaction> getTransactionByUtilityAccountName(EntityManager session, String utilityAccountName) {
-        return new JPAQuery<Transaction>(session)
+    @Override
+    public List<Transaction> getTransactionByUtilityAccountName(String utilityAccountName) {
+        return new JPAQuery<Transaction>(entityManager)
                 .select(transaction)
                 .from(transaction)
                 .where(transaction.transactionId.in(
-                        new JPAQuery<String>(session)
+                        new JPAQuery<String>(entityManager)
                                 .select(utilityPayment.transaction)
                                 .from(utilityAccount)
                                 .where(utilityAccount.providerName.eq(utilityAccountName))
@@ -64,8 +65,9 @@ public class TransactionDaoQuery {
                 .fetch();
     }
 
-    public BigDecimal getSumTransactionsPaymentByBankAccount(EntityManager session, Long bankAccountId) {
-        return new JPAQuery<BigDecimal>(session)
+    @Override
+    public BigDecimal getSumTransactionsPaymentByBankAccount(Long bankAccountId) {
+        return new JPAQuery<BigDecimal>(entityManager)
                 .select(transaction.amount.sum())
                 .from(transaction)
                 .join(transaction.bankAccount, bankAccount)
@@ -73,9 +75,10 @@ public class TransactionDaoQuery {
                 .fetchOne();
     }
 
-    public List<Transaction> getLimitedTransactionsByBankAccountOrderedByTimeAsc(EntityManager session, Long bankAccountId, int limit) {
-        var entityGraph = EntityGraphUtil.getTransactionGraphByBankAccount(session);
-        return new JPAQuery<Transaction>(session)
+    @Override
+    public List<Transaction> getLimitedTransactionsByBankAccountOrderedByTimeAsc(Long bankAccountId, int limit) {
+        var entityGraph = EntityGraphUtil.getTransactionGraphByBankAccount(entityManager);
+        return new JPAQuery<Transaction>(entityManager)
                 .select(transaction)
                 .from(transaction)
                 .join(transaction.bankAccount, bankAccount)
@@ -86,9 +89,10 @@ public class TransactionDaoQuery {
                 .fetch();
     }
 
-    public List<Transaction> getTransactionsByUserOrderedByTimeDesc(EntityManager session, Long userId) {
-        var entityGraph = EntityGraphUtil.getTransactionGraphByUser(session);
-        return new JPAQuery<Transaction>(session)
+    @Override
+    public List<Transaction> getTransactionsByUserOrderedByTimeDesc(Long userId) {
+        var entityGraph = EntityGraphUtil.getTransactionGraphByUser(entityManager);
+        return new JPAQuery<Transaction>(entityManager)
                 .select(transaction)
                 .from(transaction)
                 .join(transaction.bankAccount, bankAccount)
@@ -100,14 +104,14 @@ public class TransactionDaoQuery {
                 .fetch();
     }
 
-    public List<Transaction> getTransactionsByUserByLastDate(
-            EntityManager session, Long userId, TransactionFilter filter) {
-        var entityGraph = EntityGraphUtil.getTransactionGraphByUser(session);
+    @Override
+    public List<Transaction> getTransactionsByUserByLastDate(Long userId, TransactionFilter filter) {
+        var entityGraph = EntityGraphUtil.getTransactionGraphByUser(entityManager);
         var predicate = QPredicate.builder()
                 .add(filter.getReferenceNumber(), transaction.referenceNumber::eq)
                 .add(filter.getTime(), transaction.time::after)
                 .buildAnd();
-        return new JPAQuery<Transaction>(session)
+        return new JPAQuery<Transaction>(entityManager)
                 .select(transaction)
                 .from(transaction)
                 .join(transaction.bankAccount, bankAccount)
@@ -117,9 +121,4 @@ public class TransactionDaoQuery {
                 .setHint(QueryHints.HINT_FETCHGRAPH, entityGraph)
                 .fetch();
     }
-
-
-//    public static TransactionDaoQuery getInstance() {
-//        return INSTANCE;
-//    }
 }

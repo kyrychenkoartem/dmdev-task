@@ -1,4 +1,4 @@
-package com.artem.integration.dao;
+package com.artem.integration.repository;
 
 import com.artem.integration.annotation.IT;
 import org.junit.jupiter.api.BeforeAll;

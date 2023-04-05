@@ -1,7 +1,7 @@
-package com.artem.integration.dao;
+package com.artem.integration.repository;
 
-import com.artem.dao.AccountRepository;
-import com.artem.dao.UserRepository;
+import com.artem.repository.AccountRepository;
+import com.artem.repository.UserRepository;
 import com.artem.mapper.AccountMapper;
 import com.artem.mapper.UserMapper;
 import com.artem.model.dto.AccountCreateDto;

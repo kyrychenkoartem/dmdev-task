@@ -1,4 +1,4 @@
-package com.artem.dao;
+package com.artem.repository;
 
 import com.artem.model.entity.User;
 

@@ -1,6 +1,6 @@
-package com.artem.integration.dao;
+package com.artem.integration.repository;
 
-import com.artem.dao.UtilityAccountRepository;
+import com.artem.repository.UtilityAccountRepository;
 import com.artem.mapper.UtilityAccountMapper;
 import com.artem.model.dto.UtilityAccountCreateDto;
 import com.artem.model.dto.UtilityAccountUpdateDto;
