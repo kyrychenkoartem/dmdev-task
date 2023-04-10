@@ -5,7 +5,11 @@ import lombok.experimental.UtilityClass;
 @UtilityClass
 public class ConstantUtil {
 
+    public static final Integer PAGE = 0;
+    public static final Integer SIZE = 3;
+    public static final Long USER_1 = 1L;
     public static final Integer ALL_USERS = 5;
+    public static final Integer ALL_3_USERS = 3;
     public static final Integer ALL_ACCOUNTS = 5;
     public static final Integer ALL_BANK_ACCOUNTS = 15;
     public static final Integer ALL_BANK_CARDS = 1;

@@ -5,8 +5,9 @@ import java.time.LocalDate;
 import lombok.Builder;
 
 @Builder
-public record UserReadDto(String firstname,
-                          String lastname,
+public record UserReadDto(Long id,
+                          String firstName,
+                          String lastName,
                           String email,
                           LocalDate birthDate,
                           Role role) {

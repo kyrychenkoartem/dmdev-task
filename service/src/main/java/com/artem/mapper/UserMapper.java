@@ -24,8 +24,9 @@ public class UserMapper implements Mapper<UserCreateDto, User> {
 
     public UserReadDto mapFrom(User user) {
         return UserReadDto.builder()
-                .firstname(user.getFirstName())
-                .lastname(user.getLastName())
+                .id(user.getId())
+                .firstName(user.getFirstName())
+                .lastName(user.getLastName())
                 .email(user.getEmail())
                 .birthDate(user.getBirthDate())
                 .role(user.getRole())
@@ -33,9 +34,10 @@ public class UserMapper implements Mapper<UserCreateDto, User> {
     }
 
     public User mapFrom(User user, UserUpdateDto updateDto) {
-        user.setFirstName(updateDto.firstname());
-        user.setLastName(updateDto.lastname());
-        user.setPassword(updateDto.password());
+        user.setFirstName(updateDto.firstName());
+        user.setLastName(updateDto.lastName());
+        user.setEmail(updateDto.email());
+        user.setBirthDate(updateDto.birthDate());
         user.setRole(updateDto.role());
         return user;
     }
