@@ -62,7 +62,8 @@ class UserRepositoryTest extends RepositoryTestBase {
 
         assertThat(actualUser.getFirstName()).isEqualTo("Test");
         assertThat(actualUser.getLastName()).isEqualTo("Test");
-        assertThat(actualUser.getPassword()).isEqualTo("updatedPassword");
+        assertThat(actualUser.getEmail()).isEqualTo("testtest@gmail.com");
+        assertThat(actualUser.getBirthDate()).isEqualTo(LocalDate.of(2020, 2, 2));
         assertThat(actualUser.getRole()).isEqualTo(Role.ADMIN);
     }
 
@@ -87,9 +88,10 @@ class UserRepositoryTest extends RepositoryTestBase {
 
     private UserUpdateDto getUserUpdateDto() {
         return UserUpdateDto.builder()
-                .firstname("Test")
-                .lastname("Test")
-                .password("updatedPassword")
+                .firstName("Test")
+                .lastName("Test")
+                .email("testtest@gmail.com")
+                .birthDate(LocalDate.of(2020, 2, 2))
                 .role(Role.ADMIN)
                 .build();
     }
