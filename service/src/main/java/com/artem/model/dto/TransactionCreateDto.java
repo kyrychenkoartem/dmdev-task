@@ -2,14 +2,18 @@ package com.artem.model.dto;
 
 import com.artem.model.type.TransactionType;
 import java.math.BigDecimal;
-import java.time.LocalDateTime;
+import javax.validation.constraints.DecimalMin;
+import javax.validation.constraints.NotBlank;
 import lombok.Builder;
 
 @Builder
-public record TransactionCreateDto(BigDecimal amount,
+public record TransactionCreateDto(@DecimalMin(value = "0.00")
+                                   BigDecimal amount,
+
                                    TransactionType type,
-                                   String referenceNumber,
+
+                                   @NotBlank(message = "Transaction id shouldn't be empty")                                   String referenceNumber,
                                    String transactionId,
-                                   LocalDateTime time,
+
                                    Long bankAccountId) {
 }

@@ -1,0 +1,17 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Header</title>
+
+</head>
+
+<div th:fragment="header">
+    <link th:href="@{/css/bootstrap.min.css}" rel="stylesheet">
+    <ol>
+        <li><a href="user/users.html" th:href="@{/users}">Users</a></li>
+        <li><a href="account/accounts.html" th:href="@{/accounts}">Accounts</a></li>
+        <li><a href="bank-account/bank-accounts.html" th:href="@{/bank-accounts}">Bank Accounts</a></li>
+    </ol>
+</div>
+</html>

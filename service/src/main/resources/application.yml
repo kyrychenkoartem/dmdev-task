@@ -8,6 +8,10 @@ spring:
     change-log: db.changelog/db.changelog-master.yaml
   jpa:
     open-in-view: false
+    properties:
+      hibernate:
+        show_sql: true
+        format_sql: true
   mvc:
     format:
       date: iso

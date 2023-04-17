@@ -1,10 +1,12 @@
 package com.artem.mapper;
 
+import com.artem.model.dto.BankCardReadDto;
 import com.artem.repository.BankAccountRepository;
 import com.artem.repository.UserRepository;
 import com.artem.model.dto.BankCardCreateDto;
 import com.artem.model.dto.BankCardUpdateDto;
 import com.artem.model.entity.BankCard;
+import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 
@@ -26,12 +28,40 @@ public class BankCardMapper implements Mapper<BankCardCreateDto, BankCard> {
                 .expiryDate(createDto.expiryDate())
                 .bank(createDto.bank())
                 .cvv(createDto.cvv())
-                .cardType(createDto.cardType())
+                .cardType(createDto.type())
                 .build();
     }
 
+    public BankCardReadDto mapFrom(BankCard bankCard) {
+        return BankCardReadDto.builder()
+                .id(bankCard.getId())
+                .userId(bankCard.getUser().getId())
+                .bankAccountId(bankCard.getBankAccount().getId())
+                .cardNumber(bankCard.getCardNumber())
+                .expiryDate(bankCard.getExpiryDate())
+                .bank(bankCard.getBank())
+                .cvv(bankCard.getCvv())
+                .cardType(bankCard.getCardType())
+                .build();
+    }
+
+    public List<BankCardReadDto> mapFrom(List<BankCard> bankCards) {
+        return bankCards.stream()
+                .map(it -> BankCardReadDto.builder()
+                        .id(it.getId())
+                        .userId(it.getUser().getId())
+                        .bankAccountId(it.getBankAccount().getId())
+                        .cardNumber(it.getCardNumber())
+                        .expiryDate(it.getExpiryDate())
+                        .bank(it.getBank())
+                        .cvv(it.getCvv())
+                        .cardType(it.getCardType())
+                        .build())
+                .toList();
+    }
+
     public BankCard mapFrom(BankCard bankCard, BankCardUpdateDto updateDto) {
-        bankCard.setBankAccount(updateDto.bankAccount());
+        bankAccountRepository.findById(updateDto.bankAccountId()).ifPresent(bankCard::setBankAccount);
         bankCard.setExpiryDate(updateDto.expiryDate());
         return bankCard;
     }

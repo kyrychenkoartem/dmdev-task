@@ -83,7 +83,7 @@ class UserControllerTest extends RepositoryTestBase {
         mockMvc.perform(post("/users/1/update")
                         .param("firstName", "Test1")
                         .param("lastName", "Test1")
-                        .param("email", "test1@gmail.com")
+                        .param("email", "test2@gmail.com")
                         .param("birthDate", "2001-01-01")
                         .param("role", "USER")
                 )

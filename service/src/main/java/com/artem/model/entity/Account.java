@@ -60,8 +60,19 @@ public class Account {
     @OneToMany(mappedBy = "account", cascade = CascadeType.ALL)
     private List<BankAccount> accounts = new ArrayList<>();
 
+    @Builder.Default
+    @EqualsAndHashCode.Exclude
+    @ToString.Exclude
+    @OneToMany(mappedBy = "account", cascade = CascadeType.ALL)
+    private List<UtilityAccount> utilityAccounts = new ArrayList<>();
+
     public void addBankAccount(BankAccount bankAccount) {
         accounts.add(bankAccount);
         bankAccount.setAccount(this);
+    }
+
+    public void addUtilityAccount(UtilityAccount utilityAccount) {
+        utilityAccounts.add(utilityAccount);
+        utilityAccount.setAccount(this);
     }
 }

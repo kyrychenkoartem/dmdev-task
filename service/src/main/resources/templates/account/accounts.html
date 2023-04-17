@@ -1,0 +1,15 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Accounts</title>
+</head>
+<body>
+<div th:insert="~{header :: header}"></div>
+<form action="/accounts">
+    <div th:each="account : ${accounts}">
+        <a th:href="@{'/accounts/' + ${account.id}}" th:text="|${account.id}. ${account.createdBy} - ${account.status}|">Account</a>
+    </div>
+</form>
+</body>
+</html>

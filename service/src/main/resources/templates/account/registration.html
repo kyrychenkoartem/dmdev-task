@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Registration</title>
+</head>
+<body>
+<div th:insert="~{header :: header}"></div>
+    <form th:action="@{/accounts}" method="post" th:object="${account}">
+        <label for="userId">User:
+            <input id="userId" type="text" name="userId" th:value="*{userId}">
+        </label><br>
+
+        <div th:each="status : ${statuses}">
+            <input th:id="${status}" type="radio" name="status" th:value="${status}" th:checked="${status == account.status}">
+            <label th:for="${status}" th:text="${status}">Status name</label>
+        </div>
+        <button type="submit">Create</button>
+    </form>
+</body>
+</html>

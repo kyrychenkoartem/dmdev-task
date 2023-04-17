@@ -40,6 +40,8 @@ public class User {
     @Column(nullable = false)
     private String password;
 
+    private String image;
+
     @Column(nullable = false)
     private LocalDate birthDate;
 

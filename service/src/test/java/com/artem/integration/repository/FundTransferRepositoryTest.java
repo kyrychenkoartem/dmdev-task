@@ -171,6 +171,7 @@ class FundTransferRepositoryTest extends RepositoryTestBase {
         var user = userMapper.mapFrom(userCreateDto);
         var actualUser = userRepository.save(user);
         var accountCreateDto = AccountCreateDto.builder()
+                .status(AccountStatus.ACTIVE)
                 .userId(actualUser.getId())
                 .build();
         var account = accountMapper.mapFrom(accountCreateDto);
@@ -178,8 +179,8 @@ class FundTransferRepositoryTest extends RepositoryTestBase {
         return BankAccountCreateDto.builder()
                 .accountId(expectedAccount.getId())
                 .number("234554356765646586")
-                .accountType(AccountType.SAVINGS_ACCOUNT)
-                .accountStatus(AccountStatus.ACTIVE)
+                .type(AccountType.SAVINGS_ACCOUNT)
+                .status(AccountStatus.ACTIVE)
                 .availableBalance(BigDecimal.valueOf(500).setScale(2, RoundingMode.CEILING))
                 .actualBalance(BigDecimal.valueOf(600).setScale(2, RoundingMode.CEILING))
                 .build();
@@ -190,6 +191,7 @@ class FundTransferRepositoryTest extends RepositoryTestBase {
         var user = userMapper.mapFrom(userCreateDto);
         var actualUser = userRepository.save(user);
         var accountCreateDto = AccountCreateDto.builder()
+                .status(AccountStatus.ACTIVE)
                 .userId(actualUser.getId())
                 .build();
         var account = accountMapper.mapFrom(accountCreateDto);
@@ -197,8 +199,8 @@ class FundTransferRepositoryTest extends RepositoryTestBase {
         return BankAccountCreateDto.builder()
                 .accountId(expectedAccount.getId())
                 .number("234554356765646587")
-                .accountType(AccountType.SAVINGS_ACCOUNT)
-                .accountStatus(AccountStatus.ACTIVE)
+                .type(AccountType.SAVINGS_ACCOUNT)
+                .status(AccountStatus.ACTIVE)
                 .availableBalance(BigDecimal.valueOf(500).setScale(2, RoundingMode.CEILING))
                 .actualBalance(BigDecimal.valueOf(600).setScale(2, RoundingMode.CEILING))
                 .build();
@@ -222,7 +224,6 @@ class FundTransferRepositoryTest extends RepositoryTestBase {
                 .type(TransactionType.DEPOSIT)
                 .referenceNumber(toAccount.getNumber())
                 .transactionId(getTransactionId())
-                .time(DateTimeGenerator.getRandomDateTime())
                 .bankAccountId(fromAccount.getId())
                 .build();
     }

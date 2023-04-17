@@ -25,4 +25,11 @@ public class EntityGraphUtil {
         entityGraph.addAttributeNodes("bankAccount");
         return entityGraph;
     }
+
+    public static EntityGraph<BankAccount> getBankAccountGraph(EntityManager session) {
+        var entityGraph = session.createEntityGraph(BankAccount.class);
+        entityGraph.addAttributeNodes("bankCards");
+        entityGraph.addAttributeNodes("transactions");
+        return entityGraph;
+    }
 }

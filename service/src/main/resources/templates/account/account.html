@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Account</title>
+    <link th:href="@{/css/bootstrap.min.css}" rel="stylesheet">
+</head>
+<body>
+<div th:insert="~{header :: header}"></div>
+<div th:if="${!account.bankAccounts.isEmpty()}">
+    <div th:each="bankAccount : ${account.bankAccounts}">
+        <li><a th:href="@{'/bank-accounts/' + ${bankAccount.id}}" th:text="|${bankAccount.number}. ${bankAccount.type}
+    Available balance:  ${bankAccount.availableBalance}
+    Actual balance:  ${bankAccount.actualBalance}|">Bank account</a></li>
+    </div>
+</div><br>
+
+<form th:action="@{/bank-accounts/registration}">
+    <button type="submit">Create Bank Account</button>
+</form><br>
+
+<div th:if="${!account.utilityAccounts.isEmpty()}">
+    <div th:each="utilityAccount : ${account.utilityAccounts}">
+        <li><a th:href="@{'/utility-accounts/' + ${utilityAccount.id}}" th:text="|${utilityAccount.number}. ${utilityAccount.providerName}|">Utility account</a></li>
+    </div>
+</div><br>
+
+<form th:action="@{/utility-accounts/registration}">
+    <button type="submit">Create Utility Account</button>
+</form><br>
+
+
+
+</body>
+</html>

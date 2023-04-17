@@ -1,0 +1,15 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Accounts</title>
+</head>
+<body>
+<div th:insert="~{header :: header}"></div>
+<form action="/bank-accounts">
+    <div th:each="bankAccount : ${bankAccounts}">
+        <a th:href="@{'/bank-accounts/' + ${bankAccount.id}}" th:text="|${bankAccount.number}. ${bankAccount.type} - ${bankAccount.status}|">Bank Account</a>
+    </div>
+</form>
+</body>
+</html>

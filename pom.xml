@@ -29,6 +29,7 @@
         <hibernate.jpamodelgen.version>5.6.15.Final</hibernate.jpamodelgen.version>
         <javax.persistence-api>2.2</javax.persistence-api>
         <querydsl.version>5.0.0</querydsl.version>
+        <springdoc>1.7.0</springdoc>
     </properties>
 
     <dependencyManagement>
@@ -39,6 +40,13 @@
                 <version>5.0.0</version>
                 <scope>provided</scope>
             </dependency>
+
+            <dependency>
+                <groupId>org.springdoc</groupId>
+                <artifactId>springdoc-openapi-ui</artifactId>
+                <version>${springdoc}</version>
+            </dependency>
+
 
             <dependency>
                 <groupId>org.hibernate</groupId>

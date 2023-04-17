@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Utility account</title>
+<body>
+Number: <span th:text="${utilityAccount.number}"></span> <br>
+Provider name: <span th:text="${utilityAccount.providerName}"></span> <br>
+
+<body>
+<div th:insert="~{header :: header}"></div>
+<form th:action="@{/utility-accounts/{utilityId}/update(utilityId = ${utilityAccount.id})}" method="post" th:object="${utilityAccount}">
+    <label for="number">Number:
+        <input id="number" type="text" name="number" th:value="*{number}">
+    </label><br>
+    <label for="providerName">Provider name:
+        <input id="providerName" type="text" name="providerName" th:value="*{providerName}">
+    </label><br>
+    <button type="submit">Update</button>
+</form>
+
+<form th:action="@{/utility-accounts/{utilityId}/delete(utilityId = ${utilityAccount.id})}" method="post">
+    <button type="submit">Remove</button>
+</form>
+<br><br>
+
+<form th:action="@{/accounts/{accountId}(accountId = ${utilityAccount.accountId})}"
+      th:if="${utilityAccount.accountId != null}">
+    <button type="submit">Account</button>
+</form>
+</body>
+</html>

@@ -3,7 +3,8 @@ VALUES (1, 'Ivan', 'Ivanov', 'ivan@gmail.com', '123', '2000-01-01', 'USER', 'ACT
        (2, 'Artem', 'Artemov', 'artem@gmail.com', '123', '2000-01-01', 'USER', 'ACTIVE'),
        (3, 'Petr', 'Ivanov', 'petr@gmail.com', '123', '2000-01-01', 'USER', 'ACTIVE'),
        (4, 'John', 'Liskov', 'john@gmail.com', '123', '2000-01-01', 'USER', 'ACTIVE'),
-       (5, 'Mike', 'Dunk', 'mike@gmail.com', '123', '2000-01-01', 'USER', 'ACTIVE');
+       (5, 'Mike', 'Dunk', 'mike@gmail.com', '123', '2000-01-01', 'USER', 'ACTIVE'),
+       (6, 'Test', 'Test', 'test1@gmail.com', '123', '2000-01-01', 'USER', 'ACTIVE');
 SELECT SETVAL('users_id_seq', (SELECT MAX(id) FROM users));
 
 INSERT INTO account (id, user_id, status, created_at, created_by, updated_at, updated_by)
@@ -14,29 +15,33 @@ VALUES (1, 1, 'ACTIVE', now(), 'ivan@gmail.com', null, null),
        (5, 5, 'ACTIVE', now(), 'mike@gmail.com', null, null);
 SELECT SETVAL('account_id_seq', (SELECT MAX(id) FROM account));
 
-INSERT INTO bank_account (id, account_id, number, type, status)
-VALUES (1, 1, '1234567890', 'CHECKING_ACCOUNT', 'ACTIVE'),
-       (2, 1, '2345678901', 'SAVINGS_ACCOUNT', 'ACTIVE'),
-       (3, 1, '3456789012', 'LOAN_ACCOUNT', 'ACTIVE'),
-       (4, 2, '4567890123', 'CHECKING_ACCOUNT', 'ACTIVE'),
-       (5, 2, '5678901234', 'SAVINGS_ACCOUNT', 'ACTIVE'),
-       (6, 2, '67890123456', 'LOAN_ACCOUNT', 'ACTIVE'),
-       (7, 3, '7890123456', 'CHECKING_ACCOUNT', 'ACTIVE'),
-       (8, 3, '8901234567', 'SAVINGS_ACCOUNT', 'ACTIVE'),
-       (9, 3, '9012345678', 'LOAN_ACCOUNT', 'ACTIVE'),
-       (10, 3, '0123456789', 'FIXED_DEPOSIT', 'ACTIVE'),
-       (11, 4, '1134567890', 'CHECKING_ACCOUNT', 'ACTIVE'),
-       (12, 4, '1224567890', 'SAVINGS_ACCOUNT', 'ACTIVE'),
-       (13, 5, '1233567890', 'CHECKING_ACCOUNT', 'ACTIVE'),
-       (14, 5, '1234467890', 'SAVINGS_ACCOUNT', 'ACTIVE'),
-       (15, 5, '1234557890', 'FIXED_DEPOSIT', 'ACTIVE');
+INSERT INTO bank_account (id, account_id, number, type, status, available_balance, actual_balance)
+VALUES (1, 1, '1234567890', 'CHECKING_ACCOUNT', 'ACTIVE', 200.00, 100.00),
+       (2, 1, '2345678901', 'SAVINGS_ACCOUNT', 'ACTIVE', 200.00, 100.00),
+       (3, 1, '3456789012', 'LOAN_ACCOUNT', 'ACTIVE', 200.00, 100.00),
+       (4, 2, '4567890123', 'CHECKING_ACCOUNT', 'ACTIVE', 200.00, 100.00),
+       (5, 2, '5678901234', 'SAVINGS_ACCOUNT', 'ACTIVE', 200.00, 100.00),
+       (6, 2, '67890123456', 'LOAN_ACCOUNT', 'ACTIVE', 200.00, 100.00),
+       (7, 3, '7890123456', 'CHECKING_ACCOUNT', 'ACTIVE', 200.00, 100.00),
+       (8, 3, '8901234567', 'SAVINGS_ACCOUNT', 'ACTIVE', 200.00, 100.00),
+       (9, 3, '9012345678', 'LOAN_ACCOUNT', 'ACTIVE', 200.00, 100.00),
+       (10, 3, '0123456789', 'FIXED_DEPOSIT', 'ACTIVE', 200.00, 100.00),
+       (11, 4, '1134567890', 'CHECKING_ACCOUNT', 'ACTIVE', 200.00, 100.00),
+       (12, 4, '1224567890', 'SAVINGS_ACCOUNT', 'ACTIVE', 200.00, 100.00),
+       (13, 5, '1233567890', 'CHECKING_ACCOUNT', 'ACTIVE', 200.00, 100.00),
+       (14, 5, '1234467890', 'SAVINGS_ACCOUNT', 'ACTIVE', 200.00, 100.00),
+       (15, 5, '1234557890', 'FIXED_DEPOSIT', 'ACTIVE', 200.00, 100.00);
 SELECT SETVAL('bank_account_id_seq', (SELECT MAX(id) FROM bank_account));
 
+INSERT INTO bank_card (id, user_id, bank_account_id, card_number, expiry_date, bank, cvv, type)
+VALUES (1, 1, 1, '1234567890123456', '11/29', 'CIBC', '123', 'DEBIT');
+SELECT SETVAL('bank_card_id_seq', (SELECT MAX(id) FROM bank_card));
 
-INSERT INTO utility_account (id, number, provider_name)
-VALUES (1, '12345', 'Koodo'),
-       (2, '12346', 'Telus'),
-       (3, '12347', 'Hydro');
+
+INSERT INTO utility_account (id, account_id, number, provider_name)
+VALUES (1, 1, '12345', 'Koodo'),
+       (2, 2, '12346', 'Telus'),
+       (3, 4, '12347', 'Hydro');
 SELECT SETVAL('utility_account_id_seq', (SELECT MAX(id) FROM utility_account));
 
 INSERT INTO banking_transaction (id, amount, type, reference_number, transaction_id, time, bank_account_id)
