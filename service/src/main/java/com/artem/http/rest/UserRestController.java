@@ -34,7 +34,6 @@ import static org.springframework.http.ResponseEntity.notFound;
 public class UserRestController {
 
     private final UserService userService;
-    private final AccountService accountService;
 
     @GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
     public PageResponse<UserReadDto> findAll(UserFilter filter, Pageable pageable) {

@@ -1,7 +1,5 @@
 package com.artem.http.controller;
 
-import com.artem.model.dto.AccountCreateDto;
-import com.artem.model.dto.AccountUpdateDto;
 import com.artem.model.dto.BankAccountCreateDto;
 import com.artem.model.dto.BankAccountUpdateDto;
 import com.artem.model.type.AccountStatus;

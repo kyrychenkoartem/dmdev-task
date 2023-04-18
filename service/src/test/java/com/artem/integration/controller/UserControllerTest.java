@@ -11,6 +11,7 @@ import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.test.web.servlet.MockMvc;
 
+import static com.artem.util.ConstantUtil.REGISTRATION;
 import static com.artem.util.ConstantUtil.USER_1;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
@@ -25,11 +26,12 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 class UserControllerTest extends RepositoryTestBase {
 
     private final MockMvc mockMvc;
+    private static final String URL_PREFIX = "/users/";
 
     @Test
     @SneakyThrows
     void findAll() {
-        mockMvc.perform(get("/users"))
+        mockMvc.perform(get(URL_PREFIX))
                 .andExpect(status().is2xxSuccessful())
                 .andExpect(view().name("user/users"))
                 .andExpect(model().attributeExists("users"))
@@ -39,7 +41,7 @@ class UserControllerTest extends RepositoryTestBase {
     @Test
     @SneakyThrows
     void findById() {
-        mockMvc.perform(get("/users/1"))
+        mockMvc.perform(get(URL_PREFIX + USER_1))
                 .andExpect(status().is2xxSuccessful())
                 .andExpect(view().name("user/user"))
                 .andExpect(model().attributeExists("user"))
@@ -51,7 +53,7 @@ class UserControllerTest extends RepositoryTestBase {
     @Test
     @SneakyThrows
     void registration() {
-        mockMvc.perform(get("/users/registration"))
+        mockMvc.perform(get(URL_PREFIX + REGISTRATION))
                 .andExpect(status().is2xxSuccessful())
                 .andExpect(view().name("user/registration"))
                 .andExpect(model().attributeExists("user"))
@@ -63,7 +65,7 @@ class UserControllerTest extends RepositoryTestBase {
     @Test
     @SneakyThrows
     void create() {
-        mockMvc.perform(post("/users")
+        mockMvc.perform(post(URL_PREFIX)
                         .param("firstname", "Test")
                         .param("lastname", "Test")
                         .param("email", "test@gmail.com")

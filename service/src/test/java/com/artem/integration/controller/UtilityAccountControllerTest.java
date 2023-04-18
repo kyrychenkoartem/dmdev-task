@@ -10,6 +10,7 @@ import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.test.web.servlet.MockMvc;
 
+import static com.artem.util.ConstantUtil.REGISTRATION;
 import static com.artem.util.ConstantUtil.UTILITY_ACCOUNT_1;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
@@ -25,11 +26,12 @@ public class UtilityAccountControllerTest extends RepositoryTestBase {
 
     private final MockMvc mockMvc;
     private final UtilityAccountService utilityAccountService;
+    private static final String URL_PREFIX = "/utility-accounts/";
 
     @Test
     @SneakyThrows
     void findAll() {
-        mockMvc.perform(get("/utility-accounts"))
+        mockMvc.perform(get(URL_PREFIX))
                 .andExpect(status().is2xxSuccessful())
                 .andExpect(view().name("utility-account/utility-accounts"))
                 .andExpect(model().attributeExists("utilityAccounts"));
@@ -38,7 +40,7 @@ public class UtilityAccountControllerTest extends RepositoryTestBase {
     @Test
     @SneakyThrows
     void findById() {
-        mockMvc.perform(get("/utility-accounts/1"))
+        mockMvc.perform(get(URL_PREFIX + UTILITY_ACCOUNT_1))
                 .andExpect(status().is2xxSuccessful())
                 .andExpect(view().name("utility-account/utility-account"))
                 .andExpect(model().attributeExists("utilityAccount"))
@@ -48,7 +50,7 @@ public class UtilityAccountControllerTest extends RepositoryTestBase {
     @Test
     @SneakyThrows
     void registration() {
-        mockMvc.perform(get("/utility-accounts/registration"))
+        mockMvc.perform(get(URL_PREFIX + REGISTRATION))
                 .andExpect(status().is2xxSuccessful())
                 .andExpect(view().name("utility-account/registration"))
                 .andExpect(model().attributeExists("utilityAccount"))
@@ -58,7 +60,7 @@ public class UtilityAccountControllerTest extends RepositoryTestBase {
     @Test
     @SneakyThrows
     void create() {
-        mockMvc.perform(post("/utility-accounts")
+        mockMvc.perform(post(URL_PREFIX)
                         .param("accountId", "1")
                         .param("number", "2445464")
                         .param("providerName", "BOOM")

@@ -13,6 +13,7 @@ import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMock
 import org.springframework.test.web.servlet.MockMvc;
 
 import static com.artem.util.ConstantUtil.BANK_CARD_1;
+import static com.artem.util.ConstantUtil.REGISTRATION;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.model;
@@ -28,10 +29,12 @@ public class BankCardControllerTest extends RepositoryTestBase {
     private final MockMvc mockMvc;
     private final BankCardService bankCardService;
 
+    private static final String URL_PREFIX = "/bank-cards/";
+
     @Test
     @SneakyThrows
     void findAll() {
-        mockMvc.perform(get("/bank-cards"))
+        mockMvc.perform(get(URL_PREFIX))
                 .andExpect(status().is2xxSuccessful())
                 .andExpect(view().name("bank-card/bank-cards"))
                 .andExpect(model().attributeExists("bankCards"));
@@ -40,7 +43,7 @@ public class BankCardControllerTest extends RepositoryTestBase {
     @Test
     @SneakyThrows
     void findById() {
-        mockMvc.perform(get("/bank-cards/1"))
+        mockMvc.perform(get(URL_PREFIX + BANK_CARD_1))
                 .andExpect(status().is2xxSuccessful())
                 .andExpect(view().name("bank-card/bank-card"))
                 .andExpect(model().attributeExists("bankCard"))
@@ -50,7 +53,7 @@ public class BankCardControllerTest extends RepositoryTestBase {
     @Test
     @SneakyThrows
     void registration() {
-        mockMvc.perform(get("/bank-cards/registration"))
+        mockMvc.perform(get(URL_PREFIX + REGISTRATION))
                 .andExpect(status().is2xxSuccessful())
                 .andExpect(view().name("bank-card/registration"))
                 .andExpect(model().attributeExists("card"))
@@ -64,7 +67,7 @@ public class BankCardControllerTest extends RepositoryTestBase {
     @Test
     @SneakyThrows
     void create() {
-        mockMvc.perform(post("/bank-cards")
+        mockMvc.perform(post(URL_PREFIX)
                         .param("userId", "1")
                         .param("bankAccountId", "1")
                         .param("cardNumber", "1234567890123457")

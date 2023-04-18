@@ -1,6 +1,5 @@
 package com.artem.http.controller;
 
-import com.artem.model.dto.AccountReadDto;
 import com.artem.model.dto.PageResponse;
 import com.artem.model.dto.UserCreateDto;
 import com.artem.model.dto.UserFilter;
@@ -8,7 +7,6 @@ import com.artem.model.dto.UserUpdateDto;
 import com.artem.model.type.Role;
 import com.artem.service.AccountService;
 import com.artem.service.UserService;
-import java.util.Optional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;

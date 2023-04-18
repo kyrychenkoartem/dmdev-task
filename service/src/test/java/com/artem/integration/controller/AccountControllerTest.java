@@ -12,6 +12,7 @@ import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMock
 import org.springframework.test.web.servlet.MockMvc;
 
 import static com.artem.util.ConstantUtil.ACCOUNT_1;
+import static com.artem.util.ConstantUtil.REGISTRATION;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.model;
@@ -27,10 +28,12 @@ public class AccountControllerTest extends RepositoryTestBase {
     private final MockMvc mockMvc;
     private final AccountService accountService;
 
+    private static final String URL_PREFIX = "/accounts/";
+
     @Test
     @SneakyThrows
     void findAll() {
-        mockMvc.perform(get("/accounts"))
+        mockMvc.perform(get(URL_PREFIX))
                 .andExpect(status().is2xxSuccessful())
                 .andExpect(view().name("account/accounts"))
                 .andExpect(model().attributeExists("accounts"));
@@ -39,7 +42,7 @@ public class AccountControllerTest extends RepositoryTestBase {
     @Test
     @SneakyThrows
     void findById() {
-        mockMvc.perform(get("/accounts/1"))
+        mockMvc.perform(get(URL_PREFIX + ACCOUNT_1))
                 .andExpect(status().is2xxSuccessful())
                 .andExpect(view().name("account/account"))
                 .andExpect(model().attributeExists("account"))
@@ -51,7 +54,7 @@ public class AccountControllerTest extends RepositoryTestBase {
     @Test
     @SneakyThrows
     void registration() {
-        mockMvc.perform(get("/accounts/registration"))
+        mockMvc.perform(get(URL_PREFIX + REGISTRATION))
                 .andExpect(status().is2xxSuccessful())
                 .andExpect(view().name("account/registration"))
                 .andExpect(model().attributeExists("account"))
@@ -63,7 +66,7 @@ public class AccountControllerTest extends RepositoryTestBase {
     @Test
     @SneakyThrows
     void create() {
-        mockMvc.perform(post("/accounts")
+        mockMvc.perform(post(URL_PREFIX)
                         .param("userId", "6")
                         .param("status", "ACTIVE")
                 )

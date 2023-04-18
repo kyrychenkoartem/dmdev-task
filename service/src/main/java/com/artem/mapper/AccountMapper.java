@@ -1,16 +1,12 @@
 package com.artem.mapper;
 
 import com.artem.model.dto.AccountReadDto;
-import com.artem.model.entity.BankAccount;
 import com.artem.repository.UserRepository;
 import com.artem.model.dto.AccountCreateDto;
 import com.artem.model.dto.AccountUpdateDto;
 import com.artem.model.entity.Account;
-import com.artem.model.type.AccountStatus;
 import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
-import java.util.List;
-import java.util.Optional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 

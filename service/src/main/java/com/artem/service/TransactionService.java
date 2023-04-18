@@ -2,23 +2,15 @@ package com.artem.service;
 
 import com.artem.mapper.TransactionMapper;
 import com.artem.model.dto.TransactionCreateDto;
-import com.artem.model.dto.TransactionFilter;
 import com.artem.model.dto.TransactionReadDto;
 import com.artem.model.dto.TransactionUpdateDto;
-import com.artem.model.dto.UserFilter;
-import com.artem.model.dto.UserReadDto;
-import com.artem.repository.QPredicate;
 import com.artem.repository.TransactionRepository;
 import java.util.List;
 import java.util.Optional;
 import lombok.RequiredArgsConstructor;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import static com.artem.model.entity.QTransaction.transaction;
-import static com.artem.model.entity.QUser.user;
 
 @Service
 @RequiredArgsConstructor

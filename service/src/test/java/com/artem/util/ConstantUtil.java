@@ -31,6 +31,7 @@ public class ConstantUtil {
     public static final String UTILITY_ACCOUNT_KOODO = "Koodo";
     public static final String EXPIRY_DATE_EXPECTED = "11/30";
     public static final String EXPIRY_DATE = "11/29";
+    public static final String REGISTRATION = "registration";
     public static final String UPDATED_EXPIRY_DATE = "12/32";
     public static final String PROVIDER_NAME_EXPECTED = "Test1";
     public static final String CARD_NUMBER = "1234567890123456";

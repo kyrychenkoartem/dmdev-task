@@ -13,6 +13,7 @@ import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMock
 import org.springframework.test.web.servlet.MockMvc;
 
 import static com.artem.util.ConstantUtil.BANK_ACCOUNT_1;
+import static com.artem.util.ConstantUtil.REGISTRATION;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.model;
@@ -28,10 +29,12 @@ public class BankAccountControllerTest extends RepositoryTestBase {
     private final MockMvc mockMvc;
     private final BankAccountService bankAccountService;
 
+    private static final String URL_PREFIX = "/bank-accounts/";
+
     @Test
     @SneakyThrows
     void findAll() {
-        mockMvc.perform(get("/bank-accounts"))
+        mockMvc.perform(get(URL_PREFIX))
                 .andExpect(status().is2xxSuccessful())
                 .andExpect(view().name("bank-account/bank-accounts"))
                 .andExpect(model().attributeExists("bankAccounts"));
@@ -40,7 +43,7 @@ public class BankAccountControllerTest extends RepositoryTestBase {
     @Test
     @SneakyThrows
     void findById() {
-        mockMvc.perform(get("/bank-accounts/1"))
+        mockMvc.perform(get(URL_PREFIX + BANK_ACCOUNT_1))
                 .andExpect(status().is2xxSuccessful())
                 .andExpect(view().name("bank-account/bank-account"))
                 .andExpect(model().attributeExists("bankAccount"))
@@ -54,7 +57,7 @@ public class BankAccountControllerTest extends RepositoryTestBase {
     @Test
     @SneakyThrows
     void registration() {
-        mockMvc.perform(get("/bank-accounts/registration"))
+        mockMvc.perform(get(URL_PREFIX + REGISTRATION))
                 .andExpect(status().is2xxSuccessful())
                 .andExpect(view().name("bank-account/registration"))
                 .andExpect(model().attributeExists("bankAccount"))
@@ -68,7 +71,7 @@ public class BankAccountControllerTest extends RepositoryTestBase {
     @Test
     @SneakyThrows
     void create() {
-        mockMvc.perform(post("/bank-accounts")
+        mockMvc.perform(post(URL_PREFIX)
                         .param("accountId", "1")
                         .param("number", "123456789554645")
                         .param("type", "SAVINGS_ACCOUNT")

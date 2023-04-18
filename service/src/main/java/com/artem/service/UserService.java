@@ -20,6 +20,7 @@ import org.springframework.util.StringUtils;
 import org.springframework.web.multipart.MultipartFile;
 
 import static com.artem.model.entity.QUser.user;
+import static org.apache.commons.lang3.ObjectUtils.isNotEmpty;
 
 @Service
 @RequiredArgsConstructor
@@ -87,7 +88,7 @@ public class UserService {
 
     @SneakyThrows
     private void uploadImage(MultipartFile image) {
-        if (!image.isEmpty()) {
+        if (isNotEmpty(image)) {
             imageService.upload(image.getOriginalFilename(), image.getInputStream());
         }
     }
