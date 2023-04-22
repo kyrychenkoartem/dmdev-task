@@ -3,10 +3,11 @@
 <head>
     <meta charset="UTF-8">
     <title>Bank Account</title>
-    <link th:href = "@{/css/bootstrap.min.css}" rel="stylesheet"> </head>
+    <link th:href="@{/css/bootstrap.min.css}" rel="stylesheet">
+</head>
 <body>
 <div th:insert="~{header :: header}"></div>
-<h1>Bank account: <span th:text="${bankAccount.number}"></span></h1>
+<h3>Bank account info: <span th:text="${bankAccount.number}"></span></h3>
 <ul>
     Account Type: <span th:text="${bankAccount.type}"></span> <br>
     Account Status: <span th:text="${bankAccount.status}"></span> <br>
@@ -15,16 +16,33 @@
 </ul>
 
 <div th:if="${!bankAccount.bankCards.isEmpty()}">
+    <h4>Bank cards:</h4>
     <div th:each="bankCard : ${bankAccount.bankCards}">
-        <li><a th:href="@{'/bank-cards/' + ${bankCard.id}}" th:text="|${bankCard.cardNumber}. ${bankCard.expiryDate}|">Bank Card</a></li>
+        <li><a th:href="@{'/bank-cards/' + ${bankCard.id}}" th:text="|${bankCard.cardNumber}. ${bankCard.expiryDate}|">Bank
+            Card</a></li>
     </div>
-</div><br>
+</div>
+<br>
+
+<div th:if="${!bankAccount.transactions.isEmpty()}">
+    <h4>Transactions:</h4>
+    <div th:each="transaction : ${bankAccount.transactions}">
+        <li><span th:text="|Id: ${transaction.transactionId}
+        Account: ${transaction.referenceNumber}
+        Amount: ${transaction.amount}
+        Time: ${transaction.time}
+        |">Transaction</span></li>
+    </div>
+</div>
+<br>
 
 <form th:action="@{/bank-cards/registration}">
     <button type="submit">Create Bank Card</button>
-</form><br>
+</form>
+<br>
 
-<form th:action="@{/accounts/{accountId}(accountId = ${bankAccount.accountId})}" th:if="${bankAccount.accountId != null}">
+<form th:action="@{/accounts/{accountId}(accountId = ${bankAccount.accountId})}"
+      th:if="${bankAccount.accountId != null}">
     <button type="submit">Account</button>
 </form>
 </body>
