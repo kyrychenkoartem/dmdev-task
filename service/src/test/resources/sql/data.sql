@@ -1,10 +1,10 @@
 INSERT INTO users (id, firstname, lastname, email, password, birth_date, role, status)
-VALUES (1, 'Ivan', 'Ivanov', 'ivan@gmail.com', '123', '2000-01-01', 'USER', 'ACTIVE'),
-       (2, 'Artem', 'Artemov', 'artem@gmail.com', '123', '2000-01-01', 'USER', 'ACTIVE'),
-       (3, 'Petr', 'Ivanov', 'petr@gmail.com', '123', '2000-01-01', 'USER', 'ACTIVE'),
-       (4, 'John', 'Liskov', 'john@gmail.com', '123', '2000-01-01', 'USER', 'ACTIVE'),
-       (5, 'Mike', 'Dunk', 'mike@gmail.com', '123', '2000-01-01', 'USER', 'ACTIVE'),
-       (6, 'Test', 'Test', 'test1@gmail.com', '123', '2000-01-01', 'USER', 'ACTIVE');
+VALUES (1, 'Ivan', 'Ivanov', 'ivan@gmail.com', '{noop}123', '2000-01-01', 'USER', 'ACTIVE'),
+       (2, 'Artem', 'Artemov', 'artem@gmail.com', '{noop}123', '2000-01-01', 'USER', 'ACTIVE'),
+       (3, 'Petr', 'Ivanov', 'petr@gmail.com', '{noop}123', '2000-01-01', 'USER', 'ACTIVE'),
+       (4, 'John', 'Liskov', 'john@gmail.com', '{noop}123', '2000-01-01', 'USER', 'ACTIVE'),
+       (5, 'Mike', 'Dunk', 'mike@gmail.com', '{noop}123', '2000-01-01', 'USER', 'ACTIVE'),
+       (6, 'Test', 'Test', 'test1@gmail.com', '{noop}123', '2000-01-01', 'USER', 'ACTIVE');
 SELECT SETVAL('users_id_seq', (SELECT MAX(id) FROM users));
 
 INSERT INTO account (id, user_id, status, created_at, created_by, updated_at, updated_by)

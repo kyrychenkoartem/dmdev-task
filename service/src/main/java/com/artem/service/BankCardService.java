@@ -4,6 +4,7 @@ import com.artem.mapper.BankCardMapper;
 import com.artem.model.dto.BankCardCreateDto;
 import com.artem.model.dto.BankCardReadDto;
 import com.artem.model.dto.BankCardUpdateDto;
+import com.artem.model.entity.BankCard;
 import com.artem.repository.BankCardRepository;
 import java.util.List;
 import java.util.Optional;
@@ -18,6 +19,7 @@ public class BankCardService {
 
     private final BankCardRepository bankCardRepository;
     private final BankCardMapper bankCardMapper;
+    private final UserService userService;
 
     public List<BankCardReadDto> findAll() {
         return bankCardRepository.findAll().stream()
@@ -56,5 +58,11 @@ public class BankCardService {
                     return true;
                 })
                 .orElse(false);
+    }
+
+    public List<Long> getId() {
+        return bankCardRepository.findAllByUserId(userService.getId()).stream()
+                .map(BankCard::getId)
+                .toList();
     }
 }

@@ -26,15 +26,6 @@ public class TransactionService {
                 .toList();
     }
 
-//    public List<TransactionReadDto> findAll(TransactionFilter filter, Pageable pageable, Long userId) {
-//        var predicate = QPredicate.builder()
-//                .add(filter.getReferenceNumber(), transaction.referenceNumber::eq)
-//                .add(filter.getTime(), transaction.time::after)
-//                .buildAnd();
-//        return transactionRepository.getTransactionsByUserByLastDate(userId, filter)
-//                .map(transactionMapper::mapFrom);
-//    }
-
     public Optional<TransactionReadDto> findById(Long id) {
         return transactionRepository.findById(id)
                 .map(transactionMapper::mapFrom);

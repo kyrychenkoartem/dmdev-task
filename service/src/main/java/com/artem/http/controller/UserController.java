@@ -58,7 +58,8 @@ public class UserController {
 
     @PostMapping
     public String create(@ModelAttribute @Validated UserCreateDto user) {
-        return "redirect:/users/" + userService.create(user).id();
+        userService.create(user);
+        return "redirect:/login/";
     }
 
     @PostMapping("/{id}/update")

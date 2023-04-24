@@ -1,9 +1,12 @@
 spring:
+  profiles:
+    active: qa, local
+
   datasource:
-    url: jdbc:postgresql://localhost:5433/postgres
-    username: postgres
-    password: password
-    driver-class-name: org.postgresql.Driver
+    url: ${datasource.url}
+    username: ${datasource.username}
+    password: ${datasource.password}
+    driver-class-name: ${datasource.driver-class-name}
   liquibase:
     change-log: db.changelog/db.changelog-master.yaml
   jpa:
@@ -15,3 +18,14 @@ spring:
   mvc:
     format:
       date: iso
+
+
+  security:
+    oauth2:
+      client:
+        registration:
+          google:
+            clientId: ${oauth2.google.clientId}
+            clientSecret: ${oauth2.google.clientSecret}
+            redirectUri: ${oauth2.google.redirectUri}
+            scope: ${oauth2.google.scope}

@@ -8,7 +8,7 @@
 <div th:insert="~{header :: header}"></div>
     <form th:action="@{/accounts}" method="post" th:object="${account}">
         <label for="userId">User:
-            <input id="userId" type="text" name="userId" th:value="*{userId}">
+            <input id="userId" type="text" name="userId" th:value="${userId}">
         </label><br>
 
         <div th:each="status : ${statuses}">

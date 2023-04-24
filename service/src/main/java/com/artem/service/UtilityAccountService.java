@@ -4,6 +4,7 @@ import com.artem.mapper.UtilityAccountMapper;
 import com.artem.model.dto.UtilityAccountCreateDto;
 import com.artem.model.dto.UtilityAccountReadDto;
 import com.artem.model.dto.UtilityAccountUpdateDto;
+import com.artem.model.entity.UtilityAccount;
 import com.artem.repository.UtilityAccountRepository;
 import java.util.List;
 import java.util.Optional;
@@ -18,6 +19,7 @@ public class UtilityAccountService {
 
     private final UtilityAccountRepository utilityAccountRepository;
     private final UtilityAccountMapper utilityAccountMapper;
+    private final UserService userService;
 
     public List<UtilityAccountReadDto> findAll() {
         return utilityAccountRepository.findAll().stream()
@@ -56,5 +58,11 @@ public class UtilityAccountService {
                     return true;
                 })
                 .orElse(false);
+    }
+
+    public List<Long> getId() {
+        return utilityAccountRepository.findAllByUserId(userService.getId()).stream()
+                .map(UtilityAccount::getId)
+                .toList();
     }
 }

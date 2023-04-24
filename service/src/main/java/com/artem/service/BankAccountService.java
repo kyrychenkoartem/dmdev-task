@@ -4,6 +4,7 @@ import com.artem.mapper.BankAccountMapper;
 import com.artem.model.dto.BankAccountCreateDto;
 import com.artem.model.dto.BankAccountReadDto;
 import com.artem.model.dto.BankAccountUpdateDto;
+import com.artem.model.entity.BankAccount;
 import com.artem.repository.BankAccountRepository;
 import java.util.List;
 import java.util.Optional;
@@ -18,6 +19,7 @@ public class BankAccountService {
 
     private final BankAccountRepository bankAccountRepository;
     private final BankAccountMapper bankAccountMapper;
+    private final UserService userService;
 
     public List<BankAccountReadDto> findAll() {
         return bankAccountRepository.findAll().stream()
@@ -56,5 +58,11 @@ public class BankAccountService {
                     return true;
                 })
                 .orElse(false);
+    }
+
+    public List<Long> getId() {
+       return bankAccountRepository.findAllByUserId(userService.getId()).stream()
+                .map(BankAccount::getId)
+                .toList();
     }
 }

@@ -8,24 +8,28 @@ import com.artem.model.dto.UserUpdateDto;
 import com.artem.model.entity.User;
 import com.artem.repository.QPredicate;
 import com.artem.repository.UserRepository;
+import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.StringUtils;
 import org.springframework.web.multipart.MultipartFile;
 
 import static com.artem.model.entity.QUser.user;
-import static org.apache.commons.lang3.ObjectUtils.isNotEmpty;
 
 @Service
 @RequiredArgsConstructor
 @Transactional(readOnly = true)
-public class UserService {
+public class UserService implements UserDetailsService {
 
     private final UserRepository userRepository;
     private final UserMapper userMapper;
@@ -88,7 +92,7 @@ public class UserService {
 
     @SneakyThrows
     private void uploadImage(MultipartFile image) {
-        if (isNotEmpty(image)) {
+        if (!image.isEmpty()) {
             imageService.upload(image.getOriginalFilename(), image.getInputStream());
         }
     }
@@ -98,5 +102,23 @@ public class UserService {
                 .map(User::getImage)
                 .filter(StringUtils::hasText)
                 .flatMap(imageService::get);
+    }
+
+    @Override
+    public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
+        return userRepository.findByEmail(email)
+                .map(user -> new org.springframework.security.core.userdetails.User(
+                        user.getEmail(),
+                        user.getPassword(),
+                        Collections.singleton(user.getRole())
+                ))
+                .orElseThrow(() -> new UsernameNotFoundException("Failed to retrieve user: " + email));
+    }
+
+    public Long getId() {
+        var userDetails = (UserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        return userRepository.findByEmail(userDetails.getUsername())
+                .map(User::getId)
+                .orElseThrow(() -> new UsernameNotFoundException(userDetails.getUsername()));
     }
 }

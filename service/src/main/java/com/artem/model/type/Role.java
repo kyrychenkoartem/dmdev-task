@@ -1,14 +1,13 @@
 package com.artem.model.type;
 
-import lombok.AllArgsConstructor;
-import lombok.Getter;
+import org.springframework.security.core.GrantedAuthority;
 
-@Getter
-@AllArgsConstructor
-public enum Role {
+public enum Role implements GrantedAuthority {
 
-    USER("User"),
-    ADMIN("Admin");
+    USER, ADMIN;
 
-    private final String name;
+    @Override
+    public String getAuthority() {
+        return name();
+    }
 }

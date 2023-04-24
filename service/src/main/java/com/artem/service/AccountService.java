@@ -4,8 +4,10 @@ import com.artem.mapper.AccountMapper;
 import com.artem.model.dto.AccountCreateDto;
 import com.artem.model.dto.AccountReadDto;
 import com.artem.model.dto.AccountUpdateDto;
+import com.artem.model.entity.Account;
 import com.artem.repository.AccountRepository;
 import java.util.List;
+import java.util.NoSuchElementException;
 import java.util.Optional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -18,6 +20,7 @@ public class AccountService {
 
     private final AccountRepository accountRepository;
     private final AccountMapper accountMapper;
+    private final UserService userService;
 
     public List<AccountReadDto> findAll() {
         return accountRepository.findAll().stream()
@@ -61,5 +64,11 @@ public class AccountService {
                     return true;
                 })
                 .orElse(false);
+    }
+
+    public Long getId() {
+        return accountRepository.findByUserId(userService.getId())
+                .map(Account::getId)
+                .orElseThrow(NoSuchElementException::new);
     }
 }

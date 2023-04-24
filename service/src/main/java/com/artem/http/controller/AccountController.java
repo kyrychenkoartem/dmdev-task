@@ -4,6 +4,7 @@ import com.artem.model.dto.AccountCreateDto;
 import com.artem.model.dto.AccountUpdateDto;
 import com.artem.model.type.AccountStatus;
 import com.artem.service.AccountService;
+import com.artem.service.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Controller;
@@ -22,6 +23,7 @@ import org.springframework.web.server.ResponseStatusException;
 public class AccountController {
 
     private final AccountService accountService;
+    private final UserService userService;
 
     @GetMapping
     public String findAll(Model model) {
@@ -43,6 +45,7 @@ public class AccountController {
 
     @GetMapping("/registration")
     public String registration(Model model, @ModelAttribute("account") AccountCreateDto createDto) {
+        model.addAttribute("userId", userService.getId());
         model.addAttribute("account", createDto);
         model.addAttribute("statuses", AccountStatus.values());
         return "account/registration";
