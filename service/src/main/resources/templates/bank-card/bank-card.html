@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Bank Card</title>
+    <link th:href = "@{/css/bootstrap.min.css}" rel="stylesheet"> </head>
+<body>
+<div th:insert="~{header :: header}"></div>
+<form th:action="@{/bank-cards/{cardId}/update(cardId = ${bankCard.id})}" method="post" th:object="${bankCard}">
+
+    <label for="bankAccountId">Bank Account:
+        <input id="bankAccountId" type="text" name="bankAccountId" th:value="*{bankAccountId}">
+    </label><br>
+
+    <label for="expiryDate">Expiry Date:
+        <input id="expiryDate" type="text" name="expiryDate" th:value="*{expiryDate}">
+    </label><br>
+    <button type="submit">Update</button>
+
+</form>
+
+<form th:action="@{/bank-cards/{cardId}/delete(cardId = ${bankCard.id})}" method="post">
+    <button type="submit">Remove</button>
+</form><br><br>
+
+<form th:action="@{/bank-accounts/{bankAccountId}(bankAccountId = ${bankCard.bankAccountId})}" th:if="${bankCard.bankAccountId != null}">
+    <button type="submit">Bank Account</button>
+</form>
+
+</body>
+</html>

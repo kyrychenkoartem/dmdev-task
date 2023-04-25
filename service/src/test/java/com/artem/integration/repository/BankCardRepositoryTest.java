@@ -113,6 +113,7 @@ class BankCardRepositoryTest extends RepositoryTestBase {
         var user = userMapper.mapFrom(userCreateDto);
         var actualUser = userRepository.save(user);
         var accountCreateDto = AccountCreateDto.builder()
+                .status(AccountStatus.ACTIVE)
                 .userId(actualUser.getId())
                 .build();
         var account = accountMapper.mapFrom(accountCreateDto);
@@ -120,8 +121,8 @@ class BankCardRepositoryTest extends RepositoryTestBase {
         return BankAccountCreateDto.builder()
                 .accountId(expectedAccount.getId())
                 .number("234554356765646586")
-                .accountType(AccountType.SAVINGS_ACCOUNT)
-                .accountStatus(AccountStatus.ACTIVE)
+                .type(AccountType.SAVINGS_ACCOUNT)
+                .status(AccountStatus.ACTIVE)
                 .availableBalance(BigDecimal.valueOf(500).setScale(2, RoundingMode.CEILING))
                 .actualBalance(BigDecimal.valueOf(600).setScale(2, RoundingMode.CEILING))
                 .build();
@@ -142,13 +143,13 @@ class BankCardRepositoryTest extends RepositoryTestBase {
                 .expiryDate("12/28")
                 .bank(BankType.CIBC)
                 .cvv("123")
-                .cardType(CardType.DEBIT)
+                .type(CardType.DEBIT)
                 .build();
     }
 
     private BankCardUpdateDto getBankCardUpdateDto(BankAccount bankAccount) {
         return BankCardUpdateDto.builder()
-                .bankAccount(bankAccount)
+                .bankAccountId(bankAccount.getId())
                 .expiryDate("11/30")
                 .build();
     }

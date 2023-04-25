@@ -6,11 +6,11 @@ import com.artem.model.dto.UserReadDto;
 import com.artem.model.type.Role;
 import java.time.LocalDate;
 import lombok.RequiredArgsConstructor;
-import lombok.SneakyThrows;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.test.web.servlet.MockMvc;
 
+import static com.artem.util.ConstantUtil.REGISTRATION;
 import static com.artem.util.ConstantUtil.USER_1;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
@@ -24,12 +24,12 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @AutoConfigureMockMvc
 class UserControllerTest extends RepositoryTestBase {
 
+    private static final String URL_PREFIX = "/users/";
     private final MockMvc mockMvc;
 
     @Test
-    @SneakyThrows
-    void findAll() {
-        mockMvc.perform(get("/users"))
+    void findAll() throws Exception {
+        mockMvc.perform(get(URL_PREFIX))
                 .andExpect(status().is2xxSuccessful())
                 .andExpect(view().name("user/users"))
                 .andExpect(model().attributeExists("users"))
@@ -37,9 +37,8 @@ class UserControllerTest extends RepositoryTestBase {
     }
 
     @Test
-    @SneakyThrows
-    void findById() {
-        mockMvc.perform(get("/users/1"))
+    void findById() throws Exception {
+        mockMvc.perform(get(URL_PREFIX + USER_1))
                 .andExpect(status().is2xxSuccessful())
                 .andExpect(view().name("user/user"))
                 .andExpect(model().attributeExists("user"))
@@ -49,9 +48,8 @@ class UserControllerTest extends RepositoryTestBase {
     }
 
     @Test
-    @SneakyThrows
-    void registration() {
-        mockMvc.perform(get("/users/registration"))
+    void registration() throws Exception {
+        mockMvc.perform(get(URL_PREFIX + REGISTRATION))
                 .andExpect(status().is2xxSuccessful())
                 .andExpect(view().name("user/registration"))
                 .andExpect(model().attributeExists("user"))
@@ -61,9 +59,8 @@ class UserControllerTest extends RepositoryTestBase {
     }
 
     @Test
-    @SneakyThrows
-    void create() {
-        mockMvc.perform(post("/users")
+    void create() throws Exception {
+        mockMvc.perform(post(URL_PREFIX)
                         .param("firstname", "Test")
                         .param("lastname", "Test")
                         .param("email", "test@gmail.com")
@@ -78,12 +75,11 @@ class UserControllerTest extends RepositoryTestBase {
     }
 
     @Test
-    @SneakyThrows
-    void update() {
+    void update() throws Exception {
         mockMvc.perform(post("/users/1/update")
                         .param("firstName", "Test1")
                         .param("lastName", "Test1")
-                        .param("email", "test1@gmail.com")
+                        .param("email", "test2@gmail.com")
                         .param("birthDate", "2001-01-01")
                         .param("role", "USER")
                 )
@@ -94,8 +90,7 @@ class UserControllerTest extends RepositoryTestBase {
     }
 
     @Test
-    @SneakyThrows
-    void delete() {
+    void delete() throws Exception {
         mockMvc.perform(post("/users/1/delete"))
                 .andExpectAll(
                         status().is3xxRedirection(),

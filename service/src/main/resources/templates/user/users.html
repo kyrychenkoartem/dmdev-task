@@ -5,6 +5,7 @@
     <title>Users</title>
 </head>
 <body>
+<div th:insert="~{header :: header}"></div>
 <form action="/users">
     <label for="firstName">Firstname:
         <input id="firstName" type="text" name="firstName" th:value="${filter.firstName()}">

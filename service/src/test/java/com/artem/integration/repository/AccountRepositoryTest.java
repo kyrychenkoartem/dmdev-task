@@ -97,10 +97,10 @@ class AccountRepositoryTest extends RepositoryTestBase {
         var user = userMapper.mapFrom(userCreateDto);
         var actualUser = userRepository.save(user);
         var accountCreateDto = AccountCreateDto.builder()
+                .status(AccountStatus.ACTIVE)
                 .userId(actualUser.getId())
                 .build();
         var account = accountMapper.mapFrom(accountCreateDto);
-        var expectedAccount = accountRepository.save(account);
-        return expectedAccount;
+        return accountRepository.save(account);
     }
 }

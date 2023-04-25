@@ -83,7 +83,7 @@ CREATE TABLE IF NOT EXISTS utility_payment
     amount             DECIMAL(19, 2) NOT NULL,
     reference_number   VARCHAR(34)    NOT NULL,
     status             VARCHAR(64)    NOT NULL,
-    utility_account_id BIGINT         NOT NULL REFERENCES utility_account (id),
+    utility_account_id BIGINT         NOT NULL REFERENCES utility_account (id) ON DELETE CASCADE,
     transaction_id     VARCHAR(64)    NOT NULL UNIQUE
 );
 --rollback DROP TABLE utility_payment;

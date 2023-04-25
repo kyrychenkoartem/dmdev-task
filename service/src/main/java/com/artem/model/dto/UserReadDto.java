@@ -9,6 +9,7 @@ public record UserReadDto(Long id,
                           String firstName,
                           String lastName,
                           String email,
+                          String image,
                           LocalDate birthDate,
                           Role role) {
 }

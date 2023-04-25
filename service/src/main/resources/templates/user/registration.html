@@ -5,7 +5,7 @@
     <title>Registration</title>
 </head>
 <body>
-    <form th:action="@{/users}" method="post" th:object="${user}">
+    <form th:action="@{/users}" method="post" enctype="multipart/form-data" th:object="${user}">
         <label for="firstname">Firstname:
             <input id="firstname" type="text" name="firstname" th:value="*{firstname}">
         </label><br>
@@ -26,6 +26,9 @@
             <input th:id="${role}" type="radio" name="role" th:value="${role}" th:checked="${role == user.role}">
             <label th:for="${role}" th:text="${role}">Role name</label>
         </div>
+        <label for="image">Image:
+            <input id="image" type="file" name="image">
+        </label><br>
         <button type="submit">Register</button>
     </form>
 </body>
