@@ -8,7 +8,6 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import java.time.LocalDate;
 import lombok.RequiredArgsConstructor;
-import lombok.SneakyThrows;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.http.MediaType;
@@ -28,13 +27,12 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @AutoConfigureMockMvc
 public class UserRestControllerTest extends RepositoryTestBase {
 
-    private final MockMvc mockMvc;
-
     private static final String URL_PREFIX = "/api/v1/users/";
+    private final MockMvc mockMvc;
+    private final ObjectMapper objectMapper;
 
     @Test
-    @SneakyThrows
-    void findAll() {
+    void findAll() throws Exception {
         mockMvc.perform(get(URL_PREFIX))
                 .andExpect(status().isOk())
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON))
@@ -43,8 +41,7 @@ public class UserRestControllerTest extends RepositoryTestBase {
     }
 
     @Test
-    @SneakyThrows
-    void findById() {
+    void findById() throws Exception {
         mockMvc.perform(get(URL_PREFIX + USER_1))
                 .andExpect(status().isOk())
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON))
@@ -58,8 +55,7 @@ public class UserRestControllerTest extends RepositoryTestBase {
 
 
     @Test
-    @SneakyThrows
-    void create() {
+    void create() throws Exception {
         mockMvc.perform(post(URL_PREFIX)
                         .content(asJsonString(getUserCreateDto()))
                         .contentType(MediaType.APPLICATION_JSON)
@@ -78,8 +74,7 @@ public class UserRestControllerTest extends RepositoryTestBase {
     }
 
     @Test
-    @SneakyThrows
-    void update() {
+    void update() throws Exception {
         mockMvc.perform(put(URL_PREFIX + USER_1)
                         .content(asJsonString(getUserUpdateDto()))
                         .contentType(MediaType.APPLICATION_JSON)
@@ -98,8 +93,7 @@ public class UserRestControllerTest extends RepositoryTestBase {
     }
 
     @Test
-    @SneakyThrows
-    void delete() {
+    void delete() throws Exception {
         mockMvc.perform(MockMvcRequestBuilders.delete(URL_PREFIX + USER_1))
                 .andExpectAll(
                         status().isNoContent()
@@ -129,7 +123,6 @@ public class UserRestControllerTest extends RepositoryTestBase {
 
     private String asJsonString(final Object obj) {
         try {
-            var objectMapper = new ObjectMapper();
             objectMapper.registerModule(new JavaTimeModule());
             return objectMapper.writeValueAsString(obj);
         } catch (Exception e) {

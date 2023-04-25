@@ -47,13 +47,13 @@ public class SecurityConfiguration {
         http
                 .authorizeHttpRequests(urlConfig -> urlConfig
                         .antMatchers("/login", "/users/registration", "/v3/api-docs", "/swagger-ui/**").permitAll()
-                        .antMatchers("/users/", "/accounts/", "/bank-accounts/", "/accounts/", "/utility-accounts/",
-                                "/bank-cards/").hasAuthority(ADMIN.getAuthority())
+                        .antMatchers(HttpMethod.POST, "/users").permitAll()
                         .antMatchers("/accounts/registration**", "/bank-accounts/registration**",
                                 "/utility-accounts/registration**", "/bank-cards/registration**").authenticated()
-                        .antMatchers(HttpMethod.POST, "/users").permitAll()
                         .antMatchers(HttpMethod.POST, "/accounts", "/bank-accounts", "/utility-accounts",
                                 "/bank-cards").authenticated()
+                        .antMatchers("/users/", "/accounts/", "/bank-accounts/", "/accounts/", "/utility-accounts/",
+                        "/bank-cards/").hasAuthority(ADMIN.getAuthority())
                         .antMatchers("/users/{\\d+}/delete").hasAuthority(ADMIN.getAuthority())
                         .antMatchers("/users/{\\d+}", "/accounts/{\\d+}", "/bank-accounts/{\\d+}", "/utility-accounts/{\\d+}",
                                 "bank-cards/{\\d+}").access(authorizationManager())

@@ -5,7 +5,6 @@ import com.artem.model.dto.UtilityAccountCreateDto;
 import com.artem.model.dto.UtilityAccountReadDto;
 import com.artem.service.UtilityAccountService;
 import lombok.RequiredArgsConstructor;
-import lombok.SneakyThrows;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.test.web.servlet.MockMvc;
@@ -24,13 +23,12 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @AutoConfigureMockMvc
 public class UtilityAccountControllerTest extends RepositoryTestBase {
 
+    private static final String URL_PREFIX = "/utility-accounts/";
     private final MockMvc mockMvc;
     private final UtilityAccountService utilityAccountService;
-    private static final String URL_PREFIX = "/utility-accounts/";
 
     @Test
-    @SneakyThrows
-    void findAll() {
+    void findAll() throws Exception {
         mockMvc.perform(get(URL_PREFIX))
                 .andExpect(status().is2xxSuccessful())
                 .andExpect(view().name("utility-account/utility-accounts"))
@@ -38,8 +36,7 @@ public class UtilityAccountControllerTest extends RepositoryTestBase {
     }
 
     @Test
-    @SneakyThrows
-    void findById() {
+    void findById() throws Exception {
         mockMvc.perform(get(URL_PREFIX + UTILITY_ACCOUNT_1))
                 .andExpect(status().is2xxSuccessful())
                 .andExpect(view().name("utility-account/utility-account"))
@@ -48,8 +45,7 @@ public class UtilityAccountControllerTest extends RepositoryTestBase {
     }
 
     @Test
-    @SneakyThrows
-    void registration() {
+    void registration() throws Exception {
         mockMvc.perform(get(URL_PREFIX + REGISTRATION))
                 .andExpect(status().is2xxSuccessful())
                 .andExpect(view().name("utility-account/registration"))
@@ -58,8 +54,7 @@ public class UtilityAccountControllerTest extends RepositoryTestBase {
     }
 
     @Test
-    @SneakyThrows
-    void create() {
+    void create() throws Exception {
         mockMvc.perform(post(URL_PREFIX)
                         .param("accountId", "1")
                         .param("number", "2445464")
@@ -72,8 +67,7 @@ public class UtilityAccountControllerTest extends RepositoryTestBase {
     }
 
     @Test
-    @SneakyThrows
-    void update() {
+    void update() throws Exception {
         mockMvc.perform(post("/utility-accounts/1/update")
                         .param("providerName", "UpdatedName")
                 )
@@ -84,8 +78,7 @@ public class UtilityAccountControllerTest extends RepositoryTestBase {
     }
 
     @Test
-    @SneakyThrows
-    void delete() {
+    void delete() throws Exception {
         mockMvc.perform(post("/utility-accounts/1/delete"))
                 .andExpectAll(
                         status().is3xxRedirection(),

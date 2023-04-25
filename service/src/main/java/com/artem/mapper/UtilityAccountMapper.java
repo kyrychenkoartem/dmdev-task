@@ -19,7 +19,7 @@ public class UtilityAccountMapper implements Mapper<UtilityAccountCreateDto, Uti
     @Override
     public UtilityAccount mapFrom(UtilityAccountCreateDto createDto) {
         var account = accountRepository.findById(createDto.accountId()).get();
-        Hibernate.initialize(account);
+//        Hibernate.initialize(account);
         return UtilityAccount.builder()
                 .account(account)
                 .number(createDto.number())

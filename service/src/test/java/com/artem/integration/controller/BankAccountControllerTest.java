@@ -7,7 +7,6 @@ import com.artem.model.type.AccountStatus;
 import com.artem.model.type.AccountType;
 import com.artem.service.BankAccountService;
 import lombok.RequiredArgsConstructor;
-import lombok.SneakyThrows;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.test.web.servlet.MockMvc;
@@ -26,14 +25,13 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @AutoConfigureMockMvc
 public class BankAccountControllerTest extends RepositoryTestBase {
 
+    private static final String URL_PREFIX = "/bank-accounts/";
     private final MockMvc mockMvc;
     private final BankAccountService bankAccountService;
 
-    private static final String URL_PREFIX = "/bank-accounts/";
 
     @Test
-    @SneakyThrows
-    void findAll() {
+    void findAll() throws Exception {
         mockMvc.perform(get(URL_PREFIX))
                 .andExpect(status().is2xxSuccessful())
                 .andExpect(view().name("bank-account/bank-accounts"))
@@ -41,8 +39,7 @@ public class BankAccountControllerTest extends RepositoryTestBase {
     }
 
     @Test
-    @SneakyThrows
-    void findById() {
+    void findById() throws Exception {
         mockMvc.perform(get(URL_PREFIX + BANK_ACCOUNT_1))
                 .andExpect(status().is2xxSuccessful())
                 .andExpect(view().name("bank-account/bank-account"))
@@ -55,8 +52,7 @@ public class BankAccountControllerTest extends RepositoryTestBase {
     }
 
     @Test
-    @SneakyThrows
-    void registration() {
+    void registration() throws Exception {
         mockMvc.perform(get(URL_PREFIX + REGISTRATION))
                 .andExpect(status().is2xxSuccessful())
                 .andExpect(view().name("bank-account/registration"))
@@ -69,8 +65,7 @@ public class BankAccountControllerTest extends RepositoryTestBase {
     }
 
     @Test
-    @SneakyThrows
-    void create() {
+    void create() throws Exception {
         mockMvc.perform(post(URL_PREFIX)
                         .param("accountId", "1")
                         .param("number", "123456789554645")
@@ -86,8 +81,7 @@ public class BankAccountControllerTest extends RepositoryTestBase {
     }
 
     @Test
-    @SneakyThrows
-    void update() {
+    void update() throws Exception {
         mockMvc.perform(post("/bank-accounts/1/update")
                         .param("accountType", "FIXED_DEPOSIT")
                         .param("accountStatus", "BLOCKED")
@@ -101,8 +95,7 @@ public class BankAccountControllerTest extends RepositoryTestBase {
     }
 
     @Test
-    @SneakyThrows
-    void delete() {
+    void delete() throws Exception {
         mockMvc.perform(post("/bank-accounts/1/delete"))
                 .andExpectAll(
                         status().is3xxRedirection(),

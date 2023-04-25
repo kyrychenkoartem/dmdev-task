@@ -30,7 +30,6 @@
         <javax.persistence-api>2.2</javax.persistence-api>
         <querydsl.version>5.0.0</querydsl.version>
         <springdoc>1.7.0</springdoc>
-        <jackson-datatype>2.14.2</jackson-datatype>
     </properties>
 
     <dependencyManagement>
@@ -47,12 +46,6 @@
                 <artifactId>springdoc-openapi-ui</artifactId>
                 <version>${springdoc}</version>
             </dependency>
-            <dependency>
-                <groupId>com.fasterxml.jackson.datatype</groupId>
-                <artifactId>jackson-datatype-jsr310</artifactId>
-                <version>${jackson-datatype}</version>
-            </dependency>
-
             <dependency>
                 <groupId>org.hibernate</groupId>
                 <artifactId>hibernate-jpamodelgen</artifactId>

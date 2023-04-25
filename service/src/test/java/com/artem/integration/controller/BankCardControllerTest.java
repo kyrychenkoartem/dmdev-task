@@ -7,7 +7,6 @@ import com.artem.model.type.BankType;
 import com.artem.model.type.CardType;
 import com.artem.service.BankCardService;
 import lombok.RequiredArgsConstructor;
-import lombok.SneakyThrows;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.test.web.servlet.MockMvc;
@@ -26,14 +25,12 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @AutoConfigureMockMvc
 public class BankCardControllerTest extends RepositoryTestBase {
 
+    private static final String URL_PREFIX = "/bank-cards/";
     private final MockMvc mockMvc;
     private final BankCardService bankCardService;
 
-    private static final String URL_PREFIX = "/bank-cards/";
-
     @Test
-    @SneakyThrows
-    void findAll() {
+    void findAll() throws Exception {
         mockMvc.perform(get(URL_PREFIX))
                 .andExpect(status().is2xxSuccessful())
                 .andExpect(view().name("bank-card/bank-cards"))
@@ -41,8 +38,7 @@ public class BankCardControllerTest extends RepositoryTestBase {
     }
 
     @Test
-    @SneakyThrows
-    void findById() {
+    void findById() throws Exception {
         mockMvc.perform(get(URL_PREFIX + BANK_CARD_1))
                 .andExpect(status().is2xxSuccessful())
                 .andExpect(view().name("bank-card/bank-card"))
@@ -51,8 +47,7 @@ public class BankCardControllerTest extends RepositoryTestBase {
     }
 
     @Test
-    @SneakyThrows
-    void registration() {
+    void registration() throws Exception {
         mockMvc.perform(get(URL_PREFIX + REGISTRATION))
                 .andExpect(status().is2xxSuccessful())
                 .andExpect(view().name("bank-card/registration"))
@@ -65,8 +60,7 @@ public class BankCardControllerTest extends RepositoryTestBase {
     }
 
     @Test
-    @SneakyThrows
-    void create() {
+    void create() throws Exception {
         mockMvc.perform(post(URL_PREFIX)
                         .param("userId", "1")
                         .param("bankAccountId", "1")
@@ -83,8 +77,7 @@ public class BankCardControllerTest extends RepositoryTestBase {
     }
 
     @Test
-    @SneakyThrows
-    void update() {
+    void update() throws Exception {
         mockMvc.perform(post("/bank-cards/1/update")
                         .param("bankAccountId", "2")
                         .param("expiryDate", "10/33")
@@ -96,8 +89,7 @@ public class BankCardControllerTest extends RepositoryTestBase {
     }
 
     @Test
-    @SneakyThrows
-    void delete() {
+    void delete() throws Exception {
         mockMvc.perform(post("/bank-cards/1/delete"))
                 .andExpectAll(
                         status().is3xxRedirection(),
