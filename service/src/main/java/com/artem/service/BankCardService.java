@@ -4,22 +4,22 @@ import com.artem.mapper.BankCardMapper;
 import com.artem.model.dto.BankCardCreateDto;
 import com.artem.model.dto.BankCardReadDto;
 import com.artem.model.dto.BankCardUpdateDto;
-import com.artem.model.entity.BankCard;
 import com.artem.repository.BankCardRepository;
+import com.artem.util.UserDetailsUtil;
 import java.util.List;
 import java.util.Optional;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 @Service
 @RequiredArgsConstructor
 @Transactional(readOnly = true)
-public class BankCardService {
+public class BankCardService implements UserPermissionService {
 
     private final BankCardRepository bankCardRepository;
     private final BankCardMapper bankCardMapper;
-    private final UserService userService;
 
     public List<BankCardReadDto> findAll() {
         return bankCardRepository.findAll().stream()
@@ -27,6 +27,7 @@ public class BankCardService {
                 .toList();
     }
 
+    @PreAuthorize("hasAuthority('ADMIN') or @bankCardService.isUserOwner(#id)")
     public Optional<BankCardReadDto> findById(Long id) {
         return bankCardRepository.findById(id)
                 .map(bankCardMapper::mapFrom);
@@ -60,9 +61,14 @@ public class BankCardService {
                 .orElse(false);
     }
 
-    public List<Long> getId() {
-        return bankCardRepository.findAllByUserId(userService.getId()).stream()
-                .map(BankCard::getId)
-                .toList();
+    @Override
+    public boolean isUserOwner(Long bankCardId) {
+        var currentUserId = UserDetailsUtil.getCurrentUserId();
+        var maybeBankCard = bankCardRepository.findById(bankCardId);
+        boolean isPresent = false;
+        if (maybeBankCard.isPresent()) {
+            isPresent = maybeBankCard.get().getUser().getId().equals(currentUserId);
+        }
+        return isPresent;
     }
 }

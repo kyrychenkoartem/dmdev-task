@@ -12,6 +12,7 @@ import org.springframework.test.web.servlet.MockMvc;
 
 import static com.artem.util.ConstantUtil.ACCOUNT_1;
 import static com.artem.util.ConstantUtil.REGISTRATION;
+import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.model;
@@ -59,7 +60,7 @@ public class AccountControllerTest extends RepositoryTestBase {
 
     @Test
     void create() throws Exception {
-        mockMvc.perform(post(URL_PREFIX)
+        mockMvc.perform(post(URL_PREFIX).with(csrf())
                         .param("userId", "6")
                         .param("status", "ACTIVE")
                 )
@@ -71,7 +72,7 @@ public class AccountControllerTest extends RepositoryTestBase {
 
     @Test
     void update() throws Exception {
-        mockMvc.perform(post("/accounts/1/update")
+        mockMvc.perform(post("/accounts/1/update").with(csrf())
                         .param("status", "BLOCKED")
                 )
                 .andExpectAll(
@@ -82,7 +83,7 @@ public class AccountControllerTest extends RepositoryTestBase {
 
     @Test
     void delete() throws Exception {
-        mockMvc.perform(post("/accounts/1/delete"))
+        mockMvc.perform(post("/accounts/1/delete").with(csrf()))
                 .andExpectAll(
                         status().is3xxRedirection(),
                         redirectedUrl("/accounts")

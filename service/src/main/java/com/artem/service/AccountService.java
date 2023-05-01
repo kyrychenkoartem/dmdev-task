@@ -4,23 +4,22 @@ import com.artem.mapper.AccountMapper;
 import com.artem.model.dto.AccountCreateDto;
 import com.artem.model.dto.AccountReadDto;
 import com.artem.model.dto.AccountUpdateDto;
-import com.artem.model.entity.Account;
 import com.artem.repository.AccountRepository;
+import com.artem.util.UserDetailsUtil;
 import java.util.List;
-import java.util.NoSuchElementException;
 import java.util.Optional;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 @Service
 @RequiredArgsConstructor
 @Transactional(readOnly = true)
-public class AccountService {
+public class AccountService implements UserPermissionService {
 
     private final AccountRepository accountRepository;
     private final AccountMapper accountMapper;
-    private final UserService userService;
 
     public List<AccountReadDto> findAll() {
         return accountRepository.findAll().stream()
@@ -28,6 +27,7 @@ public class AccountService {
                 .toList();
     }
 
+    @PreAuthorize("hasAuthority('ADMIN') or @accountService.isUserOwner(#id)")
     public Optional<AccountReadDto> findById(Long id) {
         return accountRepository.findById(id)
                 .map(accountMapper::mapFrom);
@@ -66,9 +66,30 @@ public class AccountService {
                 .orElse(false);
     }
 
-    public Long getId() {
-        return accountRepository.findByUserId(userService.getId())
-                .map(Account::getId)
-                .orElseThrow(NoSuchElementException::new);
+    @Override
+    public boolean isUserOwner(Long accountId) {
+        var currentUserId = UserDetailsUtil.getCurrentUserId();
+        var maybeAccount = accountRepository.findById(accountId);
+        boolean isPresent = false;
+        if (maybeAccount.isPresent()) {
+            isPresent = maybeAccount.get().getUser().getId().equals(currentUserId);
+        }
+        return isPresent;
     }
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

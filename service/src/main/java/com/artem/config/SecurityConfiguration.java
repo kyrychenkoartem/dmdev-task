@@ -1,10 +1,7 @@
 package com.artem.config;
 
-import com.artem.service.AccountService;
-import com.artem.service.BankAccountService;
-import com.artem.service.BankCardService;
+import com.artem.security.CustomAuthenticationSuccessHandler;
 import com.artem.service.UserService;
-import com.artem.service.UtilityAccountService;
 import java.lang.reflect.Method;
 import java.lang.reflect.Proxy;
 import java.util.Set;
@@ -14,7 +11,6 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.annotation.Order;
 import org.springframework.http.HttpMethod;
-import org.springframework.security.authorization.AuthorizationManager;
 import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
@@ -24,7 +20,6 @@ import org.springframework.security.oauth2.client.userinfo.OAuth2UserService;
 import org.springframework.security.oauth2.core.oidc.user.DefaultOidcUser;
 import org.springframework.security.oauth2.core.oidc.user.OidcUser;
 import org.springframework.security.web.SecurityFilterChain;
-import org.springframework.security.web.access.intercept.RequestAuthorizationContext;
 
 import static com.artem.model.type.Role.ADMIN;
 
@@ -35,10 +30,6 @@ import static com.artem.model.type.Role.ADMIN;
 public class SecurityConfiguration {
 
     private final UserService userService;
-    private final AccountService accountService;
-    private final BankAccountService bankAccountService;
-    private final UtilityAccountService utilityAccountService;
-    private final BankCardService bankCardService;
     private final CustomAuthenticationSuccessHandler successHandler;
 
     @Bean
@@ -46,18 +37,16 @@ public class SecurityConfiguration {
     SecurityFilterChain defaultSecurityFilterChain(HttpSecurity http) throws Exception {
         http
                 .authorizeHttpRequests(urlConfig -> urlConfig
+                        .antMatchers("/users", "/accounts", "/bank-accounts", "/accounts", "/utility-accounts",
+                                "/bank-cards").hasAuthority(ADMIN.getAuthority())
+                        .antMatchers("/users/{\\d+}/delete").hasAuthority(ADMIN.getAuthority())
+                        .antMatchers("/admin/**").hasAuthority(ADMIN.getAuthority())
                         .antMatchers("/login", "/users/registration", "/v3/api-docs", "/swagger-ui/**").permitAll()
                         .antMatchers(HttpMethod.POST, "/users").permitAll()
                         .antMatchers("/accounts/registration**", "/bank-accounts/registration**",
                                 "/utility-accounts/registration**", "/bank-cards/registration**").authenticated()
                         .antMatchers(HttpMethod.POST, "/accounts", "/bank-accounts", "/utility-accounts",
                                 "/bank-cards").authenticated()
-                        .antMatchers("/users/", "/accounts/", "/bank-accounts/", "/accounts/", "/utility-accounts/",
-                        "/bank-cards/").hasAuthority(ADMIN.getAuthority())
-                        .antMatchers("/users/{\\d+}/delete").hasAuthority(ADMIN.getAuthority())
-                        .antMatchers("/users/{\\d+}", "/accounts/{\\d+}", "/bank-accounts/{\\d+}", "/utility-accounts/{\\d+}",
-                                "bank-cards/{\\d+}").access(authorizationManager())
-                        .antMatchers("/admin/**").hasAuthority(ADMIN.getAuthority())
                         .anyRequest().authenticated()
                 )
                 .logout(logout -> logout
@@ -74,12 +63,6 @@ public class SecurityConfiguration {
         return http.build();
     }
 
-    @Bean
-    public AuthorizationManager<RequestAuthorizationContext> authorizationManager() {
-        return new CustomAuthorizationManager(userService, accountService, bankAccountService,
-                bankCardService, utilityAccountService);
-    }
-
     private OAuth2UserService<OidcUserRequest, OidcUser> oidcUserService() {
         return userRequest -> {
             String email = userRequest.getIdToken().getClaim("email");
@@ -87,7 +70,7 @@ public class SecurityConfiguration {
             UserDetails userDetails = userService.loadUserByUsername(email);
             DefaultOidcUser oidcUser = new DefaultOidcUser(userDetails.getAuthorities(), userRequest.getIdToken());
 
-            Set<Method> userDetailsMethods = Set.of(UserDetails.class.getMethods());
+            Set<Method> userDetailsMethods = Set.of(userDetails.getClass().getMethods());
 
             return (OidcUser) Proxy.newProxyInstance(SecurityConfiguration.class.getClassLoader(),
                     new Class[]{UserDetails.class, OidcUser.class},

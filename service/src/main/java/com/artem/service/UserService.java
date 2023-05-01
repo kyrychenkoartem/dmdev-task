@@ -8,6 +8,8 @@ import com.artem.model.dto.UserUpdateDto;
 import com.artem.model.entity.User;
 import com.artem.repository.QPredicate;
 import com.artem.repository.UserRepository;
+import com.artem.security.UserSecurity;
+import com.artem.util.UserDetailsUtil;
 import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
@@ -15,7 +17,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
-import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -29,7 +31,7 @@ import static com.artem.model.entity.QUser.user;
 @Service
 @RequiredArgsConstructor
 @Transactional(readOnly = true)
-public class UserService implements UserDetailsService {
+public class UserService implements UserDetailsService, UserPermissionService {
 
     private final UserRepository userRepository;
     private final UserMapper userMapper;
@@ -51,6 +53,7 @@ public class UserService implements UserDetailsService {
                 .map(userMapper::mapFrom);
     }
 
+    @PreAuthorize("hasAuthority('ADMIN') or @userService.isUserOwner(#id)")
     public Optional<UserReadDto> findById(Long id) {
         return userRepository.findById(id)
                 .map(userMapper::mapFrom);
@@ -92,7 +95,7 @@ public class UserService implements UserDetailsService {
 
     @SneakyThrows
     private void uploadImage(MultipartFile image) {
-        if (!image.isEmpty()) {
+        if (image != null && !image.isEmpty()) {
             imageService.upload(image.getOriginalFilename(), image.getInputStream());
         }
     }
@@ -107,18 +110,23 @@ public class UserService implements UserDetailsService {
     @Override
     public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
         return userRepository.findByEmail(email)
-                .map(user -> new org.springframework.security.core.userdetails.User(
+                .map(user -> new UserSecurity(
                         user.getEmail(),
                         user.getPassword(),
-                        Collections.singleton(user.getRole())
+                        Collections.singleton(user.getRole()),
+                        user.getId()
                 ))
                 .orElseThrow(() -> new UsernameNotFoundException("Failed to retrieve user: " + email));
     }
 
-    public Long getId() {
-        var userDetails = (UserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-        return userRepository.findByEmail(userDetails.getUsername())
-                .map(User::getId)
-                .orElseThrow(() -> new UsernameNotFoundException(userDetails.getUsername()));
+    @Override
+    public boolean isUserOwner(Long userId) {
+        var currentUserId = UserDetailsUtil.getCurrentUserId();
+        var maybeUser = userRepository.findById(userId);
+        boolean isPresent = false;
+        if (maybeUser.isPresent()) {
+            isPresent = maybeUser.get().getId().equals(currentUserId);
+        }
+        return isPresent;
     }
 }
