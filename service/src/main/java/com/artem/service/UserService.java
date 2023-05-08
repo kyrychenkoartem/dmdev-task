@@ -122,11 +122,9 @@ public class UserService implements UserDetailsService, UserPermissionService {
     @Override
     public boolean isUserOwner(Long userId) {
         var currentUserId = UserDetailsUtil.getCurrentUserId();
-        var maybeUser = userRepository.findById(userId);
-        boolean isPresent = false;
-        if (maybeUser.isPresent()) {
-            isPresent = maybeUser.get().getId().equals(currentUserId);
-        }
-        return isPresent;
+        return userRepository.findById(userId)
+                .map(user -> user.getId().equals(currentUserId))
+                .orElse(false);
+
     }
 }

@@ -70,11 +70,8 @@ public class BankCardService implements UserPermissionService {
     @Override
     public boolean isUserOwner(Long bankCardId) {
         var currentUserId = UserDetailsUtil.getCurrentUserId();
-        var maybeBankCard = bankCardRepository.findById(bankCardId);
-        boolean isPresent = false;
-        if (maybeBankCard.isPresent()) {
-            isPresent = maybeBankCard.get().getUser().getId().equals(currentUserId);
-        }
-        return isPresent;
+        return bankCardRepository.findById(bankCardId)
+                .map(bankCard -> bankCard.getUser().getId().equals(currentUserId))
+                .orElse(false);
     }
 }

@@ -77,11 +77,8 @@ public class BankAccountService implements UserPermissionService {
     @Override
     public boolean isUserOwner(Long bankAccountId) {
         var currentUserId = UserDetailsUtil.getCurrentUserId();
-        var maybeBankAccount = bankAccountRepository.findById(bankAccountId);
-        boolean isPresent = false;
-        if (maybeBankAccount.isPresent()) {
-            isPresent = maybeBankAccount.get().getAccount().getUser().getId().equals(currentUserId);
-        }
-        return isPresent;
+        return bankAccountRepository.findById(bankAccountId)
+                .map(bankAccount -> bankAccount.getAccount().getUser().getId().equals(currentUserId))
+                .orElse(false);
     }
 }

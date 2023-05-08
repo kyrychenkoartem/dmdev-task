@@ -62,11 +62,8 @@ public class UtilityAccountService implements UserPermissionService {
     @Override
     public boolean isUserOwner(Long utilityAccountId) {
         var currentUserId = UserDetailsUtil.getCurrentUserId();
-        var maybeUtilityAccount = utilityAccountRepository.findById(utilityAccountId);
-        boolean isPresent = false;
-        if (maybeUtilityAccount.isPresent()) {
-            isPresent = maybeUtilityAccount.get().getAccount().getUser().getId().equals(currentUserId);
-        }
-        return isPresent;
+        return utilityAccountRepository.findById(utilityAccountId)
+                .map(utilityAccount -> utilityAccount.getAccount().getUser().getId().equals(currentUserId))
+                .orElse(false);
     }
 }
