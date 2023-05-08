@@ -69,27 +69,9 @@ public class AccountService implements UserPermissionService {
     @Override
     public boolean isUserOwner(Long accountId) {
         var currentUserId = UserDetailsUtil.getCurrentUserId();
-        var maybeAccount = accountRepository.findById(accountId);
-        boolean isPresent = false;
-        if (maybeAccount.isPresent()) {
-            isPresent = maybeAccount.get().getUser().getId().equals(currentUserId);
-        }
-        return isPresent;
+        return accountRepository.findById(accountId)
+                .map(account -> account.getUser().getId().equals(currentUserId))
+                .orElse(false);
     }
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 

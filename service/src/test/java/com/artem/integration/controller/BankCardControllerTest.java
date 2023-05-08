@@ -9,8 +9,10 @@ import com.artem.service.BankCardService;
 import lombok.RequiredArgsConstructor;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
+import org.springframework.mock.web.MockHttpSession;
 import org.springframework.test.web.servlet.MockMvc;
 
+import static com.artem.util.ConstantUtil.BANK_ACCOUNT_ID;
 import static com.artem.util.ConstantUtil.BANK_CARD_1;
 import static com.artem.util.ConstantUtil.REGISTRATION;
 import static com.artem.util.ConstantUtil.USER_1;
@@ -50,7 +52,9 @@ public class BankCardControllerTest extends RepositoryTestBase {
 
     @Test
     void registration() throws Exception {
-        mockMvc.perform(get(URL_PREFIX + REGISTRATION))
+        MockHttpSession session = new MockHttpSession();
+        session.setAttribute(BANK_ACCOUNT_ID, bankCardService.findByUserId(USER_1).get().bankAccountId());
+        mockMvc.perform(get(URL_PREFIX + REGISTRATION).session(session))
                 .andExpect(status().is2xxSuccessful())
                 .andExpect(view().name("bank-card/registration"))
                 .andExpect(model().attributeExists("card"))

@@ -35,4 +35,5 @@ public class ConstantUtil {
     public static final String UPDATED_EXPIRY_DATE = "12/32";
     public static final String PROVIDER_NAME_EXPECTED = "Test1";
     public static final String CARD_NUMBER = "1234567890123456";
+    public static final String BANK_ACCOUNT_ID = "bankAccountId";
 }

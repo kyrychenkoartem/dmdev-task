@@ -92,6 +92,6 @@ public class AccountControllerTest extends RepositoryTestBase {
     }
 
     private AccountReadDto getAccountReadDto() {
-        return accountService.findById(ACCOUNT_1).get();
+        return accountService.findByUserId(USER_1).get();
     }
 }

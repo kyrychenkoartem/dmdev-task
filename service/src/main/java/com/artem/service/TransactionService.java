@@ -79,11 +79,8 @@ public class TransactionService implements UserPermissionService {
     @Override
     public boolean isUserOwner(Long transactionId) {
         var currentUserId = UserDetailsUtil.getCurrentUserId();
-        var maybeTransaction = transactionRepository.findById(transactionId);
-        boolean isPresent = false;
-        if (maybeTransaction.isPresent()) {
-            isPresent = maybeTransaction.get().getBankAccount().getAccount().getUser().getId().equals(currentUserId);
-        }
-        return isPresent;
+        return transactionRepository.findById(transactionId)
+                .map(transaction -> transaction.getBankAccount().getAccount().getUser().getId().equals(currentUserId))
+                .orElse(false);
     }
 }
