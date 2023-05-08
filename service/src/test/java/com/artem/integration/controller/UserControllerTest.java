@@ -1,9 +1,11 @@
 package com.artem.integration.controller;
 
 import com.artem.integration.repository.RepositoryTestBase;
+import com.artem.model.dto.AccountReadDto;
 import com.artem.model.dto.UserCreateDto;
 import com.artem.model.dto.UserReadDto;
 import com.artem.model.type.Role;
+import com.artem.service.AccountService;
 import java.time.LocalDate;
 import lombok.RequiredArgsConstructor;
 import org.junit.jupiter.api.Test;
@@ -12,11 +14,11 @@ import org.springframework.test.web.servlet.MockMvc;
 
 import static com.artem.util.ConstantUtil.REGISTRATION;
 import static com.artem.util.ConstantUtil.USER_1;
+import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.model;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.redirectedUrl;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.redirectedUrlPattern;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.view;
 
@@ -26,6 +28,7 @@ class UserControllerTest extends RepositoryTestBase {
 
     private static final String URL_PREFIX = "/users/";
     private final MockMvc mockMvc;
+    private final AccountService accountService;
 
     @Test
     void findAll() throws Exception {
@@ -43,8 +46,10 @@ class UserControllerTest extends RepositoryTestBase {
                 .andExpect(view().name("user/user"))
                 .andExpect(model().attributeExists("user"))
                 .andExpect(model().attributeExists("roles"))
+                .andExpect(model().attributeExists("account"))
                 .andExpect(model().attribute("roles", Role.values()))
-                .andExpect(model().attribute("user", getUserReadDto()));
+                .andExpect(model().attribute("user", getUserReadDto()))
+                .andExpect(model().attribute("account", getAccountReadDto()));
     }
 
     @Test
@@ -60,7 +65,7 @@ class UserControllerTest extends RepositoryTestBase {
 
     @Test
     void create() throws Exception {
-        mockMvc.perform(post(URL_PREFIX)
+        mockMvc.perform(post(URL_PREFIX).with(csrf())
                         .param("firstname", "Test")
                         .param("lastname", "Test")
                         .param("email", "test@gmail.com")
@@ -70,13 +75,13 @@ class UserControllerTest extends RepositoryTestBase {
                 )
                 .andExpectAll(
                         status().is3xxRedirection(),
-                        redirectedUrlPattern("/users/{\\d+}")
+                        redirectedUrl("/login/")
                 );
     }
 
     @Test
     void update() throws Exception {
-        mockMvc.perform(post("/users/1/update")
+        mockMvc.perform(post("/users/1/update").with(csrf())
                         .param("firstName", "Test1")
                         .param("lastName", "Test1")
                         .param("email", "test2@gmail.com")
@@ -91,11 +96,15 @@ class UserControllerTest extends RepositoryTestBase {
 
     @Test
     void delete() throws Exception {
-        mockMvc.perform(post("/users/1/delete"))
+        mockMvc.perform(post("/users/1/delete").with(csrf()))
                 .andExpectAll(
                         status().is3xxRedirection(),
                         redirectedUrl("/users")
                 );
+    }
+
+    private AccountReadDto getAccountReadDto() {
+        return accountService.findByUserId(USER_1).get();
     }
 
     private UserReadDto getUserReadDto() {
@@ -105,7 +114,7 @@ class UserControllerTest extends RepositoryTestBase {
                 .lastName("Ivanov")
                 .email("ivan@gmail.com")
                 .birthDate(LocalDate.of(2000, 1, 1))
-                .role(Role.USER)
+                .role(Role.ADMIN)
                 .build();
     }
 }

@@ -2,47 +2,49 @@
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
-    <title>User</title>
+    <title th:text="#{user.user}">User</title>
 </head>
 <body>
+<div th:insert="~{header :: locale}"></div>
+<div th:insert="~{header :: header}"></div>
 <form th:action="@{/users/{userId}/update(userId = ${user.id})}" enctype="multipart/form-data" method="post" th:object="${user}">
-    <label for="firstName">Firstname:
+    <label for="firstName"><span th:text="#{registration.firstname}">Firstname:</span>
         <input id="firstName" type="text" name="firstName" th:value="*{firstName}">
     </label><br>
-    <label for="lastName">Lastname:
+    <label for="lastName"><span th:text="#{registration.lastname}">Lastname:</span>
         <input id="lastName" type="text" name="lastName" th:value="*{lastName}">
     </label><br>
-    <label for="email">Email:
+    <label for="email"><span th:text="#{registration.email}">Email:</span>
         <input id="email" type="text" name="email" th:value="*{email}">
     </label><br>
-    <label for="birthDate">BirthDate:
+    <label for="birthDate"><span th:text="#{registration.birthdate}">BirthDate:</span>
         <input id="birthDate" type="date" name="birthDate" th:value="*{birthDate}">
     </label><br>
     <div th:each="role : ${roles}">
         <input th:id="${role}" type="radio" name="role" th:value="${role}" th:checked="${role == user.role}">
-        <label th:for="${role}" th:text="${role}">Role name</label>
+        <label th:for="${role}" th:text="${role}"><span th:text="#{registration.role}">Role name</span></label>
     </div>
     <div th:if="${user.image}">
         <img th:src="@{/api/v1/users/{userId}/avatar(userId = ${user.id})}" alt="User image">
     </div>
-    <label for="image">Image:
+    <label for="image"><span th:text="#{registration.image}">Image:</span>
         <input id="image" type="file" name="image">
     </label><br>
-    <button type="submit">Update</button>
+    <button type="submit"><span th:text="#{user.update}">Update</span></button>
 </form>
 
 <form th:action="@{/users/{userId}/delete(userId = ${user.id})}" th:if="${user.role.name() == 'ADMIN'}" method="post">
-    <button type="submit">Remove</button>
+    <button type="submit"><span th:text="#{user.remove}">Remove</span></button>
 </form>
 <br><br>
 
 
 <form th:action="@{/accounts/{accountId}(accountId = ${account.id})}" th:if="${account != null}">
-    <button type="submit">Account</button>
+    <button type="submit"><span th:text="#{account.account}">Account</span></button>
 </form>
 
 <form th:action="@{/accounts/registration}" th:if="${account == null}">
-    <button type="submit">Create Account</button>
+    <button type="submit"><span th:text="#{account.create}">Create Account</span></button>
 </form>
 </body>
 </html>

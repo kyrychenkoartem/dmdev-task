@@ -13,6 +13,8 @@ import org.springframework.test.web.servlet.MockMvc;
 
 import static com.artem.util.ConstantUtil.BANK_ACCOUNT_1;
 import static com.artem.util.ConstantUtil.REGISTRATION;
+import static com.artem.util.ConstantUtil.USER_1;
+import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.model;
@@ -66,7 +68,7 @@ public class BankAccountControllerTest extends RepositoryTestBase {
 
     @Test
     void create() throws Exception {
-        mockMvc.perform(post(URL_PREFIX)
+        mockMvc.perform(post(URL_PREFIX).with(csrf())
                         .param("accountId", "1")
                         .param("number", "123456789554645")
                         .param("type", "SAVINGS_ACCOUNT")
@@ -82,7 +84,7 @@ public class BankAccountControllerTest extends RepositoryTestBase {
 
     @Test
     void update() throws Exception {
-        mockMvc.perform(post("/bank-accounts/1/update")
+        mockMvc.perform(post("/bank-accounts/1/update").with(csrf())
                         .param("accountType", "FIXED_DEPOSIT")
                         .param("accountStatus", "BLOCKED")
                         .param("availableBalance", "300.00")
@@ -96,7 +98,7 @@ public class BankAccountControllerTest extends RepositoryTestBase {
 
     @Test
     void delete() throws Exception {
-        mockMvc.perform(post("/bank-accounts/1/delete"))
+        mockMvc.perform(post("/bank-accounts/1/delete").with(csrf()))
                 .andExpectAll(
                         status().is3xxRedirection(),
                         redirectedUrl("/bank-accounts")
@@ -104,6 +106,6 @@ public class BankAccountControllerTest extends RepositoryTestBase {
     }
 
     private BankAccountReadDto getBankAccountReadDto() {
-        return bankAccountService.findById(BANK_ACCOUNT_1).get();
+        return bankAccountService.findByUserId(USER_1).get();
     }
 }

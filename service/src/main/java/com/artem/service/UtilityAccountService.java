@@ -4,8 +4,8 @@ import com.artem.mapper.UtilityAccountMapper;
 import com.artem.model.dto.UtilityAccountCreateDto;
 import com.artem.model.dto.UtilityAccountReadDto;
 import com.artem.model.dto.UtilityAccountUpdateDto;
-import com.artem.model.entity.UtilityAccount;
 import com.artem.repository.UtilityAccountRepository;
+import com.artem.util.UserDetailsUtil;
 import java.util.List;
 import java.util.Optional;
 import lombok.RequiredArgsConstructor;
@@ -15,11 +15,10 @@ import org.springframework.transaction.annotation.Transactional;
 @Service
 @RequiredArgsConstructor
 @Transactional(readOnly = true)
-public class UtilityAccountService {
+public class UtilityAccountService implements UserPermissionService {
 
     private final UtilityAccountRepository utilityAccountRepository;
     private final UtilityAccountMapper utilityAccountMapper;
-    private final UserService userService;
 
     public List<UtilityAccountReadDto> findAll() {
         return utilityAccountRepository.findAll().stream()
@@ -60,9 +59,14 @@ public class UtilityAccountService {
                 .orElse(false);
     }
 
-    public List<Long> getId() {
-        return utilityAccountRepository.findAllByUserId(userService.getId()).stream()
-                .map(UtilityAccount::getId)
-                .toList();
+    @Override
+    public boolean isUserOwner(Long utilityAccountId) {
+        var currentUserId = UserDetailsUtil.getCurrentUserId();
+        var maybeUtilityAccount = utilityAccountRepository.findById(utilityAccountId);
+        boolean isPresent = false;
+        if (maybeUtilityAccount.isPresent()) {
+            isPresent = maybeUtilityAccount.get().getAccount().getUser().getId().equals(currentUserId);
+        }
+        return isPresent;
     }
 }

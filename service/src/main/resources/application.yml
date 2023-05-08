@@ -19,7 +19,6 @@ spring:
     format:
       date: iso
 
-
   security:
     oauth2:
       client:
@@ -29,3 +28,9 @@ spring:
             clientSecret: ${oauth2.google.clientSecret}
             redirectUri: ${oauth2.google.redirectUri}
             scope: ${oauth2.google.scope}
+
+
+springdoc:
+  swagger-ui:
+    disable-swagger-default-url: true
+    url: /v3/api-docs

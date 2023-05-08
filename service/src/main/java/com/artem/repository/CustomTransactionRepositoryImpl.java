@@ -108,8 +108,8 @@ public class CustomTransactionRepositoryImpl implements CustomTransactionReposit
     public List<Transaction> getTransactionsByUserByLastDate(Long userId, TransactionFilter filter) {
         var entityGraph = EntityGraphUtil.getTransactionGraphByUser(entityManager);
         var predicate = QPredicate.builder()
-                .add(filter.getReferenceNumber(), transaction.referenceNumber::eq)
-                .add(filter.getTime(), transaction.time::after)
+                .add(filter.referenceNumber(), transaction.referenceNumber::eq)
+                .add(filter.time(), transaction.time::after)
                 .buildAnd();
         return new JPAQuery<Transaction>(entityManager)
                 .select(transaction)

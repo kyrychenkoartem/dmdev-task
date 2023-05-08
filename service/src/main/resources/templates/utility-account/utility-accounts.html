@@ -2,13 +2,18 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Accounts</title>
+    <title th:text="#{utility_account.accounts}">Utility Accounts</title>
 </head>
 <body>
+<div th:insert="~{header :: locale}"></div>
 <div th:insert="~{header :: header}"></div>
+
 <form action="/utility-accounts">
     <div th:each="utilityAccounts : ${utilityAccounts}">
-        <a th:href="@{'/utility-accounts/' + ${utilityAccounts.id}}" th:text="|${utilityAccounts.number}. ${utilityAccounts.providerName}|">Utility Account</a>
+        <a th:href="@{'/utility-accounts/' + ${utilityAccounts.id}}"
+           th:text="|${utilityAccounts.number}. ${utilityAccounts.providerName}|">
+            <span th:text="#{utility_account.account}">Utility Account</span>
+        </a>
     </div>
 </form>
 </body>

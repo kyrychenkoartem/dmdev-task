@@ -2,32 +2,35 @@
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
-    <title>Users</title>
+    <title th:text="#{user.users}">Users</title>
 </head>
 <body>
+<div th:insert="~{header :: locale}"></div>
 <div th:insert="~{header :: header}"></div>
 <form action="/users">
-    <label for="firstName">Firstname:
+    <label for="firstName"><span th:text="#{registration.firstname}">Firstname:</span>
         <input id="firstName" type="text" name="firstName" th:value="${filter.firstName()}">
     </label>
-    <label for="lastName">Lastname:
+    <label for="lastName"><span th:text="#{registration.lastname}">Lastname:</span>
         <input id="lastName" type="text" name="lastName" th:value="${filter.lastName()}">
     </label>
-    <label for="birthDate">BirthDate:
+    <label for="birthDate"><span th:text="#{registration.birthdate}">BirthDate:</span>
         <input id="birthDate" type="date" name="birthDate" th:value="${filter.birthDate()}">
     </label>
     <div>
-        <label for="page">Page:
+        <label for="page"><span th:text="#{page.page}">Page:</span>
             <input id="page" type="number" name="page" th:value="${users.metadata.page}">
         </label>
-        <label for="size">Size:
+        <label for="size"><span th:text="#{page.size}">Size:</span>
             <input id="size" type="number" name="size" th:value="${users.metadata.size}">
         </label>
     </div>
-    <button type="submit">Filter</button>
+    <button type="submit"><span th:text="#{page.filter}">Filter</span></button>
 </form>
-    <div th:each="user : ${users.content}">
-        <a th:href="@{'/users/' + ${user.id}}" th:text="|${user.id}. ${user.email}|">User</a>
-    </div>
+<div th:each="user : ${users.content}">
+    <a th:href="@{'/users/' + ${user.id}}" th:text="|${user.id}. ${user.email}|">
+        <span th:text="#{user.user}">User</span>
+    </a>
+</div>
 </body>
 </html>

@@ -5,57 +5,86 @@
     <title>Header</title>
 </head>
 
-<header>
-    <nav class="navbar navbar-expand-lg navbar-light bg-light">
-        <div class="container-fluid">
-            <a class="navbar-brand" href="#">Home page</a>
-            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
-                <span class="navbar-toggler-icon"></span>
-            </button>
-            <div class="collapse navbar-collapse" id="navbarNav">
-                <ul class="navbar-nav me-auto mb-2 mb-lg-0">
-                    <li class="nav-item">
-                        <a class="nav-link" href="#">Account</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="#">Utility Accounts</a>
-                    </li>
-                    <li class="nav-item dropdown">
-                        <a class="nav-link dropdown-toggle" href="#" id="banking-dropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                            Banking Accounts
-                        </a>
-                        <ul class="dropdown-menu" aria-labelledby="banking-dropdown">
-                            <li><a class="dropdown-item" href="#">Checking Account</a></li>
-                            <li><a class="dropdown-item" href="#">Savings Account</a></li>
-                            <li><a class="dropdown-item" href="#">Money Market Account</a></li>
-                        </ul>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="#">Fund Transfer</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="#">Utility Payment</a>
-                    </li>
-                </ul>
-                <ul class="navbar-nav">
-                    <li class="nav-item">
-                        <a class="nav-link" href="#">Sign In</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="#">Sign Out</a>
-                    </li>
-                </ul>
-            </div>
-        </div>
-    </nav>
-</header>
-
+<div th:fragment="locale">
+    <form action="">
+        <select name="lang" onchange="this.form.submit()">
+            <option></option>
+            <option value="en">EN</option>
+            <option value="fr">FR</option>
+        </select>
+    </form>
+</div>
 <div th:fragment="header">
     <link th:href="@{/css/bootstrap.min.css}" rel="stylesheet">
-    <ol>
-        <li><a href="user/users.html" th:href="@{/users}">Users</a></li>
-        <li><a href="account/accounts.html" th:href="@{/accounts}">Accounts</a></li>
-        <li><a href="bank-account/bank-accounts.html" th:href="@{/bank-accounts}">Bank Accounts</a></li>
-    </ol>
+    <script th:src="@{/js/bootstrap.min.js}"></script>
+<!--    <header>-->
+<!--        <nav class="navbar navbar-expand-lg navbar-light bg-light">-->
+<!--            <div class="container-fluid">-->
+<!--                <a class="navbar-brand" th:href="@{/users/{id}(id = ${#authentication.principal.id})}">User</a>-->
+<!--                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav"-->
+<!--                        aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">-->
+<!--                    <span class="navbar-toggler-icon"></span>-->
+<!--                </button>-->
+<!--                <div class="collapse navbar-collapse" id="navbarNav">-->
+<!--                    <ul class="navbar-nav me-auto mb-2 mb-lg-0">-->
+<!--                        <li class="nav-item">-->
+<!--                            <a class="nav-link"-->
+<!--                               th:href="@{/accounts/{accountId}(accountId = ${account.id})}">Account</a>-->
+<!--                        </li>-->
+<!--                        <li class="nav-item dropdown">-->
+<!--                            <a class="nav-link dropdown-toggle" id="utility-account" role="button"-->
+<!--                               data-bs-toggle="dropdown" aria-expanded="false" aria-haspopup="true">-->
+<!--                                Utility Accounts-->
+<!--                            </a>-->
+<!--                            <ul class="dropdown-menu" aria-labelledby="utility-account">-->
+<!--                                <div th:if="${!account.utilityAccounts.isEmpty()}">-->
+<!--                                    <div th:each="utilityAccount : ${account.utilityAccounts}">-->
+<!--                                        <li><a class="dropdown-item"-->
+<!--                                               th:href="@{'/utility-accounts/' + ${utilityAccount.id}}"-->
+<!--                                               th:text="|${utilityAccount.number}. ${utilityAccount.providerName}|">Utility-->
+<!--                                            account</a></li>-->
+<!--                                    </div>-->
+<!--                                </div>-->
+<!--                            </ul>-->
+<!--                        </li>-->
+<!--                        <li class="nav-item dropdown">-->
+<!--                            <a class="nav-link dropdown-toggle" href="#" id="banking-account" role="button"-->
+<!--                               data-bs-toggle="dropdown" aria-expanded="false">-->
+<!--                                Banking Accounts-->
+<!--                            </a>-->
+<!--                            <ul class="dropdown-menu" aria-labelledby="banking-account">-->
+<!--                                <li><a class="dropdown-item" href="#">Checking Account</a></li>-->
+<!--                                <li><a class="dropdown-item" href="#">Savings Account</a></li>-->
+<!--                                <li><a class="dropdown-item" href="#">Money Market Account</a></li>-->
+<!--                            </ul>-->
+<!--                        </li>-->
+<!--                        <li class="nav-item">-->
+<!--                            <a class="nav-link" href="#">Fund Transfer</a>-->
+<!--                        </li>-->
+<!--                        <li class="nav-item">-->
+<!--                            <a class="nav-link" href="#">Utility Payment</a>-->
+<!--                        </li>-->
+<!--                    </ul>-->
+                    <ul class="navbar-nav">
+                        <div th:if="${!#authentication.isAuthenticated}">
+                            <li class="nav-item">
+                                <form th:action="@{/login}" method="post" class="nav-link">
+                                    <button type="submit"><span th:text="#{login.login}">Login</span></button>
+                                </form>
+                            </li>
+                        </div>
+                        <div th:if="${#authentication.isAuthenticated}">
+                            <li class="nav-item">
+                                <form th:action="@{/logout}" method="post" class="nav-link">
+                                    <button type="submit"><span th:text="#{login.logout}">Logout</span></button>
+                                </form>
+                            </li>
+                        </div>
+                    </ul>
+                </div>
+<!--            </div>-->
+<!--        </nav>-->
+<!--    </header>-->
 </div>
+
 </html>

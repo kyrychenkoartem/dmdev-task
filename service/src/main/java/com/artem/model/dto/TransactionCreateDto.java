@@ -9,11 +9,8 @@ import lombok.Builder;
 @Builder
 public record TransactionCreateDto(@DecimalMin(value = "0.00")
                                    BigDecimal amount,
-
-                                   TransactionType type,
-
-                                   @NotBlank(message = "Transaction id shouldn't be empty")                                   String referenceNumber,
+                                   String referenceNumber,
                                    String transactionId,
-
-                                   Long bankAccountId) {
+                                   Long bankAccountId,
+                                   TransactionType type) {
 }

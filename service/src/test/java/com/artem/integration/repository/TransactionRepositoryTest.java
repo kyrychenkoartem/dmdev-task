@@ -1,5 +1,6 @@
 package com.artem.integration.repository;
 
+import com.artem.model.type.TransactionStatus;
 import com.artem.repository.AccountRepository;
 import com.artem.repository.BankAccountRepository;
 import com.artem.repository.TransactionRepository;
@@ -83,6 +84,7 @@ class TransactionRepositoryTest extends RepositoryTestBase {
 
         assertThat(actualTransaction.getAmount()).isEqualTo(BigDecimal.valueOf(60).setScale(2, RoundingMode.CEILING));
         assertThat(actualTransaction.getTransactionType()).isEqualTo(TransactionType.REFUND);
+        assertThat(actualTransaction.getStatus()).isEqualTo(TransactionStatus.FAILED);
     }
 
     @Test
@@ -259,6 +261,7 @@ class TransactionRepositoryTest extends RepositoryTestBase {
         return TransactionUpdateDto.builder()
                 .amount(BigDecimal.valueOf(60).setScale(2, RoundingMode.CEILING))
                 .type(TransactionType.REFUND)
+                .status(TransactionStatus.FAILED)
                 .build();
     }
 }

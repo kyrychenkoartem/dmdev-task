@@ -6,20 +6,21 @@ import com.artem.model.dto.BankAccountReadDto;
 import com.artem.model.dto.BankAccountUpdateDto;
 import com.artem.model.entity.BankAccount;
 import com.artem.repository.BankAccountRepository;
+import com.artem.util.UserDetailsUtil;
 import java.util.List;
 import java.util.Optional;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 @Service
 @RequiredArgsConstructor
 @Transactional(readOnly = true)
-public class BankAccountService {
+public class BankAccountService implements UserPermissionService {
 
     private final BankAccountRepository bankAccountRepository;
     private final BankAccountMapper bankAccountMapper;
-    private final UserService userService;
 
     public List<BankAccountReadDto> findAll() {
         return bankAccountRepository.findAll().stream()
@@ -27,6 +28,19 @@ public class BankAccountService {
                 .toList();
     }
 
+    public Optional<BankAccountReadDto> findByUserId(Long userId) {
+        return bankAccountRepository.findAllByUserId(userId).stream()
+                .map(bankAccountMapper::mapFrom)
+                .findFirst();
+    }
+
+    public List<BankAccountReadDto> findAllIdsByUserId(Long userId) {
+        return bankAccountRepository.findAllByUserId(userId).stream()
+                .map(bankAccountMapper::mapFrom)
+                .toList();
+    }
+
+    @PreAuthorize("hasAuthority('ADMIN') or @bankAccountService.isUserOwner(#id)")
     public Optional<BankAccountReadDto> findById(Long id) {
         return bankAccountRepository.findById(id)
                 .map(bankAccountMapper::mapFrom);
@@ -60,9 +74,14 @@ public class BankAccountService {
                 .orElse(false);
     }
 
-    public List<Long> getId() {
-       return bankAccountRepository.findAllByUserId(userService.getId()).stream()
-                .map(BankAccount::getId)
-                .toList();
+    @Override
+    public boolean isUserOwner(Long bankAccountId) {
+        var currentUserId = UserDetailsUtil.getCurrentUserId();
+        var maybeBankAccount = bankAccountRepository.findById(bankAccountId);
+        boolean isPresent = false;
+        if (maybeBankAccount.isPresent()) {
+            isPresent = maybeBankAccount.get().getAccount().getUser().getId().equals(currentUserId);
+        }
+        return isPresent;
     }
 }

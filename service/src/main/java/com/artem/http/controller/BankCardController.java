@@ -6,6 +6,10 @@ import com.artem.model.dto.BankCardUpdateDto;
 import com.artem.model.type.BankType;
 import com.artem.model.type.CardType;
 import com.artem.service.BankCardService;
+import com.artem.util.UserDetailsUtil;
+import java.util.Optional;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Controller;
@@ -42,10 +46,21 @@ public class BankCardController {
     }
 
     @GetMapping("/registration")
-    public String registration(Model model, @ModelAttribute("bankCard") BankCardCreateDto bankCard) {
+    public String registration(Model model,
+                               @ModelAttribute("bankCard") BankCardCreateDto bankCard,
+                               HttpSession session,
+                               HttpServletRequest request) {
+        model.addAttribute("userId", UserDetailsUtil.getCurrentUserId());
+        model.addAttribute("bankAccountId", Optional.ofNullable(session.getAttribute("bankAccountId")));
         model.addAttribute("card", bankCard);
         model.addAttribute("banks", BankType.values());
         model.addAttribute("types", CardType.values());
+        String previousUrl = request.getHeader("Referer");
+        if (session.getAttribute("bankAccountId") == null) {
+            return "redirect:" + previousUrl;
+        } else {
+            model.addAttribute("bankAccountId", session.getAttribute("bankAccountId"));
+        }
         return "bank-card/registration";
     }
 

@@ -2,27 +2,28 @@
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
-    <title>Login</title>
+    <title th:text="#{login.login}">Login</title>
 </head>
 <body>
+<div th:insert="~{header :: locale}"></div>
 <form th:action="@{/login}" method="post">
     <div style="color: red" th:if="${param.error}">
-        Bad credentials!
+        <span th:text="#{login.bad_cred}">Bad credentials!</span>
     </div>
-    <label for="username">Username:
+    <label for="username"><span th:text="#{login.username}">Username:</span>
         <input id="username" type="text" name="username">
     </label><br>
-    <label for="password">Password:
+    <label for="password"><span th:text="#{login.password}">Password:</span>
         <input id="password" type="password" name="password">
     </label><br>
-    <button type="submit">Login</button>
+    <button type="submit"><span th:text="#{login.login}">Login</span></button>
 </form>
 <div>
-    <div>Login with:</div>
+    <div><span th:text="#{login.with}">Login with:</span></div>
     <a href="/oauth2/authorization/google">Google</a>
 </div>
 <form action="/users/registration">
-    <button type="submit">Registration</button>
+    <button type="submit"><span th:text="#{login.registration}">Registration</span></button>
 </form>
 </body>
 </html>
