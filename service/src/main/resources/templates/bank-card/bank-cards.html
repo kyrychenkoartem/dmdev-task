@@ -2,13 +2,17 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Accounts</title>
+    <title th:text="#{bank_card.cards}">Bank Cards</title>
 </head>
 <body>
+<div th:insert="~{header :: locale}"></div>
 <div th:insert="~{header :: header}"></div>
-<form action="/bank-accounts">
-    <div th:each="bankAccount : ${bankAccounts}">
-        <a th:href="@{'/bank-accounts/' + ${bankAccount.id}}" th:text="|${bankAccount.number}. ${bankAccount.type} - ${bankAccount.status}|">Bank Account</a>
+<form action="/bank-cards">
+    <div th:each="bankCard : ${bankCards}">
+        <a th:href="@{'/bank-cards/' + ${bankCard.id}}"
+           th:text="|${bankCard.id}. ${bankCard.cardNumber} - ${bankCard.expiryDate}|">
+            <span th:text="#{bank_card.card}">Bank Card</span>
+        </a>
     </div>
 </form>
 </body>

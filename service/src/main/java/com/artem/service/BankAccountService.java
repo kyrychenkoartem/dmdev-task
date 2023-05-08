@@ -4,6 +4,7 @@ import com.artem.mapper.BankAccountMapper;
 import com.artem.model.dto.BankAccountCreateDto;
 import com.artem.model.dto.BankAccountReadDto;
 import com.artem.model.dto.BankAccountUpdateDto;
+import com.artem.model.entity.BankAccount;
 import com.artem.repository.BankAccountRepository;
 import com.artem.util.UserDetailsUtil;
 import java.util.List;
@@ -23,6 +24,18 @@ public class BankAccountService implements UserPermissionService {
 
     public List<BankAccountReadDto> findAll() {
         return bankAccountRepository.findAll().stream()
+                .map(bankAccountMapper::mapFrom)
+                .toList();
+    }
+
+    public Optional<BankAccountReadDto> findByUserId(Long userId) {
+        return bankAccountRepository.findAllByUserId(userId).stream()
+                .map(bankAccountMapper::mapFrom)
+                .findFirst();
+    }
+
+    public List<BankAccountReadDto> findAllIdsByUserId(Long userId) {
+        return bankAccountRepository.findAllByUserId(userId).stream()
                 .map(bankAccountMapper::mapFrom)
                 .toList();
     }

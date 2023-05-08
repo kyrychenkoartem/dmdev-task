@@ -14,5 +14,6 @@ public interface BankCardRepository extends JpaRepository<BankCard, Long> {
     @EntityGraph(attributePaths = {"user", "bankAccount"})
     Optional<BankCard> findById(Long id);
 
+    @EntityGraph(attributePaths = {"user", "bankAccount"})
     List<BankCard> findAllByUserId(Long userId);
 }

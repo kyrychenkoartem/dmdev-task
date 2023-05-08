@@ -11,6 +11,7 @@ import org.springframework.test.web.servlet.MockMvc;
 
 import static com.artem.util.ConstantUtil.REGISTRATION;
 import static com.artem.util.ConstantUtil.UTILITY_ACCOUNT_1;
+import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.model;
@@ -55,7 +56,7 @@ public class UtilityAccountControllerTest extends RepositoryTestBase {
 
     @Test
     void create() throws Exception {
-        mockMvc.perform(post(URL_PREFIX)
+        mockMvc.perform(post(URL_PREFIX).with(csrf())
                         .param("accountId", "1")
                         .param("number", "2445464")
                         .param("providerName", "BOOM")
@@ -68,7 +69,7 @@ public class UtilityAccountControllerTest extends RepositoryTestBase {
 
     @Test
     void update() throws Exception {
-        mockMvc.perform(post("/utility-accounts/1/update")
+        mockMvc.perform(post("/utility-accounts/1/update").with(csrf())
                         .param("providerName", "UpdatedName")
                 )
                 .andExpectAll(
@@ -79,7 +80,7 @@ public class UtilityAccountControllerTest extends RepositoryTestBase {
 
     @Test
     void delete() throws Exception {
-        mockMvc.perform(post("/utility-accounts/1/delete"))
+        mockMvc.perform(post("/utility-accounts/1/delete").with(csrf()))
                 .andExpectAll(
                         status().is3xxRedirection(),
                         redirectedUrl("/utility-accounts")

@@ -12,6 +12,7 @@ import org.springframework.test.web.servlet.MockMvc;
 
 import static com.artem.util.ConstantUtil.ACCOUNT_1;
 import static com.artem.util.ConstantUtil.REGISTRATION;
+import static com.artem.util.ConstantUtil.USER_1;
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;

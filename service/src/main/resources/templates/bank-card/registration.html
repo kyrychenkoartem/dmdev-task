@@ -2,43 +2,44 @@
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
-    <title>Registration</title>
+    <title th:text="#{login.registration}">Registration</title>
 </head>
 <body>
+<div th:insert="~{header :: locale}"></div>
 <div th:insert="~{header :: header}"></div>
     <form th:action="@{/bank-cards}" method="post" th:object="${bankCard}">
 
-        <label for="userId">User:
-            <input id="userId" type="text" name="userId" th:value="*{userId}">
+        <label for="userId"><span th:text="|#{user.user}:|">User:</span>
+            <input id="userId" type="text" name="userId" th:value="${userId}" readonly>
         </label><br>
 
-        <label for="bankAccountId">Bank Account:
-            <input id="bankAccountId" type="text" name="bankAccountId" th:value="*{bankAccountId}">
+        <label for="bankAccountId"><span th:text="|#{bank_account.account}:|">Bank Account:</span>
+            <input id="bankAccountId" type="text" name="bankAccountId" th:value="${bankAccountId}" readonly>
         </label><br>
 
-        <label for="cardNumber">Card number:
+        <label for="cardNumber"><span th:text="|#{bank_card.number}:|">Card number:</span>
             <input id="cardNumber" type="text" name="cardNumber" th:value="*{cardNumber}">
         </label><br>
 
-        <label for="expiryDate">Expiry Date:
+        <label for="expiryDate"><span th:text="|#{bank_card.expiry_date}:|">Expiry Date:</span>
             <input id="expiryDate" type="text" name="expiryDate" th:value="*{expiryDate}">
         </label><br>
 
-        <label for="cvv">Cvv:
+        <label for="cvv"><span th:text="|#{bank_card.cvv}:|">CVV:</span>
             <input id="cvv" type="text" name="cvv" th:value="*{cvv}">
         </label><br>
 
         <div th:each="bank : ${banks}">
             <input th:id="${bank}" type="radio" name="bank" th:value="${bank}" th:checked="${bank == bankCard.bank}">
-            <label th:for="${bank}" th:text="${bank}">Bank name</label>
+            <label th:for="${bank}" th:text="${bank}"><span th:text="#{bank_card.bank_name}">Bank name</span></label>
         </div> <br>
 
         <div th:each="type : ${types}">
             <input th:id="${type}" type="radio" name="type" th:value="${type}" th:checked="${type == bankCard.type}">
-            <label th:for="${type}" th:text="${type}">Type name</label>
+            <label th:for="${type}" th:text="${type}"><span th:text="#{bank_card.type_name}">Type name</span></label>
         </div> <br>
 
-        <button type="submit">Create</button>
+        <button type="submit"><span th:text="#{bank_card.create}">Create</span></button>
     </form>
 </body>
 </html>

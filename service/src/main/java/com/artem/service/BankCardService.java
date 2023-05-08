@@ -27,6 +27,12 @@ public class BankCardService implements UserPermissionService {
                 .toList();
     }
 
+    public Optional<BankCardReadDto> findByUserId(Long userId) {
+        return bankCardRepository.findAllByUserId(userId).stream()
+                .map(bankCardMapper::mapFrom)
+                .findFirst();
+    }
+
     @PreAuthorize("hasAuthority('ADMIN') or @bankCardService.isUserOwner(#id)")
     public Optional<BankCardReadDto> findById(Long id) {
         return bankCardRepository.findById(id)

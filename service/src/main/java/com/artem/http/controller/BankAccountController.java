@@ -4,7 +4,11 @@ import com.artem.model.dto.BankAccountCreateDto;
 import com.artem.model.dto.BankAccountUpdateDto;
 import com.artem.model.type.AccountStatus;
 import com.artem.model.type.AccountType;
+import com.artem.service.AccountService;
 import com.artem.service.BankAccountService;
+import com.artem.util.UserDetailsUtil;
+import java.util.Optional;
+import javax.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Controller;
@@ -23,6 +27,7 @@ import org.springframework.web.server.ResponseStatusException;
 public class BankAccountController {
 
     private final BankAccountService bankAccountService;
+    private final AccountService accountService;
 
     @GetMapping
     public String findAll(Model model) {
@@ -31,12 +36,13 @@ public class BankAccountController {
     }
 
     @GetMapping("/{id}")
-    public String findById(@PathVariable("id") Long id, Model model) {
+    public String findById(@PathVariable("id") Long id, Model model, HttpSession session) {
         return bankAccountService.findById(id)
                 .map(bankAccount -> {
                     model.addAttribute("bankAccount", bankAccount);
                     model.addAttribute("statuses", AccountStatus.values());
                     model.addAttribute("types", AccountType.values());
+                    session.setAttribute("bankAccountId", bankAccount.id());
                     return "bank-account/bank-account";
                 })
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));
@@ -44,6 +50,12 @@ public class BankAccountController {
 
     @GetMapping("/registration")
     public String registration(Model model, @ModelAttribute("bankAccount") BankAccountCreateDto bankAccount) {
+        Optional<Long> accountId = Optional.empty();
+        var maybeAccount = accountService.findByUserId(UserDetailsUtil.getCurrentUserId());
+        if (maybeAccount.isPresent()) {
+            accountId = Optional.of(maybeAccount.get().id());
+        }
+        model.addAttribute("accountId", accountId.get());
         model.addAttribute("bankAccount", bankAccount);
         model.addAttribute("statuses", AccountStatus.values());
         model.addAttribute("types", AccountType.values());

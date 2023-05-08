@@ -19,9 +19,6 @@ spring:
     format:
       date: iso
 
-  messages:
-    basename: messages
-
   security:
     oauth2:
       client:

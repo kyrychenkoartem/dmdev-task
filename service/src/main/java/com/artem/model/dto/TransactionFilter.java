@@ -2,12 +2,10 @@ package com.artem.model.dto;
 
 import java.time.LocalDateTime;
 import lombok.Builder;
-import lombok.Value;
+import org.springframework.format.annotation.DateTimeFormat;
 
-@Value
 @Builder
-public class TransactionFilter {
-
-    LocalDateTime time;
-    String referenceNumber;
+public record TransactionFilter(@DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME)
+                                LocalDateTime time,
+                                String referenceNumber) {
 }

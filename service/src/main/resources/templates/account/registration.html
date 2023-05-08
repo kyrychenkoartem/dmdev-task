@@ -2,20 +2,21 @@
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
-    <title>Registration</title>
+    <title th:text="#{login.registration}">Registration</title>
 </head>
 <body>
+<div th:insert="~{header :: locale}"></div>
 <div th:insert="~{header :: header}"></div>
     <form th:action="@{/accounts}" method="post" th:object="${account}">
-        <label for="userId">User:
-            <input id="userId" type="text" name="userId" th:value="${userId}">
+        <label for="userId"><span th:text="|#{user.user}:|">User:</span>
+            <input id="userId" type="text" name="userId" th:value="${userId}" readonly>
         </label><br>
 
         <div th:each="status : ${statuses}">
             <input th:id="${status}" type="radio" name="status" th:value="${status}" th:checked="${status == account.status}">
-            <label th:for="${status}" th:text="${status}">Status name</label>
+            <label th:for="${status}" th:text="${status}"><span th:text="#{account.status}">Status name</span></label>
         </div>
-        <button type="submit">Create</button>
+        <button type="submit"><span th:text="#{account.create}">Create Account</span></button>
     </form>
 </body>
 </html>

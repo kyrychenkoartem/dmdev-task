@@ -2,34 +2,35 @@
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
-    <title>Registration</title>
+    <title th:text="#{login.registration}">Registration</title>
 </head>
 <body>
+<div th:insert="~{header :: locale}"></div>
     <form th:action="@{/users}" method="post" enctype="multipart/form-data" th:object="${user}">
-        <label for="firstname">Firstname:
+        <label for="firstname"><span th:text="#{registration.firstname}">Firstname:</span>
             <input id="firstname" type="text" name="firstname" th:value="*{firstname}">
         </label><br>
-        <label for="lastname">Lastname:
+        <label for="lastname"><span th:text="#{registration.lastname}">Lastname:</span>
             <input id="lastname" type="text" name="lastname" th:value="*{lastname}">
         </label><br>
-        <label for="email">Email:
+        <label for="email"><span th:text="#{registration.email}">Email:</span>
             <input id="email" type="text" name="email" th:value="*{email}">
         </label><br>
-        <label for="password">Password:
+        <label for="password"><span th:text="#{registration.password}">Password:</span>
             <input id="password" type="password" name="password" th:value="*{password}">
         </label><br>
-        <label for="birthDate">BirthDate:
+        <label for="birthDate"><span th:text="#{registration.birthdate}">BirthDate:</span>
             <input id="birthDate" type="date" name="birthDate" th:value="*{birthDate}">
         </label><br>
 
         <div th:each="role : ${roles}">
             <input th:id="${role}" type="radio" name="role" th:value="${role}" th:checked="${role == user.role}">
-            <label th:for="${role}" th:text="${role}">Role name</label>
+            <label th:for="${role}" th:text="${role}"><span th:text="#{registration.role}">Role name</span></label>
         </div>
-        <label for="image">Image:
+        <label for="image"><span th:text="#{registration.image}">Image:</span>
             <input id="image" type="file" name="image">
         </label><br>
-        <button type="submit">Register</button>
+        <button type="submit"><span th:text="#{registration.register}">Register</span></button>
     </form>
 </body>
 </html>

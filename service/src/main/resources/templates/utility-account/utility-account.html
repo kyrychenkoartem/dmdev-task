@@ -2,31 +2,33 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Utility account</title>
-<body>
-Number: <span th:text="${utilityAccount.number}"></span> <br>
-Provider name: <span th:text="${utilityAccount.providerName}"></span> <br>
+    <title th:text="#{utility_account.account}">Utility account</title>
 
 <body>
+<div th:insert="~{header :: locale}"></div>
 <div th:insert="~{header :: header}"></div>
+
+<span th:texh="#{utility_account.number}">Number:</span> <span th:text="${utilityAccount.number}"></span> <br>
+<span th:texh="|#{utility_account.name}:|">Provider name:</span> <span th:text="${utilityAccount.providerName}"></span> <br>
+
 <form th:action="@{/utility-accounts/{utilityId}/update(utilityId = ${utilityAccount.id})}" method="post" th:object="${utilityAccount}">
-    <label for="number">Number:
+    <label for="number"><span th:texh="#{utility_account.number}">Number:</span>
         <input id="number" type="text" name="number" th:value="*{number}">
     </label><br>
-    <label for="providerName">Provider name:
+    <label for="providerName"><span th:texh="|#{utility_account.name}:|">Provider name:</span>
         <input id="providerName" type="text" name="providerName" th:value="*{providerName}">
     </label><br>
-    <button type="submit">Update</button>
+    <button type="submit"><span th:texh="#{utility_account.update}">Update</span></button>
 </form>
 
 <form th:action="@{/utility-accounts/{utilityId}/delete(utilityId = ${utilityAccount.id})}" method="post">
-    <button type="submit">Remove</button>
+    <button type="submit"><span th:texh="#{utility_account.remove}">Remove</span></button>
 </form>
 <br><br>
 
 <form th:action="@{/accounts/{accountId}(accountId = ${utilityAccount.accountId})}"
       th:if="${utilityAccount.accountId != null}">
-    <button type="submit">Account</button>
+    <button type="submit"><span th:text="#{account.account}">Account</span></button>
 </form>
 </body>
 </html>

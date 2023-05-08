@@ -37,16 +37,16 @@ public class SecurityConfiguration {
     SecurityFilterChain defaultSecurityFilterChain(HttpSecurity http) throws Exception {
         http
                 .authorizeHttpRequests(urlConfig -> urlConfig
+                        .antMatchers(HttpMethod.POST, "/accounts", "/bank-accounts", "/utility-accounts",
+                                "/bank-cards", "/transactions").authenticated()
                         .antMatchers("/users", "/accounts", "/bank-accounts", "/accounts", "/utility-accounts",
-                                "/bank-cards").hasAuthority(ADMIN.getAuthority())
+                                "/bank-cards", "/transactions").hasAuthority(ADMIN.getAuthority())
                         .antMatchers("/users/{\\d+}/delete").hasAuthority(ADMIN.getAuthority())
                         .antMatchers("/admin/**").hasAuthority(ADMIN.getAuthority())
                         .antMatchers("/login", "/users/registration", "/v3/api-docs", "/swagger-ui/**").permitAll()
                         .antMatchers(HttpMethod.POST, "/users").permitAll()
                         .antMatchers("/accounts/registration**", "/bank-accounts/registration**",
                                 "/utility-accounts/registration**", "/bank-cards/registration**").authenticated()
-                        .antMatchers(HttpMethod.POST, "/accounts", "/bank-accounts", "/utility-accounts",
-                                "/bank-cards").authenticated()
                         .anyRequest().authenticated()
                 )
                 .logout(logout -> logout

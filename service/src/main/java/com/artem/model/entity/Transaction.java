@@ -1,5 +1,6 @@
 package com.artem.model.entity;
 
+import com.artem.model.type.TransactionStatus;
 import com.artem.model.type.TransactionType;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
@@ -38,6 +39,10 @@ public class Transaction {
     @Column(name = "type", nullable = false)
     private TransactionType transactionType;
 
+    @Enumerated(EnumType.STRING)
+    @Column(name = "status", nullable = false)
+    private TransactionStatus status;
+
     /**
      * Bank/Utility account number to which the transaction is made
      **/
@@ -51,7 +56,7 @@ public class Transaction {
     private LocalDateTime time;
 
     /**
-     * The bank account to/from which the transaction is made
+     * The bank account from which the transaction is made
      **/
     @ToString.Exclude
     @ManyToOne(optional = false, fetch = FetchType.LAZY)

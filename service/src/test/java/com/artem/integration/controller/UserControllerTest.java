@@ -1,9 +1,11 @@
 package com.artem.integration.controller;
 
 import com.artem.integration.repository.RepositoryTestBase;
+import com.artem.model.dto.AccountReadDto;
 import com.artem.model.dto.UserCreateDto;
 import com.artem.model.dto.UserReadDto;
 import com.artem.model.type.Role;
+import com.artem.service.AccountService;
 import java.time.LocalDate;
 import lombok.RequiredArgsConstructor;
 import org.junit.jupiter.api.Test;
@@ -26,6 +28,7 @@ class UserControllerTest extends RepositoryTestBase {
 
     private static final String URL_PREFIX = "/users/";
     private final MockMvc mockMvc;
+    private final AccountService accountService;
 
     @Test
     void findAll() throws Exception {
@@ -43,8 +46,10 @@ class UserControllerTest extends RepositoryTestBase {
                 .andExpect(view().name("user/user"))
                 .andExpect(model().attributeExists("user"))
                 .andExpect(model().attributeExists("roles"))
+                .andExpect(model().attributeExists("account"))
                 .andExpect(model().attribute("roles", Role.values()))
-                .andExpect(model().attribute("user", getUserReadDto()));
+                .andExpect(model().attribute("user", getUserReadDto()))
+                .andExpect(model().attribute("account", getAccountReadDto()));
     }
 
     @Test
@@ -96,6 +101,10 @@ class UserControllerTest extends RepositoryTestBase {
                         status().is3xxRedirection(),
                         redirectedUrl("/users")
                 );
+    }
+
+    private AccountReadDto getAccountReadDto() {
+        return accountService.findByUserId(USER_1).get();
     }
 
     private UserReadDto getUserReadDto() {

@@ -2,37 +2,38 @@
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
-    <title>Registration</title>
+    <title th:text="#{login.registration}">Registration</title>
 </head>
 <body>
+<div th:insert="~{header :: locale}"></div>
 <div th:insert="~{header :: header}"></div>
     <form th:action="@{/bank-accounts}" method="post" th:object="${bankAccount}">
-        <label for="accountId">Account:
-            <input id="accountId" type="text" name="accountId" th:value="*{accountId}">
+        <label for="accountId"><span th:text="|#{account.account}:|">Account:</span>
+            <input id="accountId" type="text" name="accountId" th:value="${accountId}" readonly>
         </label><br>
 
-        <label for="number">Number:
+        <label for="number"><span th:text="#{bank_account.number}">Number:</span>
             <input id="number" type="text" name="number" th:value="*{number}">
         </label><br>
 
         <div th:each="status : ${statuses}">
             <input th:id="${status}" type="radio" name="status" th:value="${status}" th:checked="${status == bankAccount.status}">
-            <label th:for="${status}" th:text="${status}">Status name</label>
+            <label th:for="${status}" th:text="${status}"><span th:text="#{bank_account.status}">Status name</span></label>
         </div> <br>
 
         <div th:each="type : ${types}">
             <input th:id="${type}" type="radio" name="type" th:value="${type}" th:checked="${type == bankAccount.type}">
-            <label th:for="${type}" th:text="${type}">Type name</label>
+            <label th:for="${type}" th:text="${type}"><span th:text="#{bank_account.type}">Type name</span></label>
         </div> <br>
 
-        <label for="availableBalance">Available Balance:
+        <label for="availableBalance"><span th:text="#{bank_account.available}">Available Balance:</span>
             <input id="availableBalance" type="number" name="availableBalance" th:value="*{availableBalance}">
         </label><br>
 
-        <label for="actualBalance">Actual Balance:
+        <label for="actualBalance"><span th:text="#{bank_account.actual}">Actual Balance:</span>
             <input id="actualBalance" type="number" name="actualBalance" th:value="*{actualBalance}">
         </label><br>
-        <button type="submit">Create</button>
+        <button type="submit"><span th:text="#{bank_account.create}">Create</span></button>
     </form>
 </body>
 </html>

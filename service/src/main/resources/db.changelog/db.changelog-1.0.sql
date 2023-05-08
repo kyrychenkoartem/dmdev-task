@@ -69,6 +69,7 @@ CREATE TABLE IF NOT EXISTS banking_transaction
     id               BIGSERIAL PRIMARY KEY,
     amount           DECIMAL(19, 2) NOT NULL,
     type             VARCHAR(64)    NOT NULL,
+    status           VARCHAR(64)    NOT NULL,
     reference_number VARCHAR(34)    NOT NULL,
     transaction_id   VARCHAR(64)    NOT NULL UNIQUE,
     time             TIMESTAMP      NOT NULL,

@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title th:text="#{login.registration}">Registration</title>
+</head>
+<body>
+<div th:insert="~{header :: locale}"></div>
+<div th:insert="~{header :: header}"></div>
+    <form th:action="@{/transactions}" method="post" th:object="${transaction}">
+        <label for="amount"><span th:text="#{transaction.amount}">Amount:</span>
+            <input id="amount" type="number" name="amount" th:value="*{amount}">
+        </label><br>
+        <label for="referenceNumber"><span th:text="#{transaction.number}">Reference number:</span>
+            <input id="referenceNumber" type="text" name="referenceNumber" th:value="*{referenceNumber}">
+        </label><br>
+        <label for="bankAccountId"><span th:text="#{transaction.bank_account}">Bank Account:</span>
+            <select id="bankAccountId" name="bankAccountId">
+                <option th:each="account : ${bankAccounts}"
+                        th:value="${account.id}"
+                        th:text="${account.type}"></option>
+            </select>
+        </label><br>
+
+        <div th:each="type : ${types}">
+            <input th:id="${type}" type="radio" name="type" th:value="${type}" th:checked="${type == transaction.type}">
+            <label th:for="${type}" th:text="${type}"><span th:text="#{transaction.type}">Transaction type</span></label>
+        </div>
+        <button type="submit"><span th:text="#{transaction.submit}">Submit</span></button>
+    </form>
+</body>
+</html>

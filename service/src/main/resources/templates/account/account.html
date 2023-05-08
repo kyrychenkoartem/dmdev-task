@@ -2,39 +2,44 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Account</title>
+    <title th:text="#{account.account}">Account</title>
     <link th:href="@{/css/bootstrap.min.css}" rel="stylesheet">
 </head>
 <body>
+<div th:insert="~{header :: locale}"></div>
 <div th:insert="~{header :: header}"></div>
 <div th:if="${!account.bankAccounts.isEmpty()}">
-    <h4>Bank Accounts:</h4>
+    <h4><span th:text="|#{bank_account.accounts}:|">Bank Accounts:</span></h4>
     <div th:each="bankAccount : ${account.bankAccounts}">
         <li><a th:href="@{'/bank-accounts/' + ${bankAccount.id}}" th:text="|${bankAccount.number}. ${bankAccount.type}
-    Available balance:  ${bankAccount.availableBalance}
-    Actual balance:  ${bankAccount.actualBalance}|">Bank account</a></li>
+    #{bank_account.available}  ${bankAccount.availableBalance}
+    #{bank_account.actual}  ${bankAccount.actualBalance}|"><span
+                th:text="#{bank_account.account}">Bank account</span></a></li>
     </div>
 </div>
 <br>
 
 <form th:action="@{/bank-accounts/registration}">
-    <button type="submit">Create Bank Account</button>
+    <button type="submit"><span th:text="#{bank_account.create}">Create Bank Account</span></button>
 </form>
 <br>
 
 <div th:if="${!account.utilityAccounts.isEmpty()}">
     <div th:each="utilityAccount : ${account.utilityAccounts}">
-        <li><a th:href="@{'/utility-accounts/' + ${utilityAccount.id}}"
-               th:text="|${utilityAccount.number}. ${utilityAccount.providerName}|">Utility account</a></li>
+        <li>
+            <a th:href="@{'/utility-accounts/' + ${utilityAccount.id}}"
+               th:text="|${utilityAccount.number}. ${utilityAccount.providerName}|">
+                <span th:text="#{utility_account.account}">Utility account</span>
+            </a>
+        </li>
     </div>
 </div>
 <br>
 
 <form th:action="@{/utility-accounts/registration}">
-    <button type="submit">Create Utility Account</button>
+    <button type="submit"><span th:text="#{utility_account.create}">Create Utility Account</span></button>
 </form>
 <br>
-
 
 </body>
 </html>

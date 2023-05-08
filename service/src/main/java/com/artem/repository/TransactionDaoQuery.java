@@ -104,8 +104,8 @@ public class TransactionDaoQuery {
             EntityManager session, Long userId, TransactionFilter filter) {
         var entityGraph = EntityGraphUtil.getTransactionGraphByUser(session);
         var predicate = QPredicate.builder()
-                .add(filter.getReferenceNumber(), transaction.referenceNumber::eq)
-                .add(filter.getTime(), transaction.time::after)
+                .add(filter.referenceNumber(), transaction.referenceNumber::eq)
+                .add(filter.time(), transaction.time::after)
                 .buildAnd();
         return new JPAQuery<Transaction>(session)
                 .select(transaction)
@@ -118,8 +118,4 @@ public class TransactionDaoQuery {
                 .fetch();
     }
 
-
-//    public static TransactionDaoQuery getInstance() {
-//        return INSTANCE;
-//    }
 }

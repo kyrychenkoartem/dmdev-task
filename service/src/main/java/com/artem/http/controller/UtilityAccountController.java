@@ -2,7 +2,10 @@ package com.artem.http.controller;
 
 import com.artem.model.dto.UtilityAccountCreateDto;
 import com.artem.model.dto.UtilityAccountUpdateDto;
+import com.artem.service.AccountService;
 import com.artem.service.UtilityAccountService;
+import com.artem.util.UserDetailsUtil;
+import java.util.Optional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Controller;
@@ -21,6 +24,7 @@ import org.springframework.web.server.ResponseStatusException;
 public class UtilityAccountController {
 
     private final UtilityAccountService utilityAccountService;
+    private final AccountService accountService;
 
     @GetMapping
     public String findAll(Model model) {
@@ -40,6 +44,12 @@ public class UtilityAccountController {
 
     @GetMapping("/registration")
     public String registration(Model model, @ModelAttribute("utilityAccount") UtilityAccountCreateDto utilityAccount) {
+        Optional<Long> accountId = Optional.empty();
+        var maybeAccount = accountService.findByUserId(UserDetailsUtil.getCurrentUserId());
+        if (maybeAccount.isPresent()) {
+            accountId = Optional.of(maybeAccount.get().id());
+        }
+        model.addAttribute("accountId", accountId.get());
         model.addAttribute("utilityAccount", utilityAccount);
         return "utility-account/registration";
     }
